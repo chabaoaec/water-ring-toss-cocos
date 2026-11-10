@@ -13,34 +13,35 @@ export class ToyRenderer {
   constructor(g, reduced) {
     this.g = g;
     this.reduced = reduced;
-    this.bubbles = Array.from({
-      length: 32
-    }, (_, i) => ({
-      x: 28 + i * 79 % 360,
-      y: i * 53 % 510,
-      r: 1.3 + i % 3 * .7
-    }));
+
   }
-  updateMist(tracers) {
+  updateMist(tracers, time) {
     if (!this.mistFrame) {
       // A tiny procedural radial texture is uploaded once. Reusing sprite quads
       // avoids rebuilding hundreds of translucent curve meshes every frame.
       const canvas = document.createElement('canvas');
       canvas.width = canvas.height = 64;
       const ctx = canvas.getContext('2d');
-      const gradient = ctx.createRadialGradient(30, 33, 0, 32, 32, 30);
-      gradient.addColorStop(0, 'rgba(94,146,129,.90)');
-      gradient.addColorStop(.35, 'rgba(110,161,141,.70)');
-      gradient.addColorStop(.7, 'rgba(176,214,191,.24)');
-      gradient.addColorStop(1, 'rgba(220,242,231,0)');
+      const gradient = ctx.createRadialGradient(32, 32, 1, 32, 32, 29);
+      gradient.addColorStop(0, 'rgba(245,255,252,.85)');
+      gradient.addColorStop(.16, 'rgba(208,255,249,.62)');
+      gradient.addColorStop(.5, 'rgba(105,239,238,.20)');
+      gradient.addColorStop(1, 'rgba(105,239,238,0)');
       ctx.fillStyle = gradient; ctx.fillRect(0, 0, 64, 64);
+      // Reflective flake: a white specular diamond, not a dark opaque dust core.
+      ctx.fillStyle = 'rgba(255,255,244,.98)';
+      ctx.beginPath(); ctx.moveTo(32, 18); ctx.lineTo(35, 29);
+      ctx.lineTo(45, 32); ctx.lineTo(35, 35); ctx.lineTo(32, 46);
+      ctx.lineTo(29, 35); ctx.lineTo(19, 32); ctx.lineTo(29, 29);
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = 'white'; ctx.fillRect(30, 30, 4, 4);
       const image = new cc.ImageAsset(canvas), texture = new cc.Texture2D();
       texture.image = image;
       this.mistFrame = new cc.SpriteFrame();
       this.mistFrame.packable = false; // Keep this sole64px texture out of a2048px dynamic atlas.
       this.mistFrame.texture = texture;
       this.mistPool = [];
-      this.mistColors = Array.from({length: 136}, (_, alpha) => new cc.Color(255,255,255,alpha));
+      this.mistColors = Array.from({length: 256}, (_, alpha) => new cc.Color(255,255,255,alpha));
     }
     for (let i = 0; i < tracers.particles.length; i++) {
       const p = tracers.particles[i];
@@ -49,15 +50,18 @@ export class ToyRenderer {
         const node = new cc.Node(`SuspendedMist${i}`);
         node.layer = this.g.node.layer; this.g.node.addChild(node);
         const transform = node.addComponent(cc.UITransform);
-        transform.setContentSize(p.size * 2.9, p.size * 2.9);
+        transform.setContentSize(p.size * 2.7, p.size * 2.7);
         const sprite = node.addComponent(cc.Sprite);
         sprite.sizeMode = cc.Sprite.SizeMode.CUSTOM; sprite.spriteFrame = this.mistFrame;
         entry = {node, sprite, alpha: -1}; this.mistPool.push(entry);
       }
-      entry.node.active = true;
+      entry.node.active = p.inChamber === null || p.inChamber === undefined;
+      if (!entry.node.active) continue;
       entry.node.setPosition(p.x, p.y + p.z * .32, 0);
-      const fade = Math.max(0, Math.min(1, p.age / .8, (p.life - p.age) / 1.5));
-      const alpha = Math.round(135 * fade);
+      const phase = p.phase ?? p.id * 2.399963;
+      const shimmer = this.reduced ? .65 : Math.pow(.5 + .5 * Math.sin(time * 1.7 + phase), 4);
+      const alpha = Math.round(125 + 125 * shimmer);
+      entry.node.setRotationFromEuler(0, 0, phase * 57.29578 + (this.reduced ? 0 : Math.sin(time * .45 + phase) * 12));
       if (entry.alpha !== alpha) {entry.sprite.color = this.mistColors[alpha]; entry.alpha = alpha;}
     }
     for (let i = tracers.particles.length; i < this.mistPool.length; i++) this.mistPool[i].node.active = false;
@@ -83,11 +87,16 @@ export class ToyRenderer {
   draw(w) {
     const g = this.g,
       t = w.time;
+    const surfaceY = w.getWaterSurfaceY?.() ?? 540;
+    const surfaceBack = surfaceY + 16.6;
     g.clear();
     g.lineCap = cc.Graphics.LineCap.ROUND;
     g.lineJoin = cc.Graphics.LineJoin.ROUND;
     // Layered water tint, original softly rolling seabed, and caustic ribbons.
     for (let i = 0; i < 22; i++) this.rounded(0, i * 26.5, 420, 28, 0, color(i < 5 ? '#b2ded1' : i < 12 ? '#c4e7dd' : '#d6efe5'));
+    // Air space above the free water surface; depth projection gives the
+    // horizontal physical surface a narrow visible top face.
+    this.rounded(0, surfaceBack, 420, Math.max(0, 580 - surfaceBack), 0, color('#ecf5eb'));
     g.fillColor = color('#a0cebf', 100);
     g.moveTo(0, 69);
     g.bezierCurveTo(110, 113, 250, 18, 420, 86);
@@ -105,8 +114,8 @@ export class ToyRenderer {
     for (let i = 0; i < 4; i++) {
       g.strokeColor = color('#f2fff3', 70);
       g.lineWidth = 1.8;
-      g.moveTo(-20, 440 + i * 29);
-      g.bezierCurveTo(90, 470 + i * 24 + Math.sin(t * .6) * 6, 230, 430 + i * 34, 440, 461 + i * 20);
+      g.moveTo(-20, surfaceY - 110 + i * 29);
+      g.bezierCurveTo(90, surfaceY - 80 + i * 24 + Math.sin(t * .6) * 6, 230, surfaceY - 120 + i * 34, 440, surfaceY - 89 + i * 20);
       g.stroke();
     }
     for (let i = 0; i < 2; i++) {
@@ -140,8 +149,8 @@ export class ToyRenderer {
       }
     }
     // All-domain suspended mist shares the physical tracer positions. Its cached
-    // sprite texture has soft edges and no long direction-dependent ribbon.
-    this.updateMist(w.tracers);
+    // sprite texture has white specular glints, a pale cyan halo and no dark core.
+    this.updateMist(w.tracers, w.time);
     const parts = [];
     for (const p of PEGS) parts.push({
       z: 0,
@@ -188,17 +197,11 @@ export class ToyRenderer {
     }
     parts.sort((a, b) => a.z - b.z);
     for (const part of parts) part.draw();
-    const count = this.reduced ? 10 : this.bubbles.length;
-    for (let i = 0; i < count; i++) {
-      const b = this.bubbles[i];
-      const y = (b.y + t * (5 + i % 4)) % 520 + 28;
-      const x = b.x + Math.sin(t * .7 + i) * 4;
-      g.strokeColor = color('#f8fff7', 125);
-      g.lineWidth = .9;
-      g.circle(x, y, b.r);
-      g.stroke();
-    }
-    // Waterline, glass thickness and restrained highlights.
+    // A restrained free-surface band rises/falls with displaced chamber water.
+    this.rounded(0, surfaceY - 16.6, 420, 33.2, 0, color('#dff7ee', 100));
+    this.line(0, surfaceBack, 420, surfaceBack, color('#ffffff', 190), 1.5);
+    this.line(0, surfaceY - 16.6, 420, surfaceY - 16.6, color('#9bcec7', 120), 1);
+    // Fixed glass seam and restrained casing highlights.
     this.line(16, 551, 404, 551, color('#f8fff4', 160), 2);
     this.line(14, 541, 14, 81, color('#ffffff', 110), 2);
     this.line(405, 522, 405, 363, color('#ffffff', 90), 3);
