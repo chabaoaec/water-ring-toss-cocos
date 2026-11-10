@@ -1,4 +1,4 @@
-import {portCoordinate,nozzleCoordinate,FLOW_INTAKES} from './recirculating-flow.js';
+import {portCoordinate,nozzleCoordinate,FLOW_INTAKES,INITIAL_TANK_VOLUME,INITIAL_WATER_SURFACE,PUMP_CAPACITY} from './recirculating-flow.js';
 // Fixed passive marker pool, including water temporarily inside the pump.
 // Midpoint RK2 follows the shared tank field; no home force or lifetime renewal.
 const noise=n=>{const value=Math.sin(n*127.1+311.7)*43758.5453;return value-Math.floor(value);};
@@ -10,15 +10,15 @@ export class FluidTracers {
     if(this.limit===limit&&this.particles?.length===limit)return;
     this.reducedMotion=reduced;this.limit=limit;this.reset(this.lastWorld);
   }
-  createParticle(id,total=this.limit,surfaceY=450) {
+  createParticle(id,total=this.limit,surfaceY=INITIAL_WATER_SURFACE) {
     const columns=this.reducedMotion?6:8,rows=Math.ceil(total/columns);
     return {id,x:24+((id%columns)+.22+.56*noise(id+1))*372/columns,y:38+(Math.floor(id/columns)+.22+.56*noise(id+71))*(surfaceY-44)/rows,z:(noise(id+131)-.5)*84,vx:0,vy:0,vz:0,inChamber:null,size:3.6+noise(id+293)*3,phase:noise(id+349)*Math.PI*2};
   }
   // An explicit reset/quality toggle may rebuild the visual pool; ordinary
   // simulation never does. Quality changes seed the CURRENT volume/chambers.
   reset(world) {
-    const surfaceY=world?.water?.surfaceY??450,total=world?.water?.total??9.6;
-    const remaining=world?.jetStates?.map(s=>s.remaining)??[.8,.8],discharged=world?.water?.discharged??[0,0];
+    const surfaceY=world?.water?.surfaceY??INITIAL_WATER_SURFACE,total=world?.water?.total??(INITIAL_TANK_VOLUME+2*PUMP_CAPACITY);
+    const remaining=world?.jetStates?.map(s=>s.remaining)??[PUMP_CAPACITY,PUMP_CAPACITY],discharged=world?.water?.discharged??[0,0];
     this.particles=Array.from({length:this.limit},(_,id)=>this.createParticle(id,this.limit,surfaceY));
     // Seed the initial chamber water with the same approximate marker density.
     for(let side=0;side<2;side++) {

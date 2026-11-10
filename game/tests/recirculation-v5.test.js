@@ -7,7 +7,7 @@ const state=(pressure=0,rate=0)=>({active:pressure>0,pressure,volumeRate:rate,re
 test('combined curls and displacement are divergence free and match moving-surface/port flux',()=>{
   let maxDivergence=0,maxSpeed=0;
   for(const states of [[state(1,1),state(1,1)],[state(1,1),state(0,-.8/.7)],[state(0,-.8/.7),state(0,-.8/.7)]]) {
-    const surface=493,area=8/418,sample=(x,y,z)=>sampleRecirculatingFlow(x,y,z,states,INTAKES,surface,area),epsilon=.001;
+    const surface=528,area=48/488,sample=(x,y,z)=>sampleRecirculatingFlow(x,y,z,states,INTAKES,surface,area),epsilon=.001;
     for(let x=24;x<400;x+=13)for(let y=36;y<surface-4;y+=17)for(const z of [-45,-17,0,23,48]) {
       const a=sample(x+epsilon,y,z),b=sample(x-epsilon,y,z),c=sample(x,y+epsilon,z),d=sample(x,y-epsilon,z),e=sample(x,y,z+epsilon),f=sample(x,y,z-epsilon);
       const divergence=(a.x-b.x+c.y-d.y+e.z-f.z)/(2*epsilon);
@@ -51,13 +51,13 @@ test('60s real repeated pumps retain marker identity, upward/downward paths and 
   console.log(JSON.stringify({records,maxOutside,maxWaterError,up:up.size,down:down.size,entries,exits,wallMs:performance.now()-start}));
 });
 test('surface displacement, dry-body forces, gravity, pause and reset obey their contracts',()=>{
-  const w=new WaterWorld();assert.equal(w.water.surfaceY,450);w.setJet(0,true);w.setJet(1,true);run(w,1.4);
-  assert.ok(Math.abs(w.getWaterSurfaceY()-533.6)<1e-8);assert.equal(w.jetStates[0].remaining,0);
+  const w=new WaterWorld();assert.equal(w.water.surfaceY,520);w.setJet(0,true);w.setJet(1,true);run(w,1.4);
+  assert.ok(Math.abs(w.getWaterSurfaceY()-(520+1.6/(48/488)))<1e-8);assert.equal(w.jetStates[0].remaining,0);
   w.setJet(0,false);w.setJet(1,false);run(w,.2);w.setPaused(true);
   const before=JSON.stringify({water:w.water,tracers:w.tracers.particles,time:w.time});run(w,2);assert.equal(JSON.stringify({water:w.water,tracers:w.tracers.particles,time:w.time}),before);
-  w.setPaused(false);run(w,.7);assert.ok(Math.abs(w.getWaterSurfaceY()-450)<1e-8);
+  w.setPaused(false);run(w,.7);assert.ok(Math.abs(w.getWaterSurfaceY()-520)<1e-8);
   assert.equal(w.setGravityDirection({x:3,y:-4,z:0}),true);assert.ok(Math.abs(w.world.gravity.length()-210)<1e-10);assert.equal(w.setGravityDirection({x:0,y:0,z:0}),false);
   const r=w.rings[0];r.body.position.set(210,200,0);Object.assign(r,{x:210,y:200,z:0});r.body.velocity.set(0,0,0);r.body.force.set(0,0,0);w.applyWaterForces(r);assert.ok(r.body.force.x<0&&r.body.force.y>0);
-  r.body.position.y=490;r.y=490;r.body.force.set(0,0,0);r.body.velocity.set(30,20,10);w.applyWaterForces(r);assert.equal(r.body.force.length(),0);
-  w.reset();assert.equal(w.getWaterSurfaceY(),450);assert.deepEqual(w.gravityDirection,{x:0,y:-1,z:0});assert.equal(w.tracers.particles.length,128);assert.equal(w.jetStates[0].remaining,JET_CAPACITY);
+  r.body.position.y=545;r.y=545;r.body.force.set(0,0,0);r.body.velocity.set(30,20,10);w.applyWaterForces(r);assert.equal(r.body.force.length(),0);
+  w.reset();assert.equal(w.getWaterSurfaceY(),520);assert.deepEqual(w.gravityDirection,{x:0,y:-1,z:0});assert.equal(w.tracers.particles.length,128);assert.equal(w.jetStates[0].remaining,JET_CAPACITY);
 });

@@ -1,12 +1,12 @@
 import * as CANNON from '../vendor/cannon-es.js';
 import {FluidTracers} from './fluid-tracers.js';
-import {sampleRecirculatingFlow,FLOW_INTAKES} from './recirculating-flow.js';
+import {sampleRecirculatingFlow,FLOW_INTAKES,INITIAL_TANK_VOLUME,INITIAL_WATER_SURFACE,PUMP_CAPACITY,WATER_AREA,advanceCirculation} from './recirculating-flow.js';
 export const PEGS = [{x:143,z:0,tip:322,base:36},{x:277,z:0,tip:322,base:36}];
 export const INTAKES = FLOW_INTAKES;
 export const REFILL_SECONDS = .7;
 export const PALETTE = ['#f38b78','#b69af2','#f4c95c','#74cbbb','#ed8faf','#91a7ed','#f5b76e','#add68e'];
 export const RING_RADIUS = 19, TUBE_RADIUS = 3.6, INNER_RADIUS = RING_RADIUS - TUBE_RADIUS;
-export const JET_CAPACITY = .8, JET_RAMP_SECONDS = .55, JET_MIN_PRESSURE = .42;
+export const JET_CAPACITY = PUMP_CAPACITY, JET_RAMP_SECONDS = .55, JET_MIN_PRESSURE = .42;
 export const clamp = (x,a,b) => Math.max(a,Math.min(b,x));
 export function makeRandom(seed=42) {return () => {seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}
 export function pegRadiusAtY(peg,y) {return 4.6+(3.7-4.6)*clamp((y-peg.base)/(peg.tip-peg.base),0,1);}
@@ -15,9 +15,9 @@ export class WaterWorld {
   constructor(seed=42) {this.tracers=new FluidTracers();this.reset(seed);}
   reset(seed=42) {
     this.random=makeRandom(seed);this.time=0;this.started=false;this.elapsed=0;this.pumps=0;this.won=false;this.paused=false;
-    this.water={initialTank:8,tank:8,total:8+2*JET_CAPACITY,initialChambers:[JET_CAPACITY,JET_CAPACITY],discharged:[0,0],intaken:[0,0],area:8/418,surfaceY:450,previousSurfaceY:450,previousDischarged:[0,0]};
+    this.water={initialTank:INITIAL_TANK_VOLUME,tank:INITIAL_TANK_VOLUME,total:INITIAL_TANK_VOLUME+2*JET_CAPACITY,initialChambers:[JET_CAPACITY,JET_CAPACITY],discharged:[0,0],intaken:[0,0],area:WATER_AREA,surfaceY:INITIAL_WATER_SURFACE,previousSurfaceY:INITIAL_WATER_SURFACE,previousDischarged:[0,0]};
     this.held=[false,false];this.jets=[false,false];this.events=[];this.tracers.reset();
-    this.jetStates=[0,1].map(()=>({held:false,active:false,refilling:false,intakeStrength:0,remaining:JET_CAPACITY,elapsed:0,pressure:0,volumeRate:0,exhausted:false}));
+    this.jetStates=[0,1].map(()=>({held:false,active:false,refilling:false,intakeStrength:0,remaining:JET_CAPACITY,elapsed:0,pressure:0,volumeRate:0,circulation:0,intakeCirculation:0,exhausted:false}));
     this.world=new CANNON.World({gravity:new CANNON.Vec3(0,-210,0)});
     this.gravityDirection={x:0,y:-1,z:0};
     this.world.broadphase=new CANNON.SAPBroadphase(this.world);this.world.solver.iterations=14;this.world.solver.tolerance=.0001;this.world.allowSleep=false;
@@ -92,6 +92,7 @@ export class WaterWorld {
       }
       this.jets[side]=state.active;
     }
+    for(const state of this.jetStates)advanceCirculation(state,dt);
     this.water.surfaceY=32+this.water.tank/this.water.area;
   }
   finalizePumpFlows() {
@@ -106,7 +107,7 @@ export class WaterWorld {
   getWaterSurfaceY() {return this.water.surfaceY;}
   sampleFlow(x,y,z,phase=1) {
     const surface=this.water.previousSurfaceY+(this.water.surfaceY-this.water.previousSurfaceY)*phase;
-    return sampleRecirculatingFlow(x,y,z,this.jetStates,INTAKES,surface,this.water.area);
+    return sampleRecirculatingFlow(x,y,z,this.jetStates,INTAKES,surface,this.water.area,phase);
   }
   // Conservative circle enclosing the tapered post's elliptical cut by ring plane.
   threadedPeg(r) {
@@ -139,7 +140,9 @@ export class WaterWorld {
     b.torque.x-=b.angularVelocity.x*85*wet;b.torque.y-=b.angularVelocity.y*30*wet;b.torque.z-=b.angularVelocity.z*85*wet;
     const flow=this.sampleFlow(r.x,r.y,r.z,.5);
     b.applyForce(new CANNON.Vec3((-g.x*136-b.velocity.x*1.9)*wet,(-g.y*136-b.velocity.y*2.05)*wet,(-g.z*136-b.velocity.z*2.4)*wet));
-    b.applyForce(new CANNON.Vec3(flow.x*1.9*wet,flow.y*2.05*wet,flow.z*2.4*wet),new CANNON.Vec3(Math.sin(this.time*2.7+r.id)*.65,0,Math.cos(this.time*2+r.id)*.45));
+    // Centre-sampled bulk drag acts at the centre of mass. Collisions and
+    // restoring water torque still rotate the ring; no arbitrary lever pumps spin.
+    b.applyForce(new CANNON.Vec3(flow.x*1.9*wet,flow.y*2.05*wet,flow.z*2.4*wet));
   }
   // Only actual upward, loaded contacts rooted in that post's platform qualify.
   // Side contacts on posts/walls are never roots; unrooted ring cycles cannot pass.
