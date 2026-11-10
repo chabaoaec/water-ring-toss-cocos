@@ -29,9 +29,9 @@ export class ToyRenderer {
       canvas.width = canvas.height = 64;
       const ctx = canvas.getContext('2d');
       const gradient = ctx.createRadialGradient(30, 33, 0, 32, 32, 30);
-      gradient.addColorStop(0, 'rgba(153,190,179,.85)');
-      gradient.addColorStop(.35, 'rgba(193,221,209,.28)');
-      gradient.addColorStop(.7, 'rgba(220,242,231,.065)');
+      gradient.addColorStop(0, 'rgba(94,146,129,.90)');
+      gradient.addColorStop(.35, 'rgba(110,161,141,.70)');
+      gradient.addColorStop(.7, 'rgba(176,214,191,.24)');
       gradient.addColorStop(1, 'rgba(220,242,231,0)');
       ctx.fillStyle = gradient; ctx.fillRect(0, 0, 64, 64);
       const image = new cc.ImageAsset(canvas), texture = new cc.Texture2D();
@@ -40,7 +40,7 @@ export class ToyRenderer {
       this.mistFrame.packable = false; // Keep this sole64px texture out of a2048px dynamic atlas.
       this.mistFrame.texture = texture;
       this.mistPool = [];
-      this.mistColors = Array.from({length: 56}, (_, alpha) => new cc.Color(255,255,255,alpha));
+      this.mistColors = Array.from({length: 136}, (_, alpha) => new cc.Color(255,255,255,alpha));
     }
     for (let i = 0; i < tracers.particles.length; i++) {
       const p = tracers.particles[i];
@@ -49,7 +49,7 @@ export class ToyRenderer {
         const node = new cc.Node(`SuspendedMist${i}`);
         node.layer = this.g.node.layer; this.g.node.addChild(node);
         const transform = node.addComponent(cc.UITransform);
-        transform.setContentSize(p.size * 2.05, p.size * 2.05);
+        transform.setContentSize(p.size * 2.9, p.size * 2.9);
         const sprite = node.addComponent(cc.Sprite);
         sprite.sizeMode = cc.Sprite.SizeMode.CUSTOM; sprite.spriteFrame = this.mistFrame;
         entry = {node, sprite, alpha: -1}; this.mistPool.push(entry);
@@ -57,7 +57,7 @@ export class ToyRenderer {
       entry.node.active = true;
       entry.node.setPosition(p.x, p.y + p.z * .32, 0);
       const fade = Math.max(0, Math.min(1, p.age / .8, (p.life - p.age) / 1.5));
-      const alpha = Math.round(55 * fade);
+      const alpha = Math.round(135 * fade);
       if (entry.alpha !== alpha) {entry.sprite.color = this.mistColors[alpha]; entry.alpha = alpha;}
     }
     for (let i = tracers.particles.length; i < this.mistPool.length; i++) this.mistPool[i].node.active = false;

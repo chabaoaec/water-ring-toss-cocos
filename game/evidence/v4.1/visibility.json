@@ -1,0 +1,44 @@
+{
+  "errors": [],
+  "cases": [
+    {
+      "version": "v4",
+      "width": 1280,
+      "diff": {
+        "different": 2612,
+        "over20": 0,
+        "max": 11
+      }
+    },
+    {
+      "version": "v4.1",
+      "width": 1280,
+      "diff": {
+        "different": 14302,
+        "over20": 3821,
+        "max": 68
+      },
+      "pool_reuse": true
+    },
+    {
+      "version": "v4",
+      "width": 390,
+      "diff": {
+        "different": 1550,
+        "over20": 0,
+        "max": 14
+      }
+    },
+    {
+      "version": "v4.1",
+      "width": 390,
+      "diff": {
+        "different": 8599,
+        "over20": 2337,
+        "max": 69
+      },
+      "pool_reuse": true
+    }
+  ],
+  "limits": "Chromium SwiftShader emulated sizes, not hardware Brave. Nonzero pixels alone are not visual acceptance."
+}

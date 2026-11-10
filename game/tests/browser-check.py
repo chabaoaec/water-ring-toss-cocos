@@ -4,13 +4,13 @@ from playwright.sync_api import sync_playwright
 from pathlib import Path
 import shutil,json,os
 out=Path(__file__).parent
-url=os.environ.get('GAME_URL','http://127.0.0.1:8080/?build=v4')
+url=os.environ.get('GAME_URL','http://127.0.0.1:8080/?build=v4.1')
 report={'url':url,'page_errors':[],'cases':[]}
 with sync_playwright() as p:
  b=p.chromium.launch(executable_path=shutil.which('chromium'),headless=True,args=['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader'])
  for mobile,width,height in [(True,390,844),(False,1280,900)]:
   c=b.new_context(viewport={'width':width,'height':height},is_mobile=mobile,has_touch=mobile);page=c.new_page();page.on('pageerror',lambda e:report['page_errors'].append(str(e)));page.on('console',lambda m: report['page_errors'].append(m.text) if m.type=='error' else None);page.goto(url);page.wait_for_function('window.__waterToy?.ready')
-  assert 'DEMO v4' in page.locator('.toy-badge').inner_text()
+  assert 'DEMO v4.1' in page.locator('.toy-badge').inner_text()
   def state():return page.evaluate('({time:__waterToy.world.time,states:__waterToy.world.jetStates,held:__waterToy.world.held,jets:__waterToy.world.jets,pumps:__waterToy.world.pumps,water:__waterToy.world.water,particles:__waterToy.world.tracers.particles.map(p=>({x:p.x,y:p.y,z:p.z}))})')
   def wait_sim(t):
    start=page.evaluate('__waterToy.world.time');page.wait_for_function('(v)=>__waterToy.world.time>=v[0]+v[1]',arg=[start,t],timeout=45000)

@@ -1,3 +1,11 @@
+# Current validation · v4.1
+
+Zhou reported v4 particles perceptually invisible despite nonzero pixel evidence. v4.1 changes only the radial gradient, max alpha55→135 and diameter factor2.05→2.9, including matching136-entry alpha cache.128/36 counts and sprite-pool/motion/physics are retained. Root compared normal-size actual desktop/mobile images; a first overly dark candidate was rejected and kept privately, then the balanced candidate was packaged. Nonzero pixels are a rendering diagnostic, not human acceptance. Evidence and actual screenshots:game/evidence/v4.1. No new whole physics/DeepSeek rerun for these bounded appearance constants; the full render logic was previously reviewed, exact unchanged modules are bound below. v4 performance samples remain v4-only; larger visible area may change GPU cost, hardware Brave performance is unverified.
+
+---
+
+## Historical v4 validation
+
 # Current validation · v4 · 2026-11-10
 
 v4 replaces long mist ribbons with short soft dots using a shared64px procedural radial texture and pooled Cocos Sprite nodes. Actual pixels are present (mobile1535/desktop2618 differing pixels versus hidden Sprite pool). Fresh v4 ZIP matches dist exactly; desktop1280×900 and mobile390×844 pass128→36→128 active/pool reuse through resets, finite pressure/capacity/refill, pause, intake direction, and water balance, without console/page errors. See game/evidence/v4/browser.json and screenshots; these are browser-emulated sizes, not hardware phones.
