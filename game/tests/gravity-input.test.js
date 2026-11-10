@@ -131,10 +131,10 @@ test('pause-resume changed pose smooths rather than snapping; reapply keeps last
   const before = f.outputs.at(-1); f.input.reapply(); close(f.outputs.at(-1), before);
   f.input.disable(); f.input.reapply(); close(f.outputs.at(-1), DEFAULT_GRAVITY);
 });
-test('screen rotation recaptures neutral without immediate gravity update', () => {
+test('screen rotation preserves neutral without an immediate gravity update', () => {
   const f = fixture(); f.motion({ x: 0, y: 9.81, z: 0 }); const count = f.outputs.length;
   f.screen.angle = 90; f.screen.dispatchEvent(new Event('change')); assert.equal(f.outputs.length, count);
-  f.motion({ x: 9.81, y: 0, z: 0 }); close(f.outputs.at(-1), DEFAULT_GRAVITY);
+  f.motion({ x: 0, y: 9.81, z: 0 }); close(f.outputs.at(-1), DEFAULT_GRAVITY);
 });
 test('null samples and disposal never emit gravity updates', () => {
   const f = fixture(); f.motion({ x: null, y: 9.81, z: 0 }); assert.equal(f.outputs.length, 0); assert.equal(f.input.calibrate(), false);
@@ -302,4 +302,100 @@ test('tilt watchdog does not cancel a still-fresh native linear acceleration str
   assert.ok(f.input.getState().acceleration.x > 5.9);
   assert.match(f.input.getState().message, /倾斜读数/);
   f.timeout(151); close(f.accelerations.at(-1), { x: 0, y: 0, z: 0 });
+});
+
+function physicalRoll(f, kind, degrees, { auto = true, order = 'event-first', frames = 120 } = {}) {
+  const reading = angle => {
+    const a = angle * Math.PI / 180;
+    if (kind === 'orientation') f.event('deviceorientation', { beta: 90 - Math.abs(angle), gamma: angle < 0 ? 90 : -90 });
+    else if (kind === 'native') f.nativeMotion({ x: 0, y: 0, z: 0 }, { x: 9.81 * Math.sin(a), y: 9.81 * Math.cos(a), z: 0 });
+    else f.motion({ x: 9.81 * Math.sin(a), y: 9.81 * Math.cos(a), z: 0 });
+  };
+  reading(0);
+  for (let i = 0; i <= frames; i++) {
+    const angle = degrees * i / frames;
+    const screen = auto ? Math.sign(degrees) * (Math.abs(angle) >= 150 ? 180 : Math.abs(angle) >= 60 ? 90 : 0) : 0;
+    if (screen !== f.screen.angle) {
+      if (order === 'event-before-property') f.screen.dispatchEvent(new Event('change'));
+      f.screen.angle = screen;
+      if (order === 'sample-first') reading(angle);
+      const count = f.outputs.length;
+      if (!['no-event', 'event-before-property'].includes(order)) f.screen.dispatchEvent(new Event('change'));
+      assert.equal(f.outputs.length, count, 'screen event must not apply a gravity impulse');
+    }
+    reading(angle);
+  }
+  for (let i = 0; i < 180; i++) reading(degrees);
+}
+test('full inversion survives automatic screen rotation for native and fallback readings and event ordering', () => {
+  for (const kind of ['native', 'fallback', 'orientation']) for (const order of ['event-first', 'sample-first', 'event-before-property', 'no-event']) {
+    const f = fixture(); physicalRoll(f, kind, 180, { order });
+    close(f.outputs.at(-1), { x: 0, y: 1, z: 0 }, 1e-5);
+    for (const v of f.outputs) unit(v);
+    for (let i = 1; i < f.outputs.length; i++) {
+      const a = f.outputs[i - 1], b = f.outputs[i];
+      assert.ok(Math.acos(Math.max(-1, Math.min(1, a.x * b.x + a.y * b.y + a.z * b.z))) <= 1.8 * .01667 + 1e-7, `${kind}/${order} discontinuous change`);
+    }
+    f.input.dispose();
+  }
+});
+test('sideways and opposite full rolls retain full range, including initially landscape devices', () => {
+  for (const degrees of [-180, -90, 90]) {
+    const f = fixture(); physicalRoll(f, 'native', degrees);
+    const a = degrees * Math.PI / 180;
+    close(f.outputs.at(-1), { x: -Math.sin(a), y: -Math.cos(a), z: 0 }, 1e-5);
+  }
+  const landscape = fixture(); landscape.screen.angle = 90;
+  landscape.nativeMotion({ x: 0, y: 0, z: 0 }, { x: 9.81, y: 0, z: 0 });
+  landscape.screen.angle = 270; landscape.screen.dispatchEvent(new Event('change'));
+  for (let i = 0; i < 300; i++) landscape.nativeMotion({ x: 0, y: 0, z: 0 }, { x: -9.81, y: 0, z: 0 });
+  close(landscape.outputs.at(-1), { x: 0, y: 1, z: 0 }, 1e-5);
+});
+test('full pitch inversion and Euler wrap retain signed gravity without removing W3C valid ranges', () => {
+  for (const sign of [-1, 1]) {
+    const f = fixture(); f.event('deviceorientation', { beta: 90, gamma: 0 });
+    for (let i = 0; i <= 120; i++) {
+      const degrees = sign * 180 * i / 120, beta = ((90 - degrees + 180) % 360 + 360) % 360 - 180;
+      f.event('deviceorientation', { beta, gamma: 0 });
+    }
+    for (let i = 0; i < 180; i++) f.event('deviceorientation', { beta: -90, gamma: 0 });
+    close(f.outputs.at(-1), { x: 0, y: 1, z: 0 }, 1e-5);
+  }
+});
+test('inverted calibration, pause, reset reapply and shake use one preserved screen basis', () => {
+  const f = fixture(); physicalRoll(f, 'native', 180);
+  for (let i = 0; i < 30; i++) f.nativeMotion({ x: 6, y: 0, z: 0 }, { x: 6, y: -9.81, z: 0 });
+  close(f.accelerations.at(-1), { x: 6, y: 0, z: 0 }, 1e-5);
+  close(f.outputs.at(-1), { x: 0, y: 1, z: 0 }, 1e-5);
+  f.input.setPaused(true); const frozen = f.outputs.at(-1);
+  f.screen.angle = 0; f.screen.dispatchEvent(new Event('change'));
+  f.nativeMotion({ x: 12, y: 0, z: 0 }, { x: 12, y: -9.81, z: 0 });
+  close(f.outputs.at(-1), frozen); close(f.accelerations.at(-1), { x: 0, y: 0, z: 0 });
+  f.input.reapply(); close(f.outputs.at(-1), frozen);
+  f.input.setPaused(false);
+  for (let i = 0; i < 60; i++) f.nativeMotion({ x: 0, y: 0, z: 0 }, { x: 0, y: -9.81, z: 0 });
+  close(f.outputs.at(-1), { x: 0, y: 1, z: 0 }, 1e-5);
+  assert.equal(f.input.calibrate(), true); close(f.outputs.at(-1), DEFAULT_GRAVITY);
+  for (let i = 0; i < 30; i++) f.nativeMotion({ x: 0, y: 0, z: 0 }, { x: 0, y: -9.81, z: 0 });
+  close(f.outputs.at(-1), DEFAULT_GRAVITY);
+});
+test('continuous complete roll returns to initial gravity and repeated screen changes do not accumulate drift', () => {
+  const f = fixture(); f.nativeMotion({ x: 0, y: 0, z: 0 });
+  for (let i = 0; i <= 240; i++) {
+    const degrees = 360 * i / 240, theta = degrees * Math.PI / 180;
+    f.screen.angle = Math.floor((degrees + 30) / 90) * 90;
+    f.screen.dispatchEvent(new Event('change'));
+    f.nativeMotion({ x: 0, y: 0, z: 0 }, { x: 9.81 * Math.sin(theta), y: 9.81 * Math.cos(theta), z: 0 });
+  }
+  for (let i = 0; i < 180; i++) f.nativeMotion({ x: 0, y: 0, z: 0 });
+  close(f.outputs.at(-1), DEFAULT_GRAVITY, 1e-5);
+});
+test('stale recovery keeps inverted neutral reference and estimated shake is not mirrored by screen rotation', () => {
+  const f = fixture(); physicalRoll(f, 'fallback', 180);
+  for (let i = 0; i < 4; i++) f.motion({ x: 6, y: -9.81, z: 0 });
+  assert.ok(f.accelerations.at(-1).x > 4);
+  f.timeout(); assert.equal(f.input.getState().hasReading, false);
+  f.screen.angle = 0; f.screen.dispatchEvent(new Event('change'));
+  for (let i = 0; i < 180; i++) f.motion({ x: 0, y: -9.81, z: 0 });
+  close(f.outputs.at(-1), { x: 0, y: 1, z: 0 }, 1e-5);
 });

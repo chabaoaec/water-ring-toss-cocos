@@ -98,6 +98,21 @@ export function createGravityInput({ onDirection, onAcceleration = () => {}, onS
   let lastTime = null, lastMotionTime = -Infinity, timer = null, generation = 0, pending = null;
   let acceleration = copy(ZERO_ACCELERATION), accelerationActive = false, accelerationSource = null;
   let accelerationTime = null, accelerationTimer = null, gravityEstimate = null;
+  const readScreenAngle = () => {
+    const value = win?.screen?.orientation?.angle ?? win?.orientation ?? 0;
+    return Number.isFinite(value) ? ((value % 360) + 360) % 360 : 0;
+  };
+  let screenAngle = readScreenAngle();
+  function synchronizeScreenFrame() {
+    const next = readScreenAngle(), delta = next - screenAngle;
+    if (!delta) return;
+    // Gravity samples and the calibration axes use screen coordinates. Rotate
+    // BOTH by the same orthonormal transform, preserving their dot products.
+    // raw and gravityEstimate remain DEVICE-coordinate vectors, not screen data.
+    if (basis) basis = { right: toScreenVector(basis.right, delta), up: toScreenVector(basis.up, delta), depth: toScreenVector(basis.depth, delta) };
+    if (sample) sample = normalizeGravity(toScreenVector(sample, delta));
+    screenAngle = next;
+  }
   let state = 'waiting', message = '倾斜重力默认开启，正在等待传感器。';
   const permission = new Map();
   const sensors = [['motion', 'DeviceMotionEvent', 'devicemotion'], ['orientation', 'DeviceOrientationEvent', 'deviceorientation']].filter(([, name]) => typeof win?.[name] !== 'undefined');
@@ -121,6 +136,7 @@ export function createGravityInput({ onDirection, onAcceleration = () => {}, onS
   }
   function handleAcceleration(event) {
     if (!preferred || paused || disposed || permission.get('motion') !== 'granted') return;
+    synchronizeScreenFrame();
     const time = now(), dt = accelerationTime === null ? 1 / 60 : Math.max(.001, Math.min(.05, (time - accelerationTime) / 1000));
     const native = finiteVector(event.acceleration) ? event.acceleration : null;
     const including = finiteVector(event.accelerationIncludingGravity) ? event.accelerationIncludingGravity : null;
@@ -138,7 +154,7 @@ export function createGravityInput({ onDirection, onAcceleration = () => {}, onS
     }
     const bounded = clampDeviceAcceleration(linear);
     if (!bounded || !basis) return;
-    const screen = toScreenVector(bounded, win.screen?.orientation?.angle ?? win.orientation ?? 0);
+    const screen = toScreenVector(bounded, screenAngle);
     const game = calibratedAcceleration(screen, basis);
     acceleration = blend(acceleration, game, 1 - Math.exp(-dt / .03));
     accelerationTime = time; accelerationActive = true; accelerationSource = nextSource;
@@ -160,6 +176,8 @@ export function createGravityInput({ onDirection, onAcceleration = () => {}, onS
   }
   function handle(event, kind) {
     if (!preferred || disposed || permission.get(kind) !== 'granted') return;
+    // Some browsers update angle before the change event, others afterward.
+    synchronizeScreenFrame();
     const time = now();
     if (kind === 'orientation' && time - lastMotionTime < 1000) return;
     const value = kind === 'motion' ? motionGravity(event) : orientationGravity(event);
@@ -169,7 +187,7 @@ export function createGravityInput({ onDirection, onAcceleration = () => {}, onS
     // Native linear acceleration was removed above; with no native channel,
     // this low-pass gravity estimate still has the usual translation/tilt ambiguity.
     raw = !raw || source !== kind ? value : blend(raw, value, 1 - Math.exp(-dt / .18));
-    const screen = toScreenGravity(raw, win.screen?.orientation?.angle ?? win.orientation ?? 0);
+    const screen = toScreenGravity(raw, screenAngle);
     const hadSample = !!sample;
     sample = normalizeGravity(screen);
     if (!sample) return;
@@ -236,6 +254,7 @@ export function createGravityInput({ onDirection, onAcceleration = () => {}, onS
   }
   function calibrate() {
     if (!preferred || !sample) return false;
+    synchronizeScreenFrame();
     clearAcceleration();
     basis = calibrationBasis(sample); direction = copy(DEFAULT_GRAVITY); onDirection(copy(direction));
     emit(paused ? 'paused' : active ? 'active' : 'waiting', paused ? '当前姿势已校准；游戏仍暂停，请点“继续游玩”后缓慢倾斜。' : '当前姿势已校准；请缓慢倾斜手机。'); return true;
@@ -254,11 +273,10 @@ export function createGravityInput({ onDirection, onAcceleration = () => {}, onS
     } else attach();
   }
   function screenChanged() {
-    // Screen axes changed: recapture neutral on next valid sample, then blend.
-    const hadReading = !!sample;
+    // Browser UI rotation must not turn the current physical pose into neutral.
+    synchronizeScreenFrame();
     clearAcceleration();
-    basis = raw = sample = null; lastTime = null;
-    if (preferred && (active || hadReading)) emit('waiting', '屏幕方向已改变；下一次有效读数会重新校准，方向平滑过渡。');
+    if (preferred && sample) emit(paused ? 'paused' : active ? 'active' : 'waiting', '屏幕已旋转，保留原校准；可继续翻转，或手动校准当前姿势。');
   }
   win?.screen?.orientation?.addEventListener('change', screenChanged);
   win?.addEventListener('orientationchange', screenChanged);
