@@ -1,0 +1,12 @@
+{
+  "supplied_complete": {
+    "src/render.js": 8369,
+    "src/engine-bootstrap.js": 3350,
+    "src/fluid-tracers.js": 2576
+  },
+  "current_matches_snapshot": true,
+  "prompt_sha256": "e10a54bb2c73082285dc00924fc2778eabcc2548c1db3fd13ae95a2b81ab8dad",
+  "correction_actual_tool_calls": 0,
+  "initial_read_partial_chars": 8192,
+  "source_tool_full_read_claim": false
+}

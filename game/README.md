@@ -2,7 +2,7 @@
 
 一台可在桌面和手机浏览器里玩的复古水中套圈玩具。奶油白塑料壳、浅青玻璃水箱、珊瑚色双按钮；原创程序绘制，无外部美术或运行时网络请求。
 
-**实际使用 Cocos Engine 3.8.7**：`cc.Scene`、`cc.Node`、`cc.Canvas`、`cc.Camera`、`cc.Graphics` 和 `cc.Component.update` 负责场景、WebGL2 绘制和游戏循环；**cannon-es 0.20.0** 负责真正的三维刚体。没有用 Canvas2D/Phaser/Three.js 替代 Cocos。这里是开源引擎独立启动的 Web 游戏，不声称经过 Cocos Creator 编辑器构建，也不是可直接打开的 Creator 场景工程。
+**实际使用 Cocos Engine 3.8.7**：`cc.Scene`、`cc.Node`、`cc.Canvas`、`cc.Camera`、`cc.Graphics`、`cc.Sprite` 和 `cc.Component.update` 负责场景、WebGL2 绘制和游戏循环；**cannon-es 0.20.0** 负责真正的三维刚体。没有用 Canvas2D/Phaser/Three.js 替代 Cocos。这里是开源引擎独立启动的 Web 游戏，不声称经过 Cocos Creator 编辑器构建，也不是可直接打开的 Creator 场景工程。
 
 ## 快速运行
 
@@ -55,7 +55,7 @@ npm test
 `npm test` 使用 Node 内建测试器，直接运行真实 Cannon 世界，覆盖喷流、浮力/阻尼、实体碰撞、环孔穿柱、稳定门槛、重置、长时有限状态和胜利流程。浏览器测试另见 `tests/browser-check.py` 与 `tests/browser-input-check.py`；它需要外部已有 Playwright 与 Chromium，项目不会自动安装浏览器。原版证据在 `evidence/`；当前全域粒子/吸水循环版本证据在 **`evidence/v3/`**，先前有限压力/支撑计分证据在 `evidence/v2/`。保留旧版red和不适用的连续按压胜利序列失败记录。实际有限多脉冲已从初态获得合法支撑分；两组有界试验未达到8/8，不宣称新脉冲序列全胜。八环自然落下、真实支撑堆叠和胜利流程另有物理回归通过。
 
 - `src/physics.js`：三维物理和计分，独立于 UI。
-- `src/render.js`：真正的 Cocos Graphics 绘制。
+- `src/render.js`：Cocos Graphics 主场景与共用64px柔边纹理的池化Sprite悬浮点。
 - `src/input.js`：键盘/触摸聚合、最后输入释放、取消与自动重复边界。
 - `src/fluid-tracers.js`：同速度场烟雾状示踪粒子，全域常驻、错开生命周期更新和减少动态效果。
 - `src/main.js`：Cocos Component 游戏循环、状态与音效。
@@ -64,6 +64,9 @@ npm test
 
 `window.__waterToy` 保留可检查的引擎版本、场景、Graphics 组件及物理世界，用于浏览器核验；没有“自动获胜”或强制计分功能。桌面和移动 Chromium 已按当前 `evidence/v3` 验证；真实CDP双指全释放、触摸取消已测，部分指头释放使用控制器合成PointerEvent单独验证，未宣称真机或CDP部分touchEnd。测试使用2CPU亲和性以遵守执行器153任务的子树上限；这不是设备性能基准。其他浏览器、iOS 真机、低端设备性能、离线 PWA、原生封装和 Creator 编辑器导入尚未验证。
 
-### v3 版本核对
+### v4 版本核对
 
-界面右上角显示 `DEMO v3`。完整试玩包解压后运行 `python3 start-demo.py`（Windows可用 `py start-demo.py`），使用独立8083端口并禁止缓存；服务固定从脚本所在目录读取文件，不受终端当前目录影响。若端口被占用会明确报错，不跳到旧服务。
+界面右上角显示 `DEMO v4`。完整试玩包解压后运行 `python3 start-demo.py`（Windows可用 `py start-demo.py`），使用独立8084端口并禁止缓存；服务固定从脚本所在目录读取文件，不受终端当前目录影响。若端口被占用会明确报错，不跳到旧服务。
+
+
+v4将长条示踪改为短圆柔边点，128/36数量和输运不变。程序用一次Canvas2D生成64px径向纹理，再交给Cocos Sprite/WebGL2绘制；不逐帧重建粒子的曲线网格。修正GLSL4→3适配中采样器布局，uniform block保留std140、sampler移除描述符layout。物理/输入/循环水流模块与v3逐字节相同；实际像素、资源池与桌面软件渲染测量见evidence/v4。Chromium/SwiftShader结果不代表用户Brave硬件帧率，仍有长帧，不宣称完全消除卡顿。

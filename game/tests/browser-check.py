@@ -1,19 +1,32 @@
-# Browser QA against an already-served Web build. GAME_URL selects the server.
-# No forced scoring or synthetic physics stepping; limitations are in the report.
+# Independent final-ZIP browser probe. Adapt only documented public QA fields after
+# source freeze; do not mistake synthetic stepping for real browser input.
 from playwright.sync_api import sync_playwright
 from pathlib import Path
 import shutil,json,os
-out=Path(__file__).resolve().parents[1]/'evidence/v3';out.mkdir(exist_ok=True,parents=True)
-url=os.environ.get('GAME_URL','http://127.0.0.1:8080/?build=v3')
+out=Path(__file__).parent
+url=os.environ.get('GAME_URL','http://127.0.0.1:8080/?build=v4')
 report={'url':url,'page_errors':[],'cases':[]}
 with sync_playwright() as p:
  b=p.chromium.launch(executable_path=shutil.which('chromium'),headless=True,args=['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader'])
  for mobile,width,height in [(True,390,844),(False,1280,900)]:
-  c=b.new_context(viewport={'width':width,'height':height},is_mobile=mobile,has_touch=mobile);page=c.new_page();page.on('pageerror',lambda e:report['page_errors'].append(str(e)));page.goto(url);page.wait_for_function('window.__waterToy?.ready')
-  assert 'DEMO v3' in page.locator('.toy-badge').inner_text()
+  c=b.new_context(viewport={'width':width,'height':height},is_mobile=mobile,has_touch=mobile);page=c.new_page();page.on('pageerror',lambda e:report['page_errors'].append(str(e)));page.on('console',lambda m: report['page_errors'].append(m.text) if m.type=='error' else None);page.goto(url);page.wait_for_function('window.__waterToy?.ready')
+  assert 'DEMO v4' in page.locator('.toy-badge').inner_text()
   def state():return page.evaluate('({time:__waterToy.world.time,states:__waterToy.world.jetStates,held:__waterToy.world.held,jets:__waterToy.world.jets,pumps:__waterToy.world.pumps,water:__waterToy.world.water,particles:__waterToy.world.tracers.particles.map(p=>({x:p.x,y:p.y,z:p.z}))})')
   def wait_sim(t):
    start=page.evaluate('__waterToy.world.time');page.wait_for_function('(v)=>__waterToy.world.time>=v[0]+v[1]',arg=[start,t],timeout=45000)
+  page.wait_for_function('__waterToy.graphics.node.children.length===128')
+  renderer=page.evaluate("""async()=>{const {cc}=await import('./src/engine-bootstrap.js');const w=__waterToy.world,g=__waterToy.graphics;const before=g.node.children.length;for(let i=0;i<4;i++)w.reset(42);w.tracers.setReducedMotion(true);return {before,particles:w.tracers.particles.length};}""")
+  page.wait_for_function('__waterToy.graphics.node.children.filter(n=>n.active).length===36',timeout=10000)
+  renderer['reduced_active']=page.evaluate("__waterToy.graphics.node.children.filter(n=>n.active).length");assert renderer['reduced_active']==36
+  page.evaluate('__waterToy.world.tracers.setReducedMotion(false)');page.wait_for_function('__waterToy.graphics.node.children.filter(n=>n.active).length===128',timeout=10000)
+  renderer['normal_active']=page.evaluate("__waterToy.graphics.node.children.filter(n=>n.active).length");renderer['pool']=page.evaluate('__waterToy.graphics.node.children.length');assert renderer['normal_active']==128 and renderer['pool']==128 and renderer['before']==128
+  page.locator('#menu').click();page.locator('#menu-panel').evaluate('(e)=>e.style.visibility="hidden"');page.wait_for_timeout(100)
+  visible=page.screenshot();page.evaluate('()=>{for(const n of __waterToy.graphics.node.children)n.active=false}');page.wait_for_timeout(100);hidden=page.screenshot()
+  import base64
+  renderer['pixel_diff']=page.evaluate("""async(data)=>{const arrays=[];for(const b64 of data){const im=new Image();im.src='data:image/png;base64,'+b64;await im.decode();const c=document.createElement('canvas');c.width=im.width;c.height=im.height;const x=c.getContext('2d');x.drawImage(im,0,0);arrays.push(x.getImageData(0,0,c.width,c.height).data)}let different=0,max=0;for(let i=0;i<arrays[0].length;i+=4){const d=Math.max(...[0,1,2].map(k=>Math.abs(arrays[0][i+k]-arrays[1][i+k])));if(d)different++;max=Math.max(max,d)}return {different,max};}""",[base64.b64encode(x).decode() for x in [visible,hidden]])
+  assert renderer['pixel_diff']['different']>500 and renderer['pixel_diff']['max']>2
+  page.evaluate('()=>{for(const n of __waterToy.graphics.node.children)n.active=true}');page.locator('#menu-panel').evaluate('(e)=>e.style.visibility=""');page.keyboard.press('Escape')
+  report.setdefault('renderer',[]).append({'mobile':mobile,**renderer})
   initial=state();assert len(initial['particles'])>=36
   xs=[p['x'] for p in initial['particles']];ys=[p['y'] for p in initial['particles']];assert min(xs)<80 and max(xs)>340 and min(ys)<100 and max(ys)>470
   (out/f"{'mobile' if mobile else 'desktop'}-idle.png").write_bytes(page.screenshot(full_page=True))

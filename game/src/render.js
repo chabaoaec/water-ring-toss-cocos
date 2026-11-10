@@ -21,6 +21,47 @@ export class ToyRenderer {
       r: 1.3 + i % 3 * .7
     }));
   }
+  updateMist(tracers) {
+    if (!this.mistFrame) {
+      // A tiny procedural radial texture is uploaded once. Reusing sprite quads
+      // avoids rebuilding hundreds of translucent curve meshes every frame.
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 64;
+      const ctx = canvas.getContext('2d');
+      const gradient = ctx.createRadialGradient(30, 33, 0, 32, 32, 30);
+      gradient.addColorStop(0, 'rgba(153,190,179,.85)');
+      gradient.addColorStop(.35, 'rgba(193,221,209,.28)');
+      gradient.addColorStop(.7, 'rgba(220,242,231,.065)');
+      gradient.addColorStop(1, 'rgba(220,242,231,0)');
+      ctx.fillStyle = gradient; ctx.fillRect(0, 0, 64, 64);
+      const image = new cc.ImageAsset(canvas), texture = new cc.Texture2D();
+      texture.image = image;
+      this.mistFrame = new cc.SpriteFrame();
+      this.mistFrame.packable = false; // Keep this sole64px texture out of a2048px dynamic atlas.
+      this.mistFrame.texture = texture;
+      this.mistPool = [];
+      this.mistColors = Array.from({length: 56}, (_, alpha) => new cc.Color(255,255,255,alpha));
+    }
+    for (let i = 0; i < tracers.particles.length; i++) {
+      const p = tracers.particles[i];
+      let entry = this.mistPool[i];
+      if (!entry) {
+        const node = new cc.Node(`SuspendedMist${i}`);
+        node.layer = this.g.node.layer; this.g.node.addChild(node);
+        const transform = node.addComponent(cc.UITransform);
+        transform.setContentSize(p.size * 2.05, p.size * 2.05);
+        const sprite = node.addComponent(cc.Sprite);
+        sprite.sizeMode = cc.Sprite.SizeMode.CUSTOM; sprite.spriteFrame = this.mistFrame;
+        entry = {node, sprite, alpha: -1}; this.mistPool.push(entry);
+      }
+      entry.node.active = true;
+      entry.node.setPosition(p.x, p.y + p.z * .32, 0);
+      const fade = Math.max(0, Math.min(1, p.age / .8, (p.life - p.age) / 1.5));
+      const alpha = Math.round(55 * fade);
+      if (entry.alpha !== alpha) {entry.sprite.color = this.mistColors[alpha]; entry.alpha = alpha;}
+    }
+    for (let i = tracers.particles.length; i < this.mistPool.length; i++) this.mistPool[i].node.active = false;
+  }
   line(x1, y1, x2, y2, c, width) {
     const g = this.g;
     g.strokeColor = c;
@@ -98,23 +139,9 @@ export class ToyRenderer {
         }
       }
     }
-    // Existing all-domain dye forms soft asymmetric wisps, never concentric
-    // bubbles or nozzle-born puffs. Stretch/orientation follow local velocity.
-    for (const p of w.tracers.particles) {
-      const fade = Math.min(1, p.age / .8, (p.life - p.age) / 1.5);
-      const speed = Math.hypot(p.vx, p.vy), phase = p.phase + t * .11;
-      const angle = Math.atan2(p.vy + Math.sin(phase) * 4, p.vx + Math.cos(phase) * 4);
-      const dx = Math.cos(angle), dy = Math.sin(angle), nx = -dy, ny = dx;
-      const length = p.size * (2.7 + Math.min(speed / 100, 1.6));
-      const bend = p.size * (.5 + Math.sin(phase) * .3), y = p.y + p.z * .32;
-      for (const [width, alpha, offset, tint] of [[1.8,8,2,'#83b7ad'],[1.05,34,0,'#f2fff0'],[.45,25,-1,'#f6fff3']]) {
-        g.strokeColor = color(tint, alpha * fade); g.lineWidth = p.size * width;
-        const x = p.x + nx * offset, py = y + ny * offset;
-        g.moveTo(x - dx * length, py - dy * length);
-        g.bezierCurveTo(x - dx * length * .35 + nx * bend, py - dy * length * .35 + ny * bend, x + dx * length * .35 - nx * bend, py + dy * length * .35 - ny * bend, x + dx * length, py + dy * length);
-        g.stroke();
-      }
-    }
+    // All-domain suspended mist shares the physical tracer positions. Its cached
+    // sprite texture has soft edges and no long direction-dependent ribbon.
+    this.updateMist(w.tracers);
     const parts = [];
     for (const p of PEGS) parts.push({
       z: 0,

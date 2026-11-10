@@ -1,3 +1,17 @@
+# Current validation · v4 · 2026-11-10
+
+v4 replaces long mist ribbons with short soft dots using a shared64px procedural radial texture and pooled Cocos Sprite nodes. Actual pixels are present (mobile1535/desktop2618 differing pixels versus hidden Sprite pool). Fresh v4 ZIP matches dist exactly; desktop1280×900 and mobile390×844 pass128→36→128 active/pool reuse through resets, finite pressure/capacity/refill, pause, intake direction, and water balance, without console/page errors. See game/evidence/v4/browser.json and screenshots; these are browser-emulated sizes, not hardware phones.
+
+Physics/input/tracer/main modules remain byte-identical to delivered v3; prior30-test physics evidence remains attributed to v3 rather than a new run. Sampler descriptor layout conversion in engine-bootstrap is fixed separately; uniform blocks preserve std140. An earlier invisible Sprite candidate was detected by root pixel QA and rejected; its faster metrics are not an equivalent-effect optimization.
+
+Current visible software-renderer sample: idle44.75FPS, dual-pump cycles24.88FPS, draw preparation1.123/1.204ms compared with earlier v3 2.389/2.507ms. Cycle p95 remains133ms. Chromium/SwiftShader2CPU with an overlapping waiting company-review process, differing sample times and141/153 executor tasks is bounded comparison, not causal isolation or actual Brave hardware FPS. No blanket60FPS/no-stutter claim. Full report game/evidence/v4/PERFORMANCE.md.
+
+DeepSeek narrow static review uses the same session and unchanged previously verified review skills; the first source read was8192-character partial and is retained as a limitation. Complete frozen source was then supplied directly for a bounded same-session correction:36.955s completed=true/exit0 with real final, no confirmed blocker. It made zero tools/tests/browser calls; parent verified complete supplied bytes against source. No model-run tests/browser claim. User visual acceptance and hardware performance remain pending feedback.
+
+---
+
+## Historical v3 validation
+
 # Current validation · v3 · 2026-11-10
 
 The current source adds initially present tank-wide suspended wisps and release-to-refill from separate intake ports. 30 meaningful Node/Cannon regressions pass (0failed/skipped):90s idle coverage, shared-field advection, noninstant refill, partial repress, held exhaustion, pause, two independent chambers with conserved tank/chamber accounting, intake direction, and the previous collision/real-support scoring regressions. The original red/first-failed runs remain in evidence/v3; final complete report is all-tests-first.txt.

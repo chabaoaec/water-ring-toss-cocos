@@ -1,0 +1,5 @@
+# Root v4 decision
+
+Accepted corrected narrow static review against exact frozen source, fresh ZIP browser and actual visual pixels. Initial1read result was8192-character partial ending midline147; first final is NOT evidence of full source coverage. Same-session bounded correction directly supplied complete render/bootstrap/tracer files, with current/source/snapshot hashes matching. Correction completed36.955s exit0 finalpresent, no tools/commands/tests/browser; actualfinal company-coverage-final.md. Previously fully read unchanged review skills reused from v3 same session, no reread claim.
+
+No confirmed blockers. Precision-qualifier concern is not current source shape; current fixed sampler proven by runtime pixels/console. Sprites render after parent Graphics and mildly overlay scene as suspended motes; actual screenshots viewed, not physical depth volume. Root verifies actual128/36/128pool, finite/release/refill/pause/water conservation, no console/page errors. User's Brave hardware, complete hand-played win and elimination of jank remain unverified. No external approval/deployment delegated.

@@ -1,0 +1,21 @@
+{
+  "observed_utc": "2026-11-10T08:51:52.140711+00:00",
+  "directory": "/work/water-ring-cocos-20261110/repository/game/dist",
+  "sha256": {
+    "render.js": "88d0694c3796c8fe5481ff49ab865006d021c586f6225936a724f73a8512b4b2",
+    "engine-bootstrap.js": "270319070b8a33ee7bafa4d0035f8632fdb74fe2c46f597bc435ff594c78715c",
+    "physics.js": "f840c16837d6384f76a67ea5e2fb873816a58ee8300e6914ea86153419119476",
+    "fluid-tracers.js": "3616caaf4c29de9d8ebf499c129eaddc1e77b20e500721eb7731aa816af33fbc",
+    "input.js": "e9d59117209743fd35044a12fb29ed1c48612b8b01840c391a16fd52e94cd6fc",
+    "main.js": "d0ab5339719a57ac81ea02a2b191fa4b97c474bda329a5469d17081e1b0751fb"
+  },
+  "root_visibility_evidence": "acceptance/v4/sprite-info.json: pixel diff different2627 max12 reported by root; profile captures own screenshot and console",
+  "verified_after_run_utc": "2026-11-10T08:54:43.711357+00:00",
+  "source_unchanged_during_run": true,
+  "gameplay_byte_identical_to_v3": {
+    "physics.js": true,
+    "fluid-tracers.js": true,
+    "input.js": true,
+    "main.js": true
+  }
+}

@@ -1,2 +1,2 @@
-Pocket Tide Demo v3
-Tank-wide suspended flow tracers; finite jets and ring physics unchanged.
+Pocket Tide Demo v4
+Soft mist dots and measured rendering optimization; v3 pump physics unchanged.

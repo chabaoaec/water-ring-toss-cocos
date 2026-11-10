@@ -1,0 +1,70 @@
+{
+  "url": "http://127.0.0.1:8788/?build=v4",
+  "page_errors": [],
+  "cases": [
+    {
+      "mobile": true,
+      "initial_particles": 128,
+      "initial_x_range": [
+        34.602039387400055,
+        383.001608430201
+      ],
+      "initial_y_range": [
+        45.067920451030794,
+        525.9805539953077
+      ],
+      "short_flow": 192.71373760289657,
+      "long_flow": 381.05882352941177,
+      "remaining_immediately_after_release": 0,
+      "remaining_after_partial_refill": 0.29523809523809524,
+      "pause_freezes": true,
+      "intake_toward_dot": 2512.4041952213925,
+      "water_balance_error": -2.4868995751603507e-14
+    },
+    {
+      "mobile": false,
+      "initial_particles": 128,
+      "initial_x_range": [
+        34.60629722276034,
+        382.9933951477645
+      ],
+      "initial_y_range": [
+        45.070755435284184,
+        525.9743080428825
+      ],
+      "short_flow": 208.63005049686623,
+      "long_flow": 381.05882352941177,
+      "remaining_immediately_after_release": 0,
+      "remaining_after_partial_refill": 0.34285714285714297,
+      "pause_freezes": true,
+      "intake_toward_dot": 2512.4041952213925,
+      "water_balance_error": -3.552713678800501e-14
+    }
+  ],
+  "renderer": [
+    {
+      "mobile": true,
+      "before": 128,
+      "particles": 36,
+      "reduced_active": 36,
+      "normal_active": 128,
+      "pool": 128,
+      "pixel_diff": {
+        "different": 1535,
+        "max": 14
+      }
+    },
+    {
+      "mobile": false,
+      "before": 128,
+      "particles": 36,
+      "reduced_active": 36,
+      "normal_active": 128,
+      "pool": 128,
+      "pixel_diff": {
+        "different": 2618,
+        "max": 12
+      }
+    }
+  ]
+}

@@ -10,7 +10,7 @@ export async function boot() {
       effect.shaders.forEach((s, j) => {
         const original = glsl4[i][j];
         const glsl3 = {};
-        for (const stage of ['vert', 'frag']) glsl3[stage] = original[stage].replace(/layout\(set\s*=\s*\d+,\s*binding\s*=\s*\d+\)/g, 'layout(std140)').replace(/layout\(location\s*=\s*\d+\)\s*/g, '');
+        for (const stage of ['vert', 'frag']) glsl3[stage] = original[stage].replace(/layout\(set\s*=\s*\d+,\s*binding\s*=\s*\d+\)\s*(?=uniform\s+(?:[iu]?sampler|[iu]?image))/g, '').replace(/layout\(set\s*=\s*\d+,\s*binding\s*=\s*\d+\)/g, 'layout(std140)').replace(/layout\(location\s*=\s*\d+\)\s*/g, '');
         for (const stage of ['vert', 'frag']) glsl3[stage] = glsl3[stage].replace(/uniform CCGlobal \{[^}]*\};/g, 'uniform CCGlobal { vec4 cc_time; vec4 cc_screenSize; vec4 cc_nativeSize; vec4 cc_probeInfo; vec4 cc_debug_view_mode; };');
         s.glsl3 = glsl3;
       });
