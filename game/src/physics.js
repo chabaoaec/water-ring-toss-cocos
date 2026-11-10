@@ -7,6 +7,8 @@ export const PEGS = [{x:143,z:0,tip:322,base:36},{x:277,z:0,tip:322,base:36}];
 export const INTAKES = FLOW_INTAKES;
 export const REFILL_SECONDS = .7;
 export const PALETTE = ['#f38b78','#b69af2','#f4c95c','#74cbbb','#ed8faf','#91a7ed','#f5b76e','#add68e'];
+// Same ring volume:5% more mass increases density; displaced-water buoyancy stays fixed.
+export const RING_MASS = 1.05;
 export const RING_RADIUS = 19, TUBE_RADIUS = 3.6, INNER_RADIUS = RING_RADIUS - TUBE_RADIUS;
 export const JET_CAPACITY = PUMP_CAPACITY, JET_RAMP_SECONDS = .55, JET_MIN_PRESSURE = .42;
 export const clamp = (x,a,b) => Math.max(a,Math.min(b,x));
@@ -50,7 +52,7 @@ export class WaterWorld {
     }
     this.rings=PALETTE.map((color,i)=>{
       // Depth28 keeps the two offset rings clear of both posts and ±52 walls.
-      const body=new CANNON.Body({mass:1,material:this.ringMaterial,position:new CANNON.Vec3(46+i*46,49+(i%2)*8,i===2||i===5?28:(i%3-1)*17),linearDamping:0,angularDamping:.85});
+      const body=new CANNON.Body({mass:RING_MASS,material:this.ringMaterial,position:new CANNON.Vec3(46+i*46,49+(i%2)*8,i===2||i===5?28:(i%3-1)*17),linearDamping:0,angularDamping:.85});
       for(let k=0;k<24;k++){const a=k*Math.PI/12;body.addShape(new CANNON.Sphere(TUBE_RADIUS),new CANNON.Vec3(Math.cos(a)*RING_RADIUS,0,Math.sin(a)*RING_RADIUS));}
       body.quaternion.setFromEuler((this.random()-.5)*.6,0,(this.random()-.5)*.4);this.world.addBody(body);
       return {id:i,color,body,x:body.position.x,y:body.position.y,z:body.position.z,peg:null,supported:false,supportedBy:null,stable:0,scored:false};
