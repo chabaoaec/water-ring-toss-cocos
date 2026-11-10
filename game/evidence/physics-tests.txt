@@ -1,0 +1,23 @@
+
+> pocket-tide-cocos@1.0.0 test
+> node --test tests/*.test.js
+
+✔ Cannon compound torus has a physical hole, cylinder pegs and six tank walls (5.797469ms)
+✔ submerged weight sinks; water drag dissipates horizontal momentum (153.751807ms)
+✔ left jet lifts nearby rings and release allows them to descend (460.995667ms)
+✔ hole can physically slide down a post and score only after stable seating (1388.901138ms)
+✔ mere proximity, floor contact and an edge-on ring cannot count (251.765026ms)
+✔ rigid rim collides with post rather than passing sideways through it (33.492678ms)
+✔ reset clears jets, counts, timer, scored flags and rebuilds world (26.180862ms)
+✔ long pump sequence preserves finite rigid-body states inside tank (1789.39105ms)
+✔ untouched toy never starts or awards free rings (371.018604ms)
+✔ eight physically falling rings seat, win, and freeze elapsed time (4016.016928ms)
+✔ a deterministic sequence of actual pump holds can win from the untouched start (20933.891438ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 29471.265111

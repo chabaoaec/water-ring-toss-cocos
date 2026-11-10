@@ -1,0 +1,61 @@
+{
+  "checks": [
+    {
+      "name": "desktop",
+      "engine": "3.8.7",
+      "physics": "cannon-es 0.20.0",
+      "component": "Graphics",
+      "children": 1,
+      "bodyCount": 18,
+      "horizontalOverflow": false,
+      "buttonsVisible": true,
+      "canvas": {
+        "x": 447.296875,
+        "y": 109,
+        "width": 385.390625,
+        "height": 532.953125,
+        "top": 109,
+        "right": 832.6875,
+        "bottom": 641.953125,
+        "left": 447.296875
+      }
+    },
+    {
+      "name": "menu releases jets / freezes physics / blocks jets / resume",
+      "pass": true
+    },
+    {
+      "name": "keyboard jets / lift / simultaneous input / blur release / reset",
+      "pass": true,
+      "liftBefore": 48.778976143258696,
+      "liftAfter": 351.95793791505656
+    },
+    {
+      "name": "mobile",
+      "engine": "3.8.7",
+      "physics": "cannon-es 0.20.0",
+      "component": "Graphics",
+      "children": 1,
+      "bodyCount": 18,
+      "horizontalOverflow": false,
+      "buttonsVisible": true,
+      "canvas": {
+        "x": 44,
+        "y": 107,
+        "width": 302,
+        "height": 417.796875,
+        "top": 107,
+        "right": 346,
+        "bottom": 524.796875,
+        "left": 44
+      }
+    },
+    {
+      "name": "touch pointer cancellation / menu-only explicit restart",
+      "pass": true
+    }
+  ],
+  "console_errors": [],
+  "page_errors": [],
+  "webgl_warnings": []
+}

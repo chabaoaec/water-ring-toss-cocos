@@ -1,0 +1,9 @@
+# Demo validation · 2026-11-10
+
+Actual Cocos Engine 3.8.7 WebGL2 Scene/Graphics and cannon-es 0.20.0 were observed in Chromium. Root independently ran all 11 physics tests successfully, including physical ring/post collision, stable scoring, no idle free score, and a deterministic real-pump-only sequence reaching 8/8 from the untouched start. This is not an exact fluid solver.
+
+Root independently opened the final static build in 390×844, 360×740 and 1280×900 viewports: no horizontal overflow, both jet buttons in the first viewport, title removed and reset hidden in the main view. Dual pumps, menu releasing jets/freezing physics, resume and explicit menu reset passed. No page errors or external requests were observed. Implementation-side tests also cover touch cancellation, keyboard blur/release and the menu-only restart path. Screenshots in game/evidence are actual running UI, not generated concepts.
+
+An initial independent browser attempt closed before page creation; the second passed. Earlier implementation-side screenshot writes hit a Python thread-creation error; synchronous screenshot-byte writes passed. These are preserved as environment failures, not claimed fixed game bugs. Other browser engines, iOS hardware and low-end performance have not been tested.
+
+DeepSeek's separate review is running at this initial demo publication; no completed cross-review claim is made yet. This playable snapshot is for early feedback, not a platform release or advertisement integration. Source pin/rebuild instructions, Creator Editor boundary and third-party notices are in game/README.md and THIRD_PARTY_NOTICES.md.
