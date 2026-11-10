@@ -1,0 +1,16 @@
+{
+  "engine": "Cocos Engine",
+  "version": "3.8.7",
+  "repository": "https://github.com/cocos/cocos-engine",
+  "commit": "6a204c1b6ca1cbe8d090d622d8697c3398def153",
+  "sourceArchive": "https://codeload.github.com/cocos/cocos-engine/tar.gz/6a204c1b6ca1cbe8d090d622d8697c3398def153",
+  "archiveSha256": "bda1e01863bd374bc8f55febe7e141f05de85f4f0efe26b8644cedb62bb6be73",
+  "license": "MIT",
+  "features": ["base", "gfx-webgl2", "2d", "graphics", "legacy-pipeline"],
+  "build": "official @cocos/ccbuild from upstream package-lock; HTML5 BUILD esm; Chrome 90 target; source is unmodified",
+  "editor": "Cocos Creator Editor is not installed, used, or claimed to have built this game",
+  "renderer": "cc.Graphics with real WebGL2 Cocos legacy pipeline",
+  "physics": "cannon-es 0.20.0 (MIT), npm exact lock; genuine 3D rigid bodies",
+  "fixtureOrigin": ["tests/fixtures/builtin-effects.ts", "tests/fixtures/builtin-glsl4.ts"],
+  "adapter": "src/engine-bootstrap.js converts official GLSL4 layout declarations to WebGL2 GLSL3 and updates CCGlobal uniform block to current engine layout"
+}
