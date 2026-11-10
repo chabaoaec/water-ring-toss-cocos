@@ -1,5 +1,5 @@
-import { cc } from './engine-bootstrap.js?v=568a4006b13fb9e33812';
-import { PEGS, RING_RADIUS, INTAKES } from './physics.js?v=568a4006b13fb9e33812';
+import { cc } from './engine-bootstrap.js?v=57fe74982d38b3f1d351';
+import { PEGS, RING_RADIUS, INTAKES } from './physics.js?v=57fe74982d38b3f1d351';
 const color = (hex, alpha = 255) => {
   const c = new cc.Color(hex);
   c.a = alpha;

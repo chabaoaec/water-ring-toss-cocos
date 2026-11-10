@@ -1,8 +1,8 @@
-import { boot, cc } from './engine-bootstrap.js?v=568a4006b13fb9e33812';
-import { WaterWorld, JET_CAPACITY } from './physics.js?v=568a4006b13fb9e33812';
-import { bindControls } from './input.js?v=568a4006b13fb9e33812';
-import { createGravityInput, gravityStateLabel } from './gravity-input.js?v=568a4006b13fb9e33812';
-import { ToyRenderer } from './render.js?v=568a4006b13fb9e33812';
+import { boot, cc } from './engine-bootstrap.js?v=57fe74982d38b3f1d351';
+import { WaterWorld, JET_CAPACITY } from './physics.js?v=57fe74982d38b3f1d351';
+import { bindControls } from './input.js?v=57fe74982d38b3f1d351';
+import { createGravityInput, gravityStateLabel } from './gravity-input.js?v=57fe74982d38b3f1d351';
+import { ToyRenderer } from './render.js?v=57fe74982d38b3f1d351';
 const $ = s => document.querySelector(s);
 const status = $('#status');
 const world = new WaterWorld();

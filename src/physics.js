@@ -1,8 +1,8 @@
-import * as CANNON from '../vendor/cannon-es.js?v=568a4006b13fb9e33812';
-import {FluidTracers} from './fluid-tracers.js?v=568a4006b13fb9e33812';
-import {createWaterSurfaceCache} from './water-surface.js?v=568a4006b13fb9e33812';
-import {createWaterInertia,advanceWaterInertia,sampleWaterInertia,boundedAcceleration,GAME_ACCELERATION_PER_MPS2} from './inertial-water.js?v=568a4006b13fb9e33812';
-import {sampleRecirculatingFlow,FLOW_INTAKES,INITIAL_TANK_VOLUME,INITIAL_WATER_SURFACE,PUMP_CAPACITY,WATER_AREA,advanceCirculation,FLOW_BOUNDS} from './recirculating-flow.js?v=568a4006b13fb9e33812';
+import * as CANNON from '../vendor/cannon-es.js?v=57fe74982d38b3f1d351';
+import {FluidTracers} from './fluid-tracers.js?v=57fe74982d38b3f1d351';
+import {createWaterSurfaceCache} from './water-surface.js?v=57fe74982d38b3f1d351';
+import {createWaterInertia,advanceWaterInertia,sampleWaterInertia,boundedAcceleration,GAME_ACCELERATION_PER_MPS2} from './inertial-water.js?v=57fe74982d38b3f1d351';
+import {sampleRecirculatingFlow,FLOW_INTAKES,INITIAL_TANK_VOLUME,INITIAL_WATER_SURFACE,PUMP_CAPACITY,WATER_AREA,advanceCirculation,FLOW_BOUNDS} from './recirculating-flow.js?v=57fe74982d38b3f1d351';
 export const PEGS = [{x:143,z:0,tip:322,base:36},{x:277,z:0,tip:322,base:36}];
 export const INTAKES = FLOW_INTAKES;
 export const REFILL_SECONDS = .7;
@@ -25,6 +25,9 @@ export class WaterWorld {
     this.deviceAcceleration={x:0,y:0,z:0};this.waterInertia=createWaterInertia();
     this.surfaceCache=createWaterSurfaceCache();this.waterSurface=null;
     this.world.broadphase=new CANNON.SAPBroadphase(this.world);this.world.solver.iterations=14;this.world.solver.tolerance=.0001;this.world.allowSleep=false;
+    // Thin tank walls and tall posts have very loose bounding spheres. Use
+    // Cannon's conservative compound AABBs to skip distant narrowphase work.
+    this.world.broadphase.useBoundingBoxes=true;
     // Cannon's friction bounds are used as solver impulses. Bound the aggregate
     // wet static-body contact patch once, rather than giving each torus sphere
     // an independent gravity-sized impulse budget at every120Hz step.
