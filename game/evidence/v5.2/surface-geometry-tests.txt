@@ -1,0 +1,18 @@
+{"maximumIndependentGeometricFractionError":3.3306690738754696e-16,"cases":99}
+{"variedPlanes":300,"maximumIndependentGeometricFractionError":5.551115123125783e-16}
+✔ upright nominal water is exactly y520, proper depth, capacity and empty/full behavior (1.023258ms)
+✔ analytic equilibrium conserves clipped box volume under oblique and inverted gravity (5.744796ms)
+✔ deterministic varied planes conserve volume without near-axis cancellation (10.220291ms)
+✔ arbitrary rectangular bounds retain the upright volume-to-height convention (0.184293ms)
+✔ mirrored gravity mirrors plane and inverted gravity exchanges water and air (0.081418ms)
+✔ wet and air face clipping partitions the face and surface polygon stays planar and bounded (0.287544ms)
+✔ cached resolver skips unchanged solves and freezes caller-owned input snapshots (0.190751ms)
+✔ invalid gravity, area, volume and bounds fail explicitly (0.20371ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 45.101574

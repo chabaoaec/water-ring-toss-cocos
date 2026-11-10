@@ -1,0 +1,10 @@
+{
+  "observedAt": "2026-11-10T11:02:18.205Z",
+  "runtime": "v24.21.0",
+  "cases": 5000,
+  "solveTotalMs": 13.969570999999998,
+  "meanSolveMs": 0.0027939142,
+  "unchangedCacheTotalMs": 4.791331,
+  "meanUnchangedCacheMs": 0.0009582661999999999,
+  "scope": "Node on development RT_i, not browser/hardware FPS"
+}
