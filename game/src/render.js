@@ -84,19 +84,26 @@ export class ToyRenderer {
     this.g.roundRect(x, y, w, h, r);
     this.g.fill();
   }
+  surfacePolygon(points, tint, stroke = null) {
+    if (!points || points.length < 3) return;
+    const g = this.g;
+    g.moveTo(points[0].x, points[0].y + points[0].z * .32);
+    for (const p of points.slice(1)) g.lineTo(p.x, p.y + p.z * .32);
+    g.close();
+    g.fillColor = tint;
+    g.fill();
+    if (stroke) {g.strokeColor = stroke; g.lineWidth = 1.3; g.stroke();}
+  }
   draw(w) {
     const g = this.g,
       t = w.time;
     const surfaceY = w.getWaterSurfaceY?.() ?? 540;
-    const surfaceBack = surfaceY + 16.6;
+    const waterSurface = w.getWaterSurface?.();
     g.clear();
     g.lineCap = cc.Graphics.LineCap.ROUND;
     g.lineJoin = cc.Graphics.LineJoin.ROUND;
     // Layered water tint, original softly rolling seabed, and caustic ribbons.
     for (let i = 0; i < 22; i++) this.rounded(0, i * 26.5, 420, 28, 0, color(i < 5 ? '#b2ded1' : i < 12 ? '#c4e7dd' : '#d6efe5'));
-    // Air space above the free water surface; depth projection gives the
-    // horizontal physical surface a narrow visible top face.
-    this.rounded(0, surfaceBack, 420, Math.max(0, 580 - surfaceBack), 0, color('#ecf5eb'));
     g.fillColor = color('#a0cebf', 100);
     g.moveTo(0, 69);
     g.bezierCurveTo(110, 113, 250, 18, 420, 86);
@@ -117,6 +124,13 @@ export class ToyRenderer {
       g.moveTo(-20, surfaceY - 110 + i * 29);
       g.bezierCurveTo(90, surfaceY - 80 + i * 24 + Math.sin(t * .6) * 6, 230, surfaceY - 120 + i * 34, 440, surfaceY - 89 + i * 20);
       g.stroke();
+    }
+    // The cavity is the dry side of the same volume-preserving plane used by
+    // physical buoyancy. It can move to a side when the phone is tilted.
+    if (waterSurface) {
+      this.surfacePolygon(waterSurface.facePolygon('z', 'max', {water:false}), color('#ecf5eb'));
+    } else {
+      this.rounded(0, surfaceY + 16.6, 420, Math.max(0, 580 - surfaceY - 16.6), 0, color('#ecf5eb'));
     }
     for (let i = 0; i < 2; i++) {
       const x = i === 0 ? 91 : 329;
@@ -197,10 +211,14 @@ export class ToyRenderer {
     }
     parts.sort((a, b) => a.z - b.z);
     for (const part of parts) part.draw();
-    // A restrained free-surface band rises/falls with displaced chamber water.
-    this.rounded(0, surfaceY - 16.6, 420, 33.2, 0, color('#dff7ee', 100));
-    this.line(0, surfaceBack, 420, surfaceBack, color('#ffffff', 190), 1.5);
-    this.line(0, surfaceY - 16.6, 420, surfaceY - 16.6, color('#9bcec7', 120), 1);
+    // Project the true plane/box section, including forward/backward tilt.
+    if (waterSurface) {
+      this.surfacePolygon(waterSurface.surfacePolygon3D(), color('#dff7ee', 100), color('#ffffff',190));
+    } else {
+      this.rounded(0, surfaceY - 16.6, 420, 33.2, 0, color('#dff7ee', 100));
+      this.line(0, surfaceY + 16.6, 420, surfaceY + 16.6, color('#ffffff', 190), 1.5);
+      this.line(0, surfaceY - 16.6, 420, surfaceY - 16.6, color('#9bcec7', 120), 1);
+    }
     // Fixed glass seam and restrained casing highlights.
     this.line(16, 551, 404, 551, color('#f8fff4', 160), 2);
     this.line(14, 541, 14, 81, color('#ffffff', 110), 2);
