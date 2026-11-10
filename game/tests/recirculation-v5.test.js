@@ -58,6 +58,6 @@ test('surface displacement, dry-body forces, gravity, pause and reset obey their
   w.setPaused(false);run(w,.7);assert.ok(Math.abs(w.getWaterSurfaceY()-520)<1e-8);
   assert.equal(w.setGravityDirection({x:3,y:-4,z:0}),true);assert.ok(Math.abs(w.world.gravity.length()-210)<1e-10);assert.equal(w.setGravityDirection({x:0,y:0,z:0}),false);
   const r=w.rings[0];r.body.position.set(210,200,0);Object.assign(r,{x:210,y:200,z:0});r.body.velocity.set(0,0,0);r.body.force.set(0,0,0);w.applyWaterForces(r);assert.ok(r.body.force.x<0&&r.body.force.y>0);
-  r.body.position.y=545;r.y=545;r.body.force.set(0,0,0);r.body.velocity.set(30,20,10);w.applyWaterForces(r);assert.equal(r.body.force.length(),0);
+  w.setGravityDirection({x:0,y:-1,z:0});r.body.quaternion.set(0,0,0,1);r.body.position.y=535;r.y=535;r.body.force.set(0,0,0);r.body.velocity.set(30,20,10);w.applyWaterForces(r);assert.equal(r.body.force.length(),0);
   w.reset();assert.equal(w.getWaterSurfaceY(),520);assert.deepEqual(w.gravityDirection,{x:0,y:-1,z:0});assert.equal(w.tracers.particles.length,128);assert.equal(w.jetStates[0].remaining,JET_CAPACITY);
 });
