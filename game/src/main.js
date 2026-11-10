@@ -1,6 +1,7 @@
 import { boot, cc } from './engine-bootstrap.js';
 import { WaterWorld, JET_CAPACITY } from './physics.js';
 import { bindControls } from './input.js';
+import { createJetHaptics } from './haptics.js';
 import { createGravityInput, gravityStateLabel } from './gravity-input.js';
 import { ToyRenderer } from './render.js';
 const $ = s => document.querySelector(s);
@@ -21,6 +22,7 @@ function updateJetHud() {
     $(`#${name}-fuel`).setAttribute('aria-valuenow', String(Math.round(fraction * 100)));
     $(`#${name}-fuel i`).style.transform = `scaleX(${fraction})`;
   }
+  haptics.update();
 }
 let audio = null,
   sound = false;
@@ -69,8 +71,13 @@ $('#gravity-toggle').addEventListener('click', () => {
 $('#gravity-authorize').addEventListener('click', () => gravityInput.requestAccess());
 $('#gravity-calibrate').addEventListener('click', () => gravityInput.calibrate());
 const input = bindControls(world, [$('#left-jet'), $('#right-jet')], () => {
+  haptics.activate();
+  haptics.update();
   if (audio?.state === 'suspended') audio.resume();
 }, () => setPaused(true));
+const haptics = createJetHaptics({
+  readState: () => ({ jetStates: world.jetStates, paused: world.paused, won: world.won })
+});
 $('#sound').addEventListener('click', () => {
   sound = !sound;
   $('#sound').setAttribute('aria-pressed', String(sound));
@@ -79,6 +86,7 @@ $('#sound').addEventListener('click', () => {
 });
 function setPaused(value) {
   paused = value;
+  if (value) haptics.deactivate();
   world.setPaused(value);
   gravityInput.setPaused(value);
   input.release();
@@ -93,6 +101,7 @@ function setPaused(value) {
 $('#menu').addEventListener('click', () => setPaused(!paused));
 $('#resume').addEventListener('click', () => setPaused(false));
 function reset() {
+  haptics.deactivate();
   setPaused(false);
   input.release();
   world.reset(42 + Math.floor(Math.random() * 100000));
@@ -142,6 +151,7 @@ try {
       }
       if (world.won && !announcedWin) {
         announcedWin = true;
+        haptics.deactivate();
         input.release();
         for (const button of [$('#left-jet'), $('#right-jet')]) button.disabled = true;
         $('#win-stats').textContent = `用时 ${formatTime(world.elapsed)} · ${world.pumps} 次喷流`;
@@ -165,9 +175,11 @@ try {
     physics: 'cannon-es 0.20.0',
     reset,
     gravityInput,
+    haptics,
     ready: true
   };
 } catch (error) {
+  haptics.dispose();
   console.error(error);
   $('#loading').textContent = '水机启动失败，请确认浏览器支持 WebGL 2，然后刷新。';
   status.textContent = String(error);
