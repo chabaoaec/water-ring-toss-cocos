@@ -1,6 +1,7 @@
 import { boot, cc } from './engine-bootstrap.js';
 import { WaterWorld, JET_CAPACITY } from './physics.js';
 import { bindControls } from './input.js';
+import { createGravityInput } from './gravity-input.js';
 import { ToyRenderer } from './render.js';
 const $ = s => document.querySelector(s);
 const status = $('#status');
@@ -48,6 +49,23 @@ function tone(type) {
     sound = false;
   }
 }
+const gravityInput = createGravityInput({
+  onDirection: direction => world.setGravityDirection(direction),
+  onState: state => {
+    const label = state.active ? '开' : state.enabled ? '开 · 未生效' : '关';
+    $('#gravity-toggle').textContent = `倾斜重力 ${label}`;
+    $('#gravity-toggle').setAttribute('aria-pressed', String(state.enabled));
+    $('#gravity-status').textContent = state.message;
+    $('#gravity-authorize').hidden = !state.canRequest;
+    $('#gravity-calibrate').disabled = !state.canCalibrate;
+  }
+});
+$('#gravity-toggle').addEventListener('click', () => {
+  if (gravityInput.getState().enabled) gravityInput.disable(); else gravityInput.enable();
+});
+// Keep permission requests synchronous with this explicit user gesture (iOS).
+$('#gravity-authorize').addEventListener('click', () => gravityInput.requestAccess());
+$('#gravity-calibrate').addEventListener('click', () => gravityInput.calibrate());
 const input = bindControls(world, [$('#left-jet'), $('#right-jet')], () => {
   if (audio?.state === 'suspended') audio.resume();
 }, () => setPaused(true));
@@ -60,6 +78,7 @@ $('#sound').addEventListener('click', () => {
 function setPaused(value) {
   paused = value;
   world.setPaused(value);
+  gravityInput.setPaused(value);
   input.release();
   $('#menu-panel').hidden = !value;
   if (world.won) $('#win').hidden = value;
@@ -75,6 +94,7 @@ function reset() {
   setPaused(false);
   input.release();
   world.reset(42 + Math.floor(Math.random() * 100000));
+  gravityInput.reapply();
   for (const button of [$('#left-jet'), $('#right-jet')]) button.disabled = false;
   updateJetHud();
   previousScore = -1;
@@ -142,6 +162,7 @@ try {
     engine: cc.VERSION,
     physics: 'cannon-es 0.20.0',
     reset,
+    gravityInput,
     ready: true
   };
 } catch (error) {
