@@ -1,0 +1,2117 @@
+{
+  "scope": "Actual Chromium/Cocos layout and trusted browser input at emulated viewport sizes. Synthetic visualViewport-only height event separately identified. Not a real mobile Edge browser-toolbar/hardware test.",
+  "cases": [
+    {
+      "width": 320,
+      "height": 568,
+      "mobile": true,
+      "initial": {
+        "inner": {
+          "width": 320,
+          "height": 568
+        },
+        "visual": {
+          "width": 320,
+          "height": 568,
+          "scale": 1
+        },
+        "scrollY": 0,
+        "scrollX": 0,
+        "scrollHeight": 568,
+        "clientHeight": 568,
+        "toy": {
+          "x": 8,
+          "y": 8,
+          "width": 304,
+          "height": 548,
+          "right": 312,
+          "bottom": 556,
+          "display": "flex"
+        },
+        "canvas": {
+          "x": 57.234375,
+          "y": 91,
+          "width": 205.515625,
+          "height": 283.8125,
+          "right": 262.75,
+          "bottom": 374.8125,
+          "display": "block"
+        },
+        "stage": {
+          "x": 19,
+          "y": 85,
+          "width": 282,
+          "height": 295.8125,
+          "right": 301,
+          "bottom": 380.8125,
+          "display": "grid"
+        },
+        "left": {
+          "x": 42.328125,
+          "y": 420,
+          "width": 62,
+          "height": 59,
+          "right": 104.328125,
+          "bottom": 479,
+          "display": "inline-block"
+        },
+        "right": {
+          "x": 215.65625,
+          "y": 420,
+          "width": 62,
+          "height": 59,
+          "right": 277.65625,
+          "bottom": 479,
+          "display": "inline-block"
+        },
+        "menu": {
+          "x": 239.640625,
+          "y": 35,
+          "width": 57.359375,
+          "height": 44,
+          "right": 297,
+          "bottom": 79,
+          "display": "block"
+        },
+        "shell": {
+          "x": 27,
+          "y": 535,
+          "width": 266,
+          "height": 12,
+          "right": 293,
+          "bottom": 547,
+          "display": "flex"
+        },
+        "viewportStyle": "568px"
+      },
+      "engineMapping": {
+        "design": {
+          "width": 420,
+          "height": 580
+        },
+        "visible": {
+          "width": 420,
+          "height": 580
+        },
+        "viewport": {
+          "x": 0,
+          "y": 0,
+          "width": 206,
+          "height": 284
+        },
+        "cameraHeight": 290,
+        "canvasPixels": {
+          "width": 206,
+          "height": 284
+        }
+      },
+      "pointerPumpsAdded": 2,
+      "afterWheelScroll": {
+        "inner": {
+          "width": 320,
+          "height": 568
+        },
+        "visual": {
+          "width": 320,
+          "height": 568,
+          "scale": 1
+        },
+        "scrollY": 0,
+        "scrollX": 0,
+        "scrollHeight": 568,
+        "clientHeight": 568,
+        "toy": {
+          "x": 8,
+          "y": 8,
+          "width": 304,
+          "height": 548,
+          "right": 312,
+          "bottom": 556,
+          "display": "flex"
+        },
+        "canvas": {
+          "x": 57.234375,
+          "y": 91,
+          "width": 205.515625,
+          "height": 283.8125,
+          "right": 262.75,
+          "bottom": 374.8125,
+          "display": "block"
+        },
+        "stage": {
+          "x": 19,
+          "y": 85,
+          "width": 282,
+          "height": 295.8125,
+          "right": 301,
+          "bottom": 380.8125,
+          "display": "grid"
+        },
+        "left": {
+          "x": 42.328125,
+          "y": 420,
+          "width": 62,
+          "height": 59,
+          "right": 104.328125,
+          "bottom": 479,
+          "display": "inline-block"
+        },
+        "right": {
+          "x": 215.65625,
+          "y": 420.0050964355469,
+          "width": 62,
+          "height": 59.000030517578125,
+          "right": 277.65625,
+          "bottom": 479.005126953125,
+          "display": "inline-block"
+        },
+        "menu": {
+          "x": 239.640625,
+          "y": 35,
+          "width": 57.359375,
+          "height": 44,
+          "right": 297,
+          "bottom": 79,
+          "display": "block"
+        },
+        "shell": {
+          "x": 27,
+          "y": 535,
+          "width": 266,
+          "height": 12,
+          "right": 293,
+          "bottom": 547,
+          "display": "flex"
+        },
+        "viewportStyle": "568px"
+      },
+      "afterTouchScroll": {
+        "inner": {
+          "width": 320,
+          "height": 568
+        },
+        "visual": {
+          "width": 320,
+          "height": 568,
+          "scale": 1
+        },
+        "scrollY": 0,
+        "scrollX": 0,
+        "scrollHeight": 568,
+        "clientHeight": 568,
+        "toy": {
+          "x": 8,
+          "y": 8,
+          "width": 304,
+          "height": 548,
+          "right": 312,
+          "bottom": 556,
+          "display": "flex"
+        },
+        "canvas": {
+          "x": 57.234375,
+          "y": 91,
+          "width": 205.515625,
+          "height": 283.8125,
+          "right": 262.75,
+          "bottom": 374.8125,
+          "display": "block"
+        },
+        "stage": {
+          "x": 19,
+          "y": 85,
+          "width": 282,
+          "height": 295.8125,
+          "right": 301,
+          "bottom": 380.8125,
+          "display": "grid"
+        },
+        "left": {
+          "x": 42.328125,
+          "y": 420,
+          "width": 62,
+          "height": 59,
+          "right": 104.328125,
+          "bottom": 479,
+          "display": "inline-block"
+        },
+        "right": {
+          "x": 215.65625,
+          "y": 420,
+          "width": 62,
+          "height": 59,
+          "right": 277.65625,
+          "bottom": 479,
+          "display": "inline-block"
+        },
+        "menu": {
+          "x": 239.640625,
+          "y": 35,
+          "width": 57.359375,
+          "height": 44,
+          "right": 297,
+          "bottom": 79,
+          "display": "block"
+        },
+        "shell": {
+          "x": 27,
+          "y": 535,
+          "width": 266,
+          "height": 12,
+          "right": 293,
+          "bottom": 547,
+          "display": "flex"
+        },
+        "viewportStyle": "568px"
+      },
+      "menu": {
+        "client": 284,
+        "scrollHeight": 469,
+        "buttons": {
+          "resume": {
+            "box": {
+              "x": 77.984375,
+              "y": 103,
+              "width": 164,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 57.234375,
+              "y": 91,
+              "width": 205.515625,
+              "height": 283.8125
+            }
+          },
+          "reset": {
+            "box": {
+              "x": 77.984375,
+              "y": 209,
+              "width": 164,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 57.234375,
+              "y": 91,
+              "width": 205.515625,
+              "height": 283.8125
+            }
+          },
+          "gravity-toggle": {
+            "box": {
+              "x": 77.984375,
+              "y": 276,
+              "width": 164,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 57.234375,
+              "y": 91,
+              "width": 205.515625,
+              "height": 283.8125
+            }
+          },
+          "gravity-calibrate": {
+            "box": {
+              "x": 114.984375,
+              "y": 319,
+              "width": 90,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 57.234375,
+              "y": 91,
+              "width": 205.515625,
+              "height": 283.8125
+            }
+          }
+        },
+        "wheelScrollTop": 150,
+        "touchScrollTop": 85,
+        "calibrateClicked": true,
+        "resetAndResumeClicked": true,
+        "topReached": {
+          "x": 107.984375,
+          "y": 107,
+          "width": 104.015625,
+          "height": 32
+        },
+        "helpReached": {
+          "x": 96.984375,
+          "y": 318,
+          "width": 126.015625,
+          "height": 40.5
+        }
+      },
+      "finalScrollY": 0
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "mobile": true,
+      "initial": {
+        "inner": {
+          "width": 390,
+          "height": 844
+        },
+        "visual": {
+          "width": 390,
+          "height": 844,
+          "scale": 1
+        },
+        "scrollY": 0,
+        "scrollX": 0,
+        "scrollHeight": 844,
+        "clientHeight": 844,
+        "toy": {
+          "x": 8,
+          "y": 8,
+          "width": 374,
+          "height": 787.8125,
+          "right": 382,
+          "bottom": 795.8125,
+          "display": "flex"
+        },
+        "canvas": {
+          "x": 31,
+          "y": 120.640625,
+          "width": 328,
+          "height": 452.9375,
+          "right": 359,
+          "bottom": 573.578125,
+          "display": "block"
+        },
+        "stage": {
+          "x": 25,
+          "y": 93,
+          "width": 340,
+          "height": 508.21875,
+          "right": 365,
+          "bottom": 601.21875,
+          "display": "grid"
+        },
+        "left": {
+          "x": 55.65625,
+          "y": 646.8125,
+          "width": 70,
+          "height": 67,
+          "right": 125.65625,
+          "bottom": 713.8125,
+          "display": "inline-block"
+        },
+        "right": {
+          "x": 264.328125,
+          "y": 646.8125,
+          "width": 70,
+          "height": 67,
+          "right": 334.328125,
+          "bottom": 713.8125,
+          "display": "inline-block"
+        },
+        "menu": {
+          "x": 303.640625,
+          "y": 41,
+          "width": 57.359375,
+          "height": 44,
+          "right": 361,
+          "bottom": 85,
+          "display": "block"
+        },
+        "shell": {
+          "x": 33,
+          "y": 772.8125,
+          "width": 324,
+          "height": 12,
+          "right": 357,
+          "bottom": 784.8125,
+          "display": "flex"
+        },
+        "viewportStyle": "844px"
+      },
+      "engineMapping": {
+        "design": {
+          "width": 420,
+          "height": 580
+        },
+        "visible": {
+          "width": 420,
+          "height": 580
+        },
+        "viewport": {
+          "x": 0,
+          "y": 0,
+          "width": 328,
+          "height": 453
+        },
+        "cameraHeight": 290,
+        "canvasPixels": {
+          "width": 328,
+          "height": 453
+        }
+      },
+      "pointerPumpsAdded": 2,
+      "afterWheelScroll": {
+        "inner": {
+          "width": 390,
+          "height": 844
+        },
+        "visual": {
+          "width": 390,
+          "height": 844,
+          "scale": 1
+        },
+        "scrollY": 0,
+        "scrollX": 0,
+        "scrollHeight": 844,
+        "clientHeight": 844,
+        "toy": {
+          "x": 8,
+          "y": 8,
+          "width": 374,
+          "height": 787.8125,
+          "right": 382,
+          "bottom": 795.8125,
+          "display": "flex"
+        },
+        "canvas": {
+          "x": 31,
+          "y": 120.640625,
+          "width": 328,
+          "height": 452.9375,
+          "right": 359,
+          "bottom": 573.578125,
+          "display": "block"
+        },
+        "stage": {
+          "x": 25,
+          "y": 93,
+          "width": 340,
+          "height": 508.21875,
+          "right": 365,
+          "bottom": 601.21875,
+          "display": "grid"
+        },
+        "left": {
+          "x": 55.65625,
+          "y": 646.8125,
+          "width": 70,
+          "height": 67,
+          "right": 125.65625,
+          "bottom": 713.8125,
+          "display": "inline-block"
+        },
+        "right": {
+          "x": 264.328125,
+          "y": 647.0256958007812,
+          "width": 70,
+          "height": 67,
+          "right": 334.328125,
+          "bottom": 714.0256958007812,
+          "display": "inline-block"
+        },
+        "menu": {
+          "x": 303.640625,
+          "y": 41,
+          "width": 57.359375,
+          "height": 44,
+          "right": 361,
+          "bottom": 85,
+          "display": "block"
+        },
+        "shell": {
+          "x": 33,
+          "y": 772.8125,
+          "width": 324,
+          "height": 12,
+          "right": 357,
+          "bottom": 784.8125,
+          "display": "flex"
+        },
+        "viewportStyle": "844px"
+      },
+      "afterTouchScroll": {
+        "inner": {
+          "width": 390,
+          "height": 844
+        },
+        "visual": {
+          "width": 390,
+          "height": 844,
+          "scale": 1
+        },
+        "scrollY": 0,
+        "scrollX": 0,
+        "scrollHeight": 844,
+        "clientHeight": 844,
+        "toy": {
+          "x": 8,
+          "y": 8,
+          "width": 374,
+          "height": 787.8125,
+          "right": 382,
+          "bottom": 795.8125,
+          "display": "flex"
+        },
+        "canvas": {
+          "x": 31,
+          "y": 120.640625,
+          "width": 328,
+          "height": 452.9375,
+          "right": 359,
+          "bottom": 573.578125,
+          "display": "block"
+        },
+        "stage": {
+          "x": 25,
+          "y": 93,
+          "width": 340,
+          "height": 508.21875,
+          "right": 365,
+          "bottom": 601.21875,
+          "display": "grid"
+        },
+        "left": {
+          "x": 55.65625,
+          "y": 646.8125,
+          "width": 70,
+          "height": 67,
+          "right": 125.65625,
+          "bottom": 713.8125,
+          "display": "inline-block"
+        },
+        "right": {
+          "x": 264.328125,
+          "y": 646.8125,
+          "width": 70,
+          "height": 67,
+          "right": 334.328125,
+          "bottom": 713.8125,
+          "display": "inline-block"
+        },
+        "menu": {
+          "x": 303.640625,
+          "y": 41,
+          "width": 57.359375,
+          "height": 44,
+          "right": 361,
+          "bottom": 85,
+          "display": "block"
+        },
+        "shell": {
+          "x": 33,
+          "y": 772.8125,
+          "width": 324,
+          "height": 12,
+          "right": 357,
+          "bottom": 784.8125,
+          "display": "flex"
+        },
+        "viewportStyle": "844px"
+      },
+      "menu": {
+        "client": 453,
+        "scrollHeight": 469,
+        "buttons": {
+          "resume": {
+            "box": {
+              "x": 113,
+              "y": 197.640625,
+              "width": 164,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 31,
+              "y": 120.640625,
+              "width": 328,
+              "height": 452.9375
+            }
+          },
+          "reset": {
+            "box": {
+              "x": 113,
+              "y": 303.640625,
+              "width": 164,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 31,
+              "y": 120.640625,
+              "width": 328,
+              "height": 452.9375
+            }
+          },
+          "gravity-toggle": {
+            "box": {
+              "x": 113,
+              "y": 370.640625,
+              "width": 164,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 31,
+              "y": 120.640625,
+              "width": 328,
+              "height": 452.9375
+            }
+          },
+          "gravity-calibrate": {
+            "box": {
+              "x": 150,
+              "y": 421.640625,
+              "width": 90,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 31,
+              "y": 120.640625,
+              "width": 328,
+              "height": 452.9375
+            }
+          }
+        },
+        "wheelScrollTop": 15,
+        "touchScrollTop": 15,
+        "calibrateClicked": true,
+        "resetAndResumeClicked": true,
+        "topReached": {
+          "x": 142.984375,
+          "y": 136.640625,
+          "width": 104.015625,
+          "height": 32
+        },
+        "helpReached": {
+          "x": 131.984375,
+          "y": 520.640625,
+          "width": 126.015625,
+          "height": 40.5
+        }
+      },
+      "visualViewportOnly": {
+        "inner": {
+          "width": 390,
+          "height": 844
+        },
+        "visual": {
+          "width": 390,
+          "height": 700,
+          "scale": 1
+        },
+        "scrollY": 0,
+        "scrollX": 0,
+        "scrollHeight": 844,
+        "clientHeight": 844,
+        "toy": {
+          "x": 8,
+          "y": 8,
+          "width": 374,
+          "height": 643.8125,
+          "right": 382,
+          "bottom": 651.8125,
+          "display": "flex"
+        },
+        "canvas": {
+          "x": 67.46875,
+          "y": 99,
+          "width": 255.046875,
+          "height": 352.21875,
+          "right": 322.515625,
+          "bottom": 451.21875,
+          "display": "block"
+        },
+        "stage": {
+          "x": 25,
+          "y": 93,
+          "width": 340,
+          "height": 364.21875,
+          "right": 365,
+          "bottom": 457.21875,
+          "display": "grid"
+        },
+        "left": {
+          "x": 55.65625,
+          "y": 502.8125,
+          "width": 70,
+          "height": 67,
+          "right": 125.65625,
+          "bottom": 569.8125,
+          "display": "inline-block"
+        },
+        "right": {
+          "x": 264.328125,
+          "y": 502.8125,
+          "width": 70,
+          "height": 67,
+          "right": 334.328125,
+          "bottom": 569.8125,
+          "display": "inline-block"
+        },
+        "menu": {
+          "x": 303.640625,
+          "y": 41,
+          "width": 57.359375,
+          "height": 44,
+          "right": 361,
+          "bottom": 85,
+          "display": "block"
+        },
+        "shell": {
+          "x": 33,
+          "y": 628.8125,
+          "width": 324,
+          "height": 12,
+          "right": 357,
+          "bottom": 640.8125,
+          "display": "flex"
+        },
+        "viewportStyle": "700px"
+      },
+      "nativeResize": {
+        "inner": {
+          "width": 390,
+          "height": 620
+        },
+        "visual": {
+          "width": 390,
+          "height": 620,
+          "scale": 1
+        },
+        "scrollY": 0,
+        "scrollX": 0,
+        "scrollHeight": 620,
+        "clientHeight": 620,
+        "toy": {
+          "x": 8,
+          "y": 8,
+          "width": 374,
+          "height": 600,
+          "right": 382,
+          "bottom": 608,
+          "display": "flex"
+        },
+        "canvas": {
+          "x": 73.40625,
+          "y": 91,
+          "width": 243.171875,
+          "height": 335.8125,
+          "right": 316.578125,
+          "bottom": 426.8125,
+          "display": "block"
+        },
+        "stage": {
+          "x": 25,
+          "y": 85,
+          "width": 340,
+          "height": 347.8125,
+          "right": 365,
+          "bottom": 432.8125,
+          "display": "grid"
+        },
+        "left": {
+          "x": 59.65625,
+          "y": 472,
+          "width": 62,
+          "height": 59,
+          "right": 121.65625,
+          "bottom": 531,
+          "display": "inline-block"
+        },
+        "right": {
+          "x": 268.328125,
+          "y": 472,
+          "width": 62,
+          "height": 59,
+          "right": 330.328125,
+          "bottom": 531,
+          "display": "inline-block"
+        },
+        "menu": {
+          "x": 303.640625,
+          "y": 35,
+          "width": 57.359375,
+          "height": 44,
+          "right": 361,
+          "bottom": 79,
+          "display": "block"
+        },
+        "shell": {
+          "x": 33,
+          "y": 587,
+          "width": 324,
+          "height": 12,
+          "right": 357,
+          "bottom": 599,
+          "display": "flex"
+        },
+        "viewportStyle": "620px"
+      },
+      "pinchZoom": {
+        "scale": 1.5,
+        "fittedHeight": "620px",
+        "meta": "width=device-width, initial-scale=1, viewport-fit=cover"
+      },
+      "finalScrollY": 0
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "mobile": true,
+      "initial": {
+        "inner": {
+          "width": 430,
+          "height": 932
+        },
+        "visual": {
+          "width": 430,
+          "height": 932,
+          "scale": 1
+        },
+        "scrollY": 0,
+        "scrollX": 0,
+        "scrollHeight": 932,
+        "clientHeight": 932,
+        "toy": {
+          "x": 10,
+          "y": 8,
+          "width": 410,
+          "height": 875.8125,
+          "right": 420,
+          "bottom": 883.8125,
+          "display": "flex"
+        },
+        "canvas": {
+          "x": 33,
+          "y": 139.78125,
+          "width": 364,
+          "height": 502.65625,
+          "right": 397,
+          "bottom": 642.4375,
+          "display": "block"
+        },
+        "stage": {
+          "x": 27,
+          "y": 93,
+          "width": 376,
+          "height": 596.21875,
+          "right": 403,
+          "bottom": 689.21875,
+          "display": "grid"
+        },
+        "left": {
+          "x": 63.65625,
+          "y": 734.8125,
+          "width": 70,
+          "height": 67,
+          "right": 133.65625,
+          "bottom": 801.8125,
+          "display": "inline-block"
+        },
+        "right": {
+          "x": 296.328125,
+          "y": 734.8125,
+          "width": 70,
+          "height": 67,
+          "right": 366.328125,
+          "bottom": 801.8125,
+          "display": "inline-block"
+        },
+        "menu": {
+          "x": 341.640625,
+          "y": 41,
+          "width": 57.359375,
+          "height": 44,
+          "right": 399,
+          "bottom": 85,
+          "display": "block"
+        },
+        "shell": {
+          "x": 35,
+          "y": 860.8125,
+          "width": 360,
+          "height": 12,
+          "right": 395,
+          "bottom": 872.8125,
+          "display": "flex"
+        },
+        "viewportStyle": "932px"
+      },
+      "engineMapping": {
+        "design": {
+          "width": 420,
+          "height": 580
+        },
+        "visible": {
+          "width": 420,
+          "height": 580
+        },
+        "viewport": {
+          "x": 0,
+          "y": 0,
+          "width": 364,
+          "height": 503
+        },
+        "cameraHeight": 290,
+        "canvasPixels": {
+          "width": 364,
+          "height": 503
+        }
+      },
+      "pointerPumpsAdded": 2,
+      "afterWheelScroll": {
+        "inner": {
+          "width": 430,
+          "height": 932
+        },
+        "visual": {
+          "width": 430,
+          "height": 932,
+          "scale": 1
+        },
+        "scrollY": 0,
+        "scrollX": 0,
+        "scrollHeight": 932,
+        "clientHeight": 932,
+        "toy": {
+          "x": 10,
+          "y": 8,
+          "width": 410,
+          "height": 875.8125,
+          "right": 420,
+          "bottom": 883.8125,
+          "display": "flex"
+        },
+        "canvas": {
+          "x": 33,
+          "y": 139.78125,
+          "width": 364,
+          "height": 502.65625,
+          "right": 397,
+          "bottom": 642.4375,
+          "display": "block"
+        },
+        "stage": {
+          "x": 27,
+          "y": 93,
+          "width": 376,
+          "height": 596.21875,
+          "right": 403,
+          "bottom": 689.21875,
+          "display": "grid"
+        },
+        "left": {
+          "x": 63.65625,
+          "y": 734.8125,
+          "width": 70,
+          "height": 67,
+          "right": 133.65625,
+          "bottom": 801.8125,
+          "display": "inline-block"
+        },
+        "right": {
+          "x": 296.328125,
+          "y": 734.8125,
+          "width": 70,
+          "height": 67,
+          "right": 366.328125,
+          "bottom": 801.8125,
+          "display": "inline-block"
+        },
+        "menu": {
+          "x": 341.640625,
+          "y": 41,
+          "width": 57.359375,
+          "height": 44,
+          "right": 399,
+          "bottom": 85,
+          "display": "block"
+        },
+        "shell": {
+          "x": 35,
+          "y": 860.8125,
+          "width": 360,
+          "height": 12,
+          "right": 395,
+          "bottom": 872.8125,
+          "display": "flex"
+        },
+        "viewportStyle": "932px"
+      },
+      "afterTouchScroll": {
+        "inner": {
+          "width": 430,
+          "height": 932
+        },
+        "visual": {
+          "width": 430,
+          "height": 932,
+          "scale": 1
+        },
+        "scrollY": 0,
+        "scrollX": 0,
+        "scrollHeight": 932,
+        "clientHeight": 932,
+        "toy": {
+          "x": 10,
+          "y": 8,
+          "width": 410,
+          "height": 875.8125,
+          "right": 420,
+          "bottom": 883.8125,
+          "display": "flex"
+        },
+        "canvas": {
+          "x": 33,
+          "y": 139.78125,
+          "width": 364,
+          "height": 502.65625,
+          "right": 397,
+          "bottom": 642.4375,
+          "display": "block"
+        },
+        "stage": {
+          "x": 27,
+          "y": 93,
+          "width": 376,
+          "height": 596.21875,
+          "right": 403,
+          "bottom": 689.21875,
+          "display": "grid"
+        },
+        "left": {
+          "x": 63.65625,
+          "y": 734.8125,
+          "width": 70,
+          "height": 67,
+          "right": 133.65625,
+          "bottom": 801.8125,
+          "display": "inline-block"
+        },
+        "right": {
+          "x": 296.328125,
+          "y": 734.8125,
+          "width": 70,
+          "height": 67,
+          "right": 366.328125,
+          "bottom": 801.8125,
+          "display": "inline-block"
+        },
+        "menu": {
+          "x": 341.640625,
+          "y": 41,
+          "width": 57.359375,
+          "height": 44,
+          "right": 399,
+          "bottom": 85,
+          "display": "block"
+        },
+        "shell": {
+          "x": 35,
+          "y": 860.8125,
+          "width": 360,
+          "height": 12,
+          "right": 395,
+          "bottom": 872.8125,
+          "display": "flex"
+        },
+        "viewportStyle": "932px"
+      },
+      "menu": {
+        "client": 503,
+        "scrollHeight": 503,
+        "buttons": {
+          "resume": {
+            "box": {
+              "x": 133,
+              "y": 248.859375,
+              "width": 164,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 33,
+              "y": 139.78125,
+              "width": 364,
+              "height": 502.65625
+            }
+          },
+          "reset": {
+            "box": {
+              "x": 133,
+              "y": 354.859375,
+              "width": 164,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 33,
+              "y": 139.78125,
+              "width": 364,
+              "height": 502.65625
+            }
+          },
+          "gravity-toggle": {
+            "box": {
+              "x": 133,
+              "y": 421.859375,
+              "width": 164,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 33,
+              "y": 139.78125,
+              "width": 364,
+              "height": 502.65625
+            }
+          },
+          "gravity-calibrate": {
+            "box": {
+              "x": 170,
+              "y": 472.859375,
+              "width": 90,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 33,
+              "y": 139.78125,
+              "width": 364,
+              "height": 502.65625
+            }
+          }
+        },
+        "calibrateClicked": true,
+        "resetAndResumeClicked": true,
+        "topReached": {
+          "x": 162.984375,
+          "y": 172.859375,
+          "width": 104.015625,
+          "height": 32
+        },
+        "helpReached": {
+          "x": 151.984375,
+          "y": 568.859375,
+          "width": 126.015625,
+          "height": 40.5
+        }
+      },
+      "finalScrollY": 0
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "mobile": true,
+      "initial": {
+        "inner": {
+          "width": 844,
+          "height": 390
+        },
+        "visual": {
+          "width": 844,
+          "height": 390,
+          "scale": 1
+        },
+        "scrollY": 0,
+        "scrollX": 0,
+        "scrollHeight": 390,
+        "clientHeight": 390,
+        "toy": {
+          "x": 82,
+          "y": 8,
+          "width": 680,
+          "height": 370,
+          "right": 762,
+          "bottom": 378,
+          "display": "grid"
+        },
+        "canvas": {
+          "x": 185.953125,
+          "y": 46,
+          "width": 228.09375,
+          "height": 315,
+          "right": 414.046875,
+          "bottom": 361,
+          "display": "block"
+        },
+        "stage": {
+          "x": 97,
+          "y": 40,
+          "width": 406,
+          "height": 327,
+          "right": 503,
+          "bottom": 367,
+          "display": "grid"
+        },
+        "left": {
+          "x": 530.65625,
+          "y": 169,
+          "width": 64,
+          "height": 61,
+          "right": 594.65625,
+          "bottom": 230,
+          "display": "inline-block"
+        },
+        "right": {
+          "x": 667.328125,
+          "y": 169,
+          "width": 64,
+          "height": 61,
+          "right": 731.328125,
+          "bottom": 230,
+          "display": "inline-block"
+        },
+        "menu": {
+          "x": 689.640625,
+          "y": 37,
+          "width": 57.359375,
+          "height": 44,
+          "right": 747,
+          "bottom": 81,
+          "display": "block"
+        },
+        "shell": {
+          "x": 519,
+          "y": 351,
+          "width": 224,
+          "height": 16,
+          "right": 743,
+          "bottom": 367,
+          "display": "flex"
+        },
+        "viewportStyle": "390px"
+      },
+      "engineMapping": {
+        "design": {
+          "width": 420,
+          "height": 580
+        },
+        "visible": {
+          "width": 420.00000000000006,
+          "height": 580
+        },
+        "viewport": {
+          "x": 0,
+          "y": 0,
+          "width": 228,
+          "height": 315
+        },
+        "cameraHeight": 290,
+        "canvasPixels": {
+          "width": 228,
+          "height": 315
+        }
+      },
+      "pointerPumpsAdded": 2,
+      "afterWheelScroll": {
+        "inner": {
+          "width": 844,
+          "height": 390
+        },
+        "visual": {
+          "width": 844,
+          "height": 390,
+          "scale": 1
+        },
+        "scrollY": 0,
+        "scrollX": 0,
+        "scrollHeight": 390,
+        "clientHeight": 390,
+        "toy": {
+          "x": 82,
+          "y": 8,
+          "width": 680,
+          "height": 370,
+          "right": 762,
+          "bottom": 378,
+          "display": "grid"
+        },
+        "canvas": {
+          "x": 185.953125,
+          "y": 46,
+          "width": 228.09375,
+          "height": 315,
+          "right": 414.046875,
+          "bottom": 361,
+          "display": "block"
+        },
+        "stage": {
+          "x": 97,
+          "y": 40,
+          "width": 406,
+          "height": 327,
+          "right": 503,
+          "bottom": 367,
+          "display": "grid"
+        },
+        "left": {
+          "x": 530.65625,
+          "y": 169,
+          "width": 64,
+          "height": 61,
+          "right": 594.65625,
+          "bottom": 230,
+          "display": "inline-block"
+        },
+        "right": {
+          "x": 667.328125,
+          "y": 169,
+          "width": 64,
+          "height": 61,
+          "right": 731.328125,
+          "bottom": 230,
+          "display": "inline-block"
+        },
+        "menu": {
+          "x": 689.640625,
+          "y": 37,
+          "width": 57.359375,
+          "height": 44,
+          "right": 747,
+          "bottom": 81,
+          "display": "block"
+        },
+        "shell": {
+          "x": 519,
+          "y": 351,
+          "width": 224,
+          "height": 16,
+          "right": 743,
+          "bottom": 367,
+          "display": "flex"
+        },
+        "viewportStyle": "390px"
+      },
+      "afterTouchScroll": {
+        "inner": {
+          "width": 844,
+          "height": 390
+        },
+        "visual": {
+          "width": 844,
+          "height": 390,
+          "scale": 1
+        },
+        "scrollY": 0,
+        "scrollX": 0,
+        "scrollHeight": 390,
+        "clientHeight": 390,
+        "toy": {
+          "x": 82,
+          "y": 8,
+          "width": 680,
+          "height": 370,
+          "right": 762,
+          "bottom": 378,
+          "display": "grid"
+        },
+        "canvas": {
+          "x": 185.953125,
+          "y": 46,
+          "width": 228.09375,
+          "height": 315,
+          "right": 414.046875,
+          "bottom": 361,
+          "display": "block"
+        },
+        "stage": {
+          "x": 97,
+          "y": 40,
+          "width": 406,
+          "height": 327,
+          "right": 503,
+          "bottom": 367,
+          "display": "grid"
+        },
+        "left": {
+          "x": 530.65625,
+          "y": 169,
+          "width": 64,
+          "height": 61,
+          "right": 594.65625,
+          "bottom": 230,
+          "display": "inline-block"
+        },
+        "right": {
+          "x": 667.328125,
+          "y": 169,
+          "width": 64,
+          "height": 61,
+          "right": 731.328125,
+          "bottom": 230,
+          "display": "inline-block"
+        },
+        "menu": {
+          "x": 689.640625,
+          "y": 37,
+          "width": 57.359375,
+          "height": 44,
+          "right": 747,
+          "bottom": 81,
+          "display": "block"
+        },
+        "shell": {
+          "x": 519,
+          "y": 351,
+          "width": 224,
+          "height": 16,
+          "right": 743,
+          "bottom": 367,
+          "display": "flex"
+        },
+        "viewportStyle": "390px"
+      },
+      "menu": {
+        "client": 315,
+        "scrollHeight": 469,
+        "buttons": {
+          "resume": {
+            "box": {
+              "x": 218,
+              "y": 58,
+              "width": 164,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 185.953125,
+              "y": 46,
+              "width": 228.09375,
+              "height": 315
+            }
+          },
+          "reset": {
+            "box": {
+              "x": 218,
+              "y": 164,
+              "width": 164,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 185.953125,
+              "y": 46,
+              "width": 228.09375,
+              "height": 315
+            }
+          },
+          "gravity-toggle": {
+            "box": {
+              "x": 218,
+              "y": 231,
+              "width": 164,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 185.953125,
+              "y": 46,
+              "width": 228.09375,
+              "height": 315
+            }
+          },
+          "gravity-calibrate": {
+            "box": {
+              "x": 255,
+              "y": 282,
+              "width": 90,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 185.953125,
+              "y": 46,
+              "width": 228.09375,
+              "height": 315
+            }
+          }
+        },
+        "wheelScrollTop": 150,
+        "touchScrollTop": 85,
+        "calibrateClicked": true,
+        "resetAndResumeClicked": true,
+        "topReached": {
+          "x": 247.984375,
+          "y": 62,
+          "width": 104.015625,
+          "height": 32
+        },
+        "helpReached": {
+          "x": 236.984375,
+          "y": 304,
+          "width": 126.015625,
+          "height": 40.5
+        }
+      },
+      "finalScrollY": 0
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "mobile": false,
+      "initial": {
+        "inner": {
+          "width": 1280,
+          "height": 720
+        },
+        "visual": {
+          "width": 1280,
+          "height": 720,
+          "scale": 1
+        },
+        "scrollY": 0,
+        "scrollX": 0,
+        "scrollHeight": 720,
+        "clientHeight": 720,
+        "toy": {
+          "x": 435,
+          "y": 8,
+          "width": 410,
+          "height": 700,
+          "right": 845,
+          "bottom": 708,
+          "display": "flex"
+        },
+        "canvas": {
+          "x": 482.203125,
+          "y": 91,
+          "width": 315.578125,
+          "height": 435.8125,
+          "right": 797.78125,
+          "bottom": 526.8125,
+          "display": "block"
+        },
+        "stage": {
+          "x": 452,
+          "y": 85,
+          "width": 376,
+          "height": 447.8125,
+          "right": 828,
+          "bottom": 532.8125,
+          "display": "grid"
+        },
+        "left": {
+          "x": 492.65625,
+          "y": 572,
+          "width": 62,
+          "height": 59,
+          "right": 554.65625,
+          "bottom": 631,
+          "display": "inline-block"
+        },
+        "right": {
+          "x": 725.328125,
+          "y": 572,
+          "width": 62,
+          "height": 59,
+          "right": 787.328125,
+          "bottom": 631,
+          "display": "inline-block"
+        },
+        "menu": {
+          "x": 766.640625,
+          "y": 35,
+          "width": 57.359375,
+          "height": 44,
+          "right": 824,
+          "bottom": 79,
+          "display": "block"
+        },
+        "shell": {
+          "x": 460,
+          "y": 687,
+          "width": 360,
+          "height": 12,
+          "right": 820,
+          "bottom": 699,
+          "display": "flex"
+        },
+        "viewportStyle": "720px"
+      },
+      "engineMapping": {
+        "design": {
+          "width": 420,
+          "height": 580
+        },
+        "visible": {
+          "width": 420,
+          "height": 580
+        },
+        "viewport": {
+          "x": 0,
+          "y": 0,
+          "width": 316,
+          "height": 436
+        },
+        "cameraHeight": 290,
+        "canvasPixels": {
+          "width": 316,
+          "height": 436
+        }
+      },
+      "pointerPumpsAdded": 2,
+      "afterWheelScroll": {
+        "inner": {
+          "width": 1280,
+          "height": 720
+        },
+        "visual": {
+          "width": 1280,
+          "height": 720,
+          "scale": 1
+        },
+        "scrollY": 0,
+        "scrollX": 0,
+        "scrollHeight": 720,
+        "clientHeight": 720,
+        "toy": {
+          "x": 435,
+          "y": 8,
+          "width": 410,
+          "height": 700,
+          "right": 845,
+          "bottom": 708,
+          "display": "flex"
+        },
+        "canvas": {
+          "x": 482.203125,
+          "y": 91,
+          "width": 315.578125,
+          "height": 435.8125,
+          "right": 797.78125,
+          "bottom": 526.8125,
+          "display": "block"
+        },
+        "stage": {
+          "x": 452,
+          "y": 85,
+          "width": 376,
+          "height": 447.8125,
+          "right": 828,
+          "bottom": 532.8125,
+          "display": "grid"
+        },
+        "left": {
+          "x": 492.65625,
+          "y": 572,
+          "width": 62,
+          "height": 59,
+          "right": 554.65625,
+          "bottom": 631,
+          "display": "inline-block"
+        },
+        "right": {
+          "x": 725.328125,
+          "y": 572,
+          "width": 62,
+          "height": 59,
+          "right": 787.328125,
+          "bottom": 631,
+          "display": "inline-block"
+        },
+        "menu": {
+          "x": 766.640625,
+          "y": 35,
+          "width": 57.359375,
+          "height": 44,
+          "right": 824,
+          "bottom": 79,
+          "display": "block"
+        },
+        "shell": {
+          "x": 460,
+          "y": 687,
+          "width": 360,
+          "height": 12,
+          "right": 820,
+          "bottom": 699,
+          "display": "flex"
+        },
+        "viewportStyle": "720px"
+      },
+      "menu": {
+        "client": 436,
+        "scrollHeight": 469,
+        "buttons": {
+          "resume": {
+            "box": {
+              "x": 557.984375,
+              "y": 150,
+              "width": 164,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 482.203125,
+              "y": 91,
+              "width": 315.578125,
+              "height": 435.8125
+            }
+          },
+          "reset": {
+            "box": {
+              "x": 557.984375,
+              "y": 256,
+              "width": 164,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 482.203125,
+              "y": 91,
+              "width": 315.578125,
+              "height": 435.8125
+            }
+          },
+          "gravity-toggle": {
+            "box": {
+              "x": 557.984375,
+              "y": 323,
+              "width": 164,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 482.203125,
+              "y": 91,
+              "width": 315.578125,
+              "height": 435.8125
+            }
+          },
+          "gravity-calibrate": {
+            "box": {
+              "x": 594.984375,
+              "y": 374,
+              "width": 90,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 482.203125,
+              "y": 91,
+              "width": 315.578125,
+              "height": 435.8125
+            }
+          }
+        },
+        "wheelScrollTop": 33,
+        "calibrateClicked": true,
+        "resetAndResumeClicked": true,
+        "topReached": {
+          "x": 587.984375,
+          "y": 107,
+          "width": 104.015625,
+          "height": 32
+        },
+        "helpReached": {
+          "x": 576.984375,
+          "y": 474,
+          "width": 126.015625,
+          "height": 40.5
+        }
+      },
+      "finalScrollY": 0
+    },
+    {
+      "width": 1280,
+      "height": 900,
+      "mobile": false,
+      "initial": {
+        "inner": {
+          "width": 1280,
+          "height": 900
+        },
+        "visual": {
+          "width": 1280,
+          "height": 900,
+          "scale": 1
+        },
+        "scrollY": 0,
+        "scrollX": 0,
+        "scrollHeight": 900,
+        "clientHeight": 900,
+        "toy": {
+          "x": 435,
+          "y": 8,
+          "width": 410,
+          "height": 843.8125,
+          "right": 845,
+          "bottom": 851.8125,
+          "display": "flex"
+        },
+        "canvas": {
+          "x": 458,
+          "y": 123.78125,
+          "width": 364,
+          "height": 502.65625,
+          "right": 822,
+          "bottom": 626.4375,
+          "display": "block"
+        },
+        "stage": {
+          "x": 452,
+          "y": 93,
+          "width": 376,
+          "height": 564.21875,
+          "right": 828,
+          "bottom": 657.21875,
+          "display": "grid"
+        },
+        "left": {
+          "x": 488.65625,
+          "y": 702.8125,
+          "width": 70,
+          "height": 67,
+          "right": 558.65625,
+          "bottom": 769.8125,
+          "display": "inline-block"
+        },
+        "right": {
+          "x": 721.328125,
+          "y": 702.8125,
+          "width": 70,
+          "height": 67,
+          "right": 791.328125,
+          "bottom": 769.8125,
+          "display": "inline-block"
+        },
+        "menu": {
+          "x": 766.640625,
+          "y": 41,
+          "width": 57.359375,
+          "height": 44,
+          "right": 824,
+          "bottom": 85,
+          "display": "block"
+        },
+        "shell": {
+          "x": 460,
+          "y": 828.8125,
+          "width": 360,
+          "height": 12,
+          "right": 820,
+          "bottom": 840.8125,
+          "display": "flex"
+        },
+        "viewportStyle": "900px"
+      },
+      "engineMapping": {
+        "design": {
+          "width": 420,
+          "height": 580
+        },
+        "visible": {
+          "width": 420,
+          "height": 580
+        },
+        "viewport": {
+          "x": 0,
+          "y": 0,
+          "width": 364,
+          "height": 503
+        },
+        "cameraHeight": 290,
+        "canvasPixels": {
+          "width": 364,
+          "height": 503
+        }
+      },
+      "pointerPumpsAdded": 2,
+      "afterWheelScroll": {
+        "inner": {
+          "width": 1280,
+          "height": 900
+        },
+        "visual": {
+          "width": 1280,
+          "height": 900,
+          "scale": 1
+        },
+        "scrollY": 0,
+        "scrollX": 0,
+        "scrollHeight": 900,
+        "clientHeight": 900,
+        "toy": {
+          "x": 435,
+          "y": 8,
+          "width": 410,
+          "height": 843.8125,
+          "right": 845,
+          "bottom": 851.8125,
+          "display": "flex"
+        },
+        "canvas": {
+          "x": 458,
+          "y": 123.78125,
+          "width": 364,
+          "height": 502.65625,
+          "right": 822,
+          "bottom": 626.4375,
+          "display": "block"
+        },
+        "stage": {
+          "x": 452,
+          "y": 93,
+          "width": 376,
+          "height": 564.21875,
+          "right": 828,
+          "bottom": 657.21875,
+          "display": "grid"
+        },
+        "left": {
+          "x": 488.65625,
+          "y": 702.8125,
+          "width": 70,
+          "height": 67,
+          "right": 558.65625,
+          "bottom": 769.8125,
+          "display": "inline-block"
+        },
+        "right": {
+          "x": 721.328125,
+          "y": 702.8125,
+          "width": 70,
+          "height": 67,
+          "right": 791.328125,
+          "bottom": 769.8125,
+          "display": "inline-block"
+        },
+        "menu": {
+          "x": 766.640625,
+          "y": 41,
+          "width": 57.359375,
+          "height": 44,
+          "right": 824,
+          "bottom": 85,
+          "display": "block"
+        },
+        "shell": {
+          "x": 460,
+          "y": 828.8125,
+          "width": 360,
+          "height": 12,
+          "right": 820,
+          "bottom": 840.8125,
+          "display": "flex"
+        },
+        "viewportStyle": "900px"
+      },
+      "menu": {
+        "client": 503,
+        "scrollHeight": 503,
+        "buttons": {
+          "resume": {
+            "box": {
+              "x": 558,
+              "y": 232.859375,
+              "width": 164,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 458,
+              "y": 123.78125,
+              "width": 364,
+              "height": 502.65625
+            }
+          },
+          "reset": {
+            "box": {
+              "x": 558,
+              "y": 338.859375,
+              "width": 164,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 458,
+              "y": 123.78125,
+              "width": 364,
+              "height": 502.65625
+            }
+          },
+          "gravity-toggle": {
+            "box": {
+              "x": 558,
+              "y": 405.859375,
+              "width": 164,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 458,
+              "y": 123.78125,
+              "width": 364,
+              "height": 502.65625
+            }
+          },
+          "gravity-calibrate": {
+            "box": {
+              "x": 595,
+              "y": 456.859375,
+              "width": 90,
+              "height": 44
+            },
+            "disabled": false,
+            "visible": true,
+            "panel": {
+              "x": 458,
+              "y": 123.78125,
+              "width": 364,
+              "height": 502.65625
+            }
+          }
+        },
+        "calibrateClicked": true,
+        "resetAndResumeClicked": true,
+        "topReached": {
+          "x": 587.984375,
+          "y": 156.859375,
+          "width": 104.015625,
+          "height": 32
+        },
+        "helpReached": {
+          "x": 576.984375,
+          "y": 552.859375,
+          "width": 126.015625,
+          "height": 40.5
+        }
+      },
+      "finalScrollY": 0
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "failedRequests": [],
+  "started": 1794314087.9178119,
+  "passed": true,
+  "finished": 1794314113.2838368
+}
