@@ -1,0 +1,6 @@
+{
+  "stage": "fresh ZIP first browser load",
+  "result": "failed; thread-starved static server",
+  "evidence": "HTTP ThreadingHTTPServer RuntimeError: cannot start new thread with simultaneous company-review/browser; requested modules could not finish loading; not inferred package corruption or game FPS",
+  "change_before_retry": "review300s exited timeout and browser closed; root source preview server8790 stopped; retry same unchanged ZIP alone"
+}

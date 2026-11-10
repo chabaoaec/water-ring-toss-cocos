@@ -1,0 +1,323 @@
+{
+  "node": "v24.21.0",
+  "hz": 120,
+  "seconds": 60,
+  "press": 1.1,
+  "release": 0.8,
+  "results": [
+    {
+      "scenario": "left",
+      "total": 128,
+      "records": [
+        {
+          "seconds": 5,
+          "visible": 115,
+          "bins": [
+            32,
+            20,
+            33,
+            30
+          ],
+          "top5": 1,
+          "surfaceY": 485.8285714285685
+        },
+        {
+          "seconds": 10,
+          "visible": 110,
+          "bins": [
+            35,
+            33,
+            26,
+            16
+          ],
+          "top5": 2,
+          "surfaceY": 467.9265665174427
+        },
+        {
+          "seconds": 15,
+          "visible": 106,
+          "bins": [
+            20,
+            22,
+            34,
+            30
+          ],
+          "top5": 3,
+          "surfaceY": 455.97142857142114
+        },
+        {
+          "seconds": 20,
+          "visible": 117,
+          "bins": [
+            31,
+            31,
+            26,
+            29
+          ],
+          "top5": 1,
+          "surfaceY": 491.79999999998967
+        },
+        {
+          "seconds": 25,
+          "visible": 110,
+          "bins": [
+            22,
+            30,
+            28,
+            30
+          ],
+          "top5": 2,
+          "surfaceY": 458.62290203166833
+        },
+        {
+          "seconds": 30,
+          "visible": 111,
+          "bins": [
+            25,
+            31,
+            32,
+            23
+          ],
+          "top5": 2,
+          "surfaceY": 467.9142857142708
+        },
+        {
+          "seconds": 35,
+          "visible": 113,
+          "bins": [
+            32,
+            35,
+            25,
+            21
+          ],
+          "top5": 2,
+          "surfaceY": 483.592395833316
+        },
+        {
+          "seconds": 40,
+          "visible": 109,
+          "bins": [
+            24,
+            29,
+            30,
+            26
+          ],
+          "top5": 2,
+          "surfaceY": 452.29686380852047
+        },
+        {
+          "seconds": 45,
+          "visible": 114,
+          "bins": [
+            40,
+            19,
+            26,
+            29
+          ],
+          "top5": 1,
+          "surfaceY": 479.8571428571205
+        },
+        {
+          "seconds": 50,
+          "visible": 115,
+          "bins": [
+            37,
+            29,
+            28,
+            21
+          ],
+          "top5": 1,
+          "surfaceY": 473.14239583330914
+        },
+        {
+          "seconds": 55,
+          "visible": 110,
+          "bins": [
+            28,
+            28,
+            31,
+            23
+          ],
+          "top5": 1,
+          "surfaceY": 449.9999999999731
+        },
+        {
+          "seconds": 60,
+          "visible": 117,
+          "bins": [
+            39,
+            19,
+            34,
+            25
+          ],
+          "top5": 0,
+          "surfaceY": 491.79999999997017
+        }
+      ],
+      "maxOutside": 0,
+      "maxWaterError": 5.719869022868806e-13,
+      "maxTopFraction": 0.32323232323232326,
+      "maxCeilingFraction": 0.02857142857142857,
+      "up": 117,
+      "down": 117,
+      "wallMs": 8214.397139
+    },
+    {
+      "scenario": "reduced-both",
+      "total": 36,
+      "records": [
+        {
+          "seconds": 5,
+          "visible": 34,
+          "bins": [
+            3,
+            11,
+            10,
+            10
+          ],
+          "top5": 2,
+          "surfaceY": 521.6571428571369
+        },
+        {
+          "seconds": 10,
+          "visible": 31,
+          "bins": [
+            9,
+            8,
+            6,
+            8
+          ],
+          "top5": 1,
+          "surfaceY": 485.85313303488493
+        },
+        {
+          "seconds": 15,
+          "visible": 34,
+          "bins": [
+            6,
+            11,
+            6,
+            11
+          ],
+          "top5": 0,
+          "surfaceY": 461.9428571428416
+        },
+        {
+          "seconds": 20,
+          "visible": 36,
+          "bins": [
+            10,
+            7,
+            13,
+            6
+          ],
+          "top5": 0,
+          "surfaceY": 533.5999999999783
+        },
+        {
+          "seconds": 25,
+          "visible": 25,
+          "bins": [
+            4,
+            8,
+            7,
+            6
+          ],
+          "top5": 1,
+          "surfaceY": 467.24580406333547
+        },
+        {
+          "seconds": 30,
+          "visible": 34,
+          "bins": [
+            16,
+            7,
+            2,
+            9
+          ],
+          "top5": 0,
+          "surfaceY": 485.8285714285402
+        },
+        {
+          "seconds": 35,
+          "visible": 33,
+          "bins": [
+            8,
+            9,
+            10,
+            6
+          ],
+          "top5": 0,
+          "surfaceY": 517.1847916666302
+        },
+        {
+          "seconds": 40,
+          "visible": 29,
+          "bins": [
+            7,
+            7,
+            10,
+            5
+          ],
+          "top5": 0,
+          "surfaceY": 454.59372761703895
+        },
+        {
+          "seconds": 45,
+          "visible": 34,
+          "bins": [
+            10,
+            10,
+            10,
+            4
+          ],
+          "top5": 0,
+          "surfaceY": 509.7142857142388
+        },
+        {
+          "seconds": 50,
+          "visible": 34,
+          "bins": [
+            14,
+            10,
+            4,
+            6
+          ],
+          "top5": 0,
+          "surfaceY": 496.2847916666159
+        },
+        {
+          "seconds": 55,
+          "visible": 25,
+          "bins": [
+            9,
+            5,
+            7,
+            4
+          ],
+          "top5": 0,
+          "surfaceY": 449.9999999999436
+        },
+        {
+          "seconds": 60,
+          "visible": 36,
+          "bins": [
+            12,
+            7,
+            6,
+            11
+          ],
+          "top5": 1,
+          "surfaceY": 533.5999999999374
+        }
+      ],
+      "maxOutside": 0,
+      "maxWaterError": 1.199040866595169e-12,
+      "maxTopFraction": 0.38235294117647056,
+      "maxCeilingFraction": 0.058823529411764705,
+      "up": 36,
+      "down": 36,
+      "wallMs": 7605.367629
+    }
+  ]
+}

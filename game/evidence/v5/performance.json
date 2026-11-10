@@ -1,0 +1,24 @@
+{
+  "renderer": "WebKit WebGL",
+  "results": [
+    {
+      "mode": "idle",
+      "frames": 239,
+      "fps": 39.724092080113024,
+      "frameMedian": 16.700000000000728,
+      "frameP95": 33.400000000000546,
+      "stepMedian": 1.199999988079071,
+      "stepP95": 2.5
+    },
+    {
+      "mode": "both",
+      "frames": 72,
+      "fps": 11.967488323388132,
+      "frameMedian": 33.400000000001455,
+      "frameP95": 249.90000000000146,
+      "stepMedian": 1.300000011920929,
+      "stepP95": 3.300000011920929
+    }
+  ],
+  "limits": "Single bounded Chromium/SwiftShader 2CPU run, 6s idle/6s cycles, no concurrent model review; not user Brave/mobile hardware FPS or controlled v4 comparison."
+}

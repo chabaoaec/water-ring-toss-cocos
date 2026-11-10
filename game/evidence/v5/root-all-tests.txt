@@ -1,0 +1,66 @@
+
+> pocket-tide-cocos@1.0.0 test
+> node --test tests/*.test.js
+
+✔ tracers exist over the entire water volume before any button is pressed (1.908348ms)
+✔ idle and stopped jets keep the full suspended population and long-term coverage (16.971258ms)
+✔ existing all-domain wisps are advected by the shared velocity sampler (4.27695ms)
+✔ releasing a pump preserves its remaining water, then refill takes time (321.827654ms)
+✔ pressing during refill spends only the current partial chamber and never refills while held (522.996902ms)
+✔ pause freezes refill and cumulative volumes without an edge refill (118.11872ms)
+✔ two chambers circulate independently and conserve tank plus chamber water (310.507857ms)
+✔ refill contributes a local converging field at the separate intake (105.320411ms)
+✔ specific-force sign fixtures: face-up, upright, right, left, front and back (3.903197ms)
+✔ orientation fallback follows gravity projection Rz(alpha)Rx(beta)Ry(gamma) (0.642172ms)
+✔ screen-angle fixtures give displayed down in all orientations (1.058258ms)
+✔ comfort calibration maps arbitrary neutral down and retains orthonormal axes (1.179676ms)
+✔ invalid, null and unsupported readings are ignored; normalization is overflow safe (0.792923ms)
+✔ angular smoothing is bounded, unit length and traverses antipodal directions (3.156733ms)
+✔ default preference on auto-attaches without permission requests; valid reading activates (1.178593ms)
+✔ permission is only requested on explicit call, both calls occur synchronously (0.724964ms)
+✔ repeated enabling does not duplicate listeners (0.137793ms)
+✔ denial and insecure/unsupported browsers honestly remain inactive (0.230085ms)
+✔ granting only orientation works after motion denial (0.156126ms)
+✔ disable during unresolved permission does not attach late listeners (0.106084ms)
+✔ motion preferred over orientation, with fallback after stale motion (0.085709ms)
+✔ no-data and stopped-data timeout do not claim active; later readings recover (0.109667ms)
+✔ paused readings allow current-pose calibration without changing physics (0.657255ms)
+✔ pause-resume changed pose smooths rather than snapping; reapply keeps last valid after reset (0.469421ms)
+✔ screen rotation recaptures neutral without immediate gravity update (0.078126ms)
+✔ null samples and disposal never emit gravity updates (0.067542ms)
+✔ one held press exhausts; refill requires full release and elapsed refill time (461.206083ms)
+✔ longer press increases actual same-point flow speed before capacity runs out (92.792271ms)
+✔ left and right pressure/water budgets are independent (173.755282ms)
+✔ a jet-held threaded ring suspended well above the base cannot score (785.507049ms)
+✔ near-rim peg overlap is rejected by conservative hole containment (0.893465ms)
+✔ all-domain particles follow flow and stay suspended after release (750.366814ms)
+✔ real floating ring contacts do not create a support root (28.964145ms)
+✔ physical platform and stacked ring contacts root support continuously (240.378264ms)
+✔ ring-ring impact reverses closing relative velocity and water damps its rebound (73.751121ms)
+✔ shell rebound is gentler than elastic ring-ring impact (22.859013ms)
+✔ global suspended tracer count stays bounded during finite pulses; reduced motion is visual only (881.836972ms)
+{"protocol":"left1.1-release.7-left.1-release","release":{"x":133.27655756063893,"y":454.3302702285289,"z":0,"vx":11.356751605837536,"vy":-16.50524888395396}}
+✔ Cannon compound torus has a physical hole, cylinder pegs and six tank walls (8.735777ms)
+✔ submerged weight sinks; water drag dissipates horizontal momentum (213.042799ms)
+✔ left jet lifts nearby rings and release allows them to descend (501.718276ms)
+✔ hole can physically slide down a post and score only after stable seating (1545.167602ms)
+✔ mere proximity, floor contact and an edge-on ring cannot count (266.448552ms)
+✔ rigid rim collides with post rather than passing sideways through it (34.994858ms)
+✔ reset clears jets, counts, timer, scored flags and rebuilds world (29.213147ms)
+✔ long pump sequence preserves finite rigid-body states inside tank (2055.964325ms)
+✔ untouched toy never starts or awards free rings (396.272239ms)
+✔ eight physically falling rings seat, win, and freeze elapsed time (4298.660742ms)
+✔ a long left stroke then a short tap can earn a physically rooted point from untouched start (2453.526616ms)
+{"maxDivergence":1.391435855424561e-7,"maxGridSpeed":1615.5714313441238}
+{"records":[{"seconds":5,"surfaceY":521.6571428571369,"visible":124,"bins":[31,37,31,25],"top5":0},{"seconds":10,"surfaceY":485.85313303488493,"visible":120,"bins":[38,30,24,28],"top5":1},{"seconds":15,"surfaceY":461.9428571428416,"visible":108,"bins":[30,22,30,26],"top5":4},{"seconds":20,"surfaceY":533.5999999999783,"visible":126,"bins":[37,35,27,27],"top5":3},{"seconds":25,"surfaceY":467.24580406333547,"visible":111,"bins":[24,29,32,26],"top5":0},{"seconds":30,"surfaceY":485.8285714285402,"visible":107,"bins":[24,34,23,26],"top5":2},{"seconds":35,"surfaceY":517.1847916666302,"visible":117,"bins":[28,26,26,37],"top5":1},{"seconds":40,"surfaceY":454.59372761703895,"visible":103,"bins":[30,24,19,30],"top5":2},{"seconds":45,"surfaceY":509.7142857142388,"visible":118,"bins":[37,28,27,26],"top5":2},{"seconds":50,"surfaceY":496.2847916666159,"visible":117,"bins":[31,35,29,22],"top5":0},{"seconds":55,"surfaceY":449.9999999999436,"visible":101,"bins":[25,27,23,26],"top5":1},{"seconds":60,"surfaceY":533.5999999999374,"visible":128,"bins":[39,29,29,31],"top5":2}],"maxOutside":0,"maxWaterError":1.199040866595169e-12,"up":128,"down":128,"entries":837,"exits":859,"wallMs":8062.773659}
+✔ combined curls and displacement are divergence free and match moving-surface/port flux (66.820942ms)
+✔ 60s real repeated pumps retain marker identity, upward/downward paths and water-volume distribution (8070.967765ms)
+✔ surface displacement, dry-body forces, gravity, pause and reset obey their contracts (315.928149ms)
+ℹ tests 51
+ℹ suites 0
+ℹ pass 51
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11851.651144

@@ -1,0 +1,19 @@
+{
+  "base": "7fd314e",
+  "seconds": 20,
+  "hz": 120,
+  "press": 1.1,
+  "release": 0.8,
+  "records": [
+    {
+      "scenario": "idle",
+      "topQuarter": 32,
+      "top5px": 0
+    },
+    {
+      "scenario": "both",
+      "topQuarter": 117,
+      "top5px": 112
+    }
+  ]
+}

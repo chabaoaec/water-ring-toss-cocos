@@ -1,0 +1,29 @@
+{
+  "url": "http://127.0.0.1:8086/?build=v5",
+  "headers": {
+    "Server": "SimpleHTTP/0.6 Python/3.13.15",
+    "Date": "Tue, 10 Nov 2026 10:08:52 GMT",
+    "Content-type": "text/html",
+    "Content-Length": "5041",
+    "Last-Modified": "Tue, 10 Nov 2026 10:06:33 GMT",
+    "Cache-Control": "no-store, max-age=0",
+    "X-Pocket-Tide-Version": "v5"
+  },
+  "state": {
+    "engine": "3.8.7",
+    "total": 128,
+    "visible": 106,
+    "surface": 450,
+    "gravity": {
+      "enabled": true,
+      "active": false,
+      "state": "permission",
+      "message": "\u503e\u659c\u91cd\u529b\u9ed8\u8ba4\u5f00\u542f\uff0c\u5f85\u6388\u6743\uff1a\u70b9\u201c\u6388\u6743\u4f20\u611f\u5668\u201d\u3002",
+      "source": null,
+      "paused": false,
+      "canRequest": true,
+      "canCalibrate": false
+    }
+  },
+  "errors": []
+}

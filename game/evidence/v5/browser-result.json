@@ -1,0 +1,75 @@
+{
+  "scope": "Actual Chromium/SwiftShader UI with synthetic sensor events, not physical phone or Brave hardware",
+  "cases": [
+    {
+      "name": "permission-denied-retry-granted/synthetic-motion/pause/calibrate/off-on/reset/pump-waterline",
+      "direction": {
+        "x": 0.5987595114458029,
+        "y": -0.8009288654138914,
+        "z": 0
+      },
+      "idle": {
+        "t": 0.4000000000000004,
+        "water": 8,
+        "surface": 450,
+        "remaining": [
+          0.8,
+          0.8
+        ],
+        "total": 128,
+        "visible": 106
+      },
+      "full": {
+        "t": 1.3666666666666643,
+        "water": 9.599999999999959,
+        "surface": 533.5999999999979,
+        "remaining": [
+          0,
+          0
+        ],
+        "total": 128,
+        "visible": 128
+      },
+      "refill": {
+        "t": 2.2749999999999946,
+        "water": 7.999999999999963,
+        "surface": 449.99999999999807,
+        "remaining": [
+          0.8,
+          0.8
+        ],
+        "total": 128,
+        "visible": 108
+      }
+    },
+    {
+      "name": "desktop-no-data/actual-world-button-score",
+      "sensor": {
+        "enabled": true,
+        "active": false,
+        "state": "permission",
+        "message": "\u503e\u659c\u91cd\u529b\u9ed8\u8ba4\u5f00\u542f\uff0c\u5f85\u6388\u6743\uff1a\u70b9\u201c\u6388\u6743\u4f20\u611f\u5668\u201d\u3002",
+        "source": null,
+        "paused": false,
+        "canRequest": true,
+        "canCalibrate": false
+      },
+      "protocol": {
+        "score": 1,
+        "pumps": 2,
+        "supported": [
+          {
+            "id": 1,
+            "supported": true,
+            "peg": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "reduced-motion",
+      "total": 36
+    }
+  ],
+  "errors": []
+}
