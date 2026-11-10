@@ -23,3 +23,86 @@
 
 /* Sensor controls live in the scrollable pause menu, including small screens. */
 .pause-overlay{overflow-y:auto;justify-content:flex-start;padding:22px 10px;gap:9px}.pause-overlay>p{margin-top:auto}.pause-overlay>.menu-help{margin-bottom:auto}.gravity-controls{display:flex;flex-direction:column;align-items:center;gap:7px;width:100%;max-width:270px;border-top:1px solid #c4d1b9;padding-top:10px;margin-top:3px;flex-shrink:0}.gravity-actions{display:flex;justify-content:center;gap:7px;flex-wrap:wrap}.pause-overlay .gravity-actions button{min-width:0;padding:8px 11px;font-size:11px}.pause-overlay button[aria-pressed=true]{background:#d4e5cf;border-color:#779d7c}.pause-overlay button:disabled{opacity:.5;cursor:default}.gravity-status{font-size:10px;line-height:1.65;text-align:center;color:#59745e;max-width:250px}.pause-overlay .menu-help{margin-top:3px;font-size:9px;line-height:1.5}.pause-overlay button{flex-shrink:0}
+
+/* v5.4: one fixed viewport, with a bounded canvas stage and reachable controls.
+   The stage fits the original420/580 canvas instead of stretching or cropping it.
+   Only the pause menu scrolls; pinch zoom remains a browser capability. */
+html{height:100%;overflow:hidden;overscroll-behavior:none}
+body{position:fixed;inset:0;width:100%;height:100%;min-height:0;overflow:hidden;overscroll-behavior:none}
+.experience{
+  position:absolute;inset:0 0 auto;height:var(--viewport-height,100dvh);
+  max-width:none;margin:0;padding:calc(env(safe-area-inset-top,0px) + 8px) calc(env(safe-area-inset-right,0px) + 8px) calc(env(safe-area-inset-bottom,0px) + 12px) calc(env(safe-area-inset-left,0px) + 8px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;overflow:hidden;
+}
+.toy{
+  flex:1;min-height:0;max-height:900px;width:min(100%,410px);max-width:none;
+  margin:0;padding:12px 16px 10px;display:flex;flex-direction:column;
+}
+.shell-top{flex:none;min-height:12px;margin:0 4px 8px}
+.dashboard{flex:none;min-height:30px;margin:0 4px 8px}
+.dashboard-right{gap:12px;align-items:center}
+.dashboard-right strong{font-size:12px}.stat-label{font-size:9px}
+.score-number{font-size:22px}.score-number em{font-size:12px}
+.toy-model{font-size:8px}.toy-badge{font-size:7px}
+.menu-trigger{min-height:44px;font-size:11px;padding:6px 10px}
+.water-stage{position:relative;flex:1;min-height:0;width:100%;display:grid;place-items:center;container-type:size}
+.water-stage .glass-rim{
+  --tank-height:min(calc(100cqh - 12px),calc((100cqw - 12px)*580/420));
+  flex:none;margin:0;padding:6px;
+  height:calc(var(--tank-height) + 12px);width:calc(var(--tank-height)*420/580 + 12px);
+}
+.water-stage .tank-window{
+  height:var(--tank-height);width:calc(var(--tank-height)*420/580);aspect-ratio:420/580;border:0;
+  box-shadow:inset 0 0 0 1px #91b9a5,inset 0 3px 8px #4d8e7455;
+}
+.collection{flex:none;min-height:14px;padding:6px 9px 0;gap:12px}
+.hint{flex:none;font-size:9px;line-height:1.4;margin:7px -4px 8px}
+.controls{flex:none;margin:4px 0 8px;gap:6px;justify-content:space-around}
+.jet-wrap{min-width:98px}.jet{width:70px;height:67px}.jet svg{width:29px;height:29px}
+.jet-feedback{font-size:9px;min-height:13px;margin-top:10px}
+.jet-meter{margin-top:4px;height:4px}.button-label{font-size:10px;margin-top:5px}
+.control-middle{padding-bottom:10px}.control-middle>span:nth-child(2){font-size:8px;line-height:1.6;letter-spacing:0}
+.shell-bottom{flex:none;min-height:12px;margin:0 8px;font-size:6px}
+.experience>footer{flex:none;margin:0;font-size:9px;line-height:1.4}
+.experience>footer p{margin:0 0 3px}.experience>footer>span{font-size:8px}
+.pause-overlay{overscroll-behavior:contain;touch-action:pan-y pinch-zoom;padding:16px 9px;scroll-padding:12px}
+.pause-overlay button{touch-action:manipulation;min-height:44px}
+.pause-overlay .gravity-actions button{min-height:44px}
+@media(max-width:360px){
+  .toy{padding-left:10px;padding-right:10px}.toy-model{font-size:7px;letter-spacing:1.5px}.toy-badge{font-size:6px;letter-spacing:.5px}
+  .dashboard-right{gap:8px}.dashboard-right strong{font-size:11px}.stat-label{font-size:8px}
+  .jet-wrap{min-width:88px}.hint{font-size:8px}.shell-bottom{font-size:5px}
+}
+@media(max-height:740px){
+  .experience>footer{display:none}.toy{max-height:none;padding-top:9px;padding-bottom:8px}
+  .shell-top{margin-bottom:5px}.dashboard{margin-bottom:6px}
+  .controls{margin-bottom:6px}.jet{width:62px;height:59px}.jet-feedback{margin-top:9px;font-size:8px}
+  .button-label{font-size:9px}.hint{font-size:8px;margin:5px -3px}
+}
+@media(max-height:540px) and (orientation:portrait){
+  .hint,.shell-bottom{display:none}.toy{padding:8px 10px}.shell-top{min-height:10px;margin-bottom:3px}
+  .dashboard{min-height:28px;margin-bottom:4px}.jet{width:50px;height:47px}.jet svg{width:23px;height:23px}
+  .jet-feedback{margin-top:8px}.controls{margin:4px 0 3px}.collection{min-height:10px;padding-top:4px}
+}
+/* A short landscape screen gives the tank a tall left column and places the
+   existing HUD and physical pump buttons at right, retaining useful hit areas. */
+@media(max-height:540px) and (orientation:landscape){
+  .toy{width:min(100%,680px);padding:10px 14px;display:grid;grid-template-columns:minmax(0,1fr) 232px;grid-template-rows:16px 38px minmax(0,1fr) 16px;column-gap:12px;row-gap:5px;border-radius:28px}
+  .shell-top{grid-column:1/-1;grid-row:1;margin:0 4px;align-self:center}
+  .water-stage{grid-column:1;grid-row:2/5;height:100%;min-width:0}
+  .dashboard{grid-column:2;grid-row:2;margin:0;min-height:0;gap:7px}
+  .dashboard-right{gap:9px}.dashboard-right div{gap:5px}.score-block{gap:6px}.score-number{font-size:20px}
+  .collection{grid-column:2;grid-row:3;align-self:start;padding:4px 5px 0;min-height:12px}
+  .controls{grid-column:2;grid-row:3;align-self:center;margin:20px 0 0;gap:3px}
+  .jet-wrap{min-width:88px}.jet{width:64px;height:61px}.jet-feedback{font-size:8px}.button-label{font-size:9px}
+  .control-middle{padding-bottom:8px}.control-middle>span:nth-child(2){font-size:7px}
+  .hint{display:none}.shell-bottom{grid-column:2;grid-row:4;margin:0 4px;font-size:5px}
+  .experience>footer{display:none}
+}
+
+/* Completion remains reachable inside the same fixed viewport on short screens.
+   Scroll the overlay itself, never the hidden-overflow tank/canvas behind it. */
+.win{overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y pinch-zoom;justify-content:flex-start;padding:14px 8px;scroll-padding:14px}
+.win>*{flex-shrink:0;max-width:100%}
+.win-symbol{margin-top:auto}
+.win button{min-height:44px;margin-bottom:auto;touch-action:manipulation}

@@ -1,9 +1,9 @@
 {
-  "version": "v5.3",
-  "source_commit": "81888b73be5c719a3a297a51f3e5a772a414aa6e",
-  "runtime_core_commit": "f3d99dffb3f7e231f3cc0e553dbb2b9f7adbe859",
-  "assetRevision": "57fe74982d38b3f1d351",
-  "manifest_sha256": "d11f506001916c011070ab72714b27ee2874a4668fa1191d466b007d85a94362",
+  "version": "v5.4",
+  "source_commit": "04568470fbb6ce3ad72b0edc01ebd3ee8d870754",
+  "runtime_core_commit": "5f7c95f7b987b6cf78e7472ad30f69c2d92da8b3",
+  "assetRevision": "4ca47e03e619b998ee99",
+  "manifest_sha256": "f3bf609096ae2404bde6e79edff44533c8a290f01b2d7e5067ea1842e8fc052d",
   "authorization": "P9Dp-1x6lXzsNzRG",
-  "prepared_at": "2026-11-10T12:12:33.244578+00:00"
+  "prepared_at": "2026-11-10T13:08:38.385594+00:00"
 }

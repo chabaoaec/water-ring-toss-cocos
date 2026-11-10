@@ -1,6 +1,6 @@
-import * as cc from '../engine/cc.js?v=57fe74982d38b3f1d351';
-import { effects } from '../engine/builtin-effects.js?v=57fe74982d38b3f1d351';
-import { glsl4 } from '../engine/builtin-glsl4.js?v=57fe74982d38b3f1d351';
+import * as cc from '../engine/cc.js?v=4ca47e03e619b998ee99';
+import { effects } from '../engine/builtin-effects.js?v=4ca47e03e619b998ee99';
+import { glsl4 } from '../engine/builtin-glsl4.js?v=4ca47e03e619b998ee99';
 export { cc };
 export async function boot() {
   cc.game.on(cc.Game.EVENT_POST_SUBSYSTEM_INIT, () => {
