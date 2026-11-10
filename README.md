@@ -1,4 +1,4 @@
-# Pocket Tide · 水中套圈 Demo v5.3
+# Pocket Tide · 水中套圈 Demo v5.4
 
 竖版水中套圈玩具。真实 Cocos Engine 3.8.7 WebGL2 绘制、cannon-es 三维刚体。
 
@@ -14,13 +14,13 @@
 
 ## 在线试玩
 
-https://chabaoaec.github.io/water-ring-toss-cocos/?build=v5.3
+https://chabaoaec.github.io/water-ring-toss-cocos/?build=v5.4
 
-公开静态试玩，右上角显示 **DEMO v5.3**；手机需要权限时在菜单授权传感器。
+公开静态试玩，右上角显示 **DEMO v5.4**；手机需要权限时在菜单授权传感器。
 
 ## 本地试玩
 
-完整Web试玩包解压后运行 `python3 start-demo.py`（Windows可用 `py start-demo.py`），打开提示的 `http://127.0.0.1:8088/?build=v5.3`。右上角应显示 **DEMO v5.3**。启动器读取自身目录并禁止缓存；端口占用会明确报错。需要支持WebGL2的浏览器，不要双击HTML。
+完整Web试玩包解压后运行 `python3 start-demo.py`（Windows可用 `py start-demo.py`），打开提示的 `http://127.0.0.1:8088/?build=v5.4`。右上角应显示 **DEMO v5.4**。启动器读取自身目录并禁止缓存；端口占用会明确报错。需要支持WebGL2的浏览器，不要双击HTML。
 
 从源码运行：
 
@@ -37,3 +37,6 @@ npm start
 ![v5.2反光亮片与惯性与水位](game/evidence/v5.2/v52-local-tilt.png)
 
 完整实现和边界见[游戏说明](game/README.md)、[验收证据](VALIDATION.md)与[第三方许可](game/THIRD_PARTY_NOTICES.md)。这是独立启动的真实Cocos引擎Web Demo，未使用Creator编辑器导出，不是Creator场景工程。水流是解析近似，自由面随倾斜保持水量，快速摇晃让水和圈产生惯性响应；仍是解析近似，不含完整压力/晃荡求解。尚未完整手动8/8通关；Brave硬件性能与手机真机传感器未验证。
+
+
+v5.4：圆环物理质量略增5%，实际喷流驱动震动节奏，页面固定并保留全部控制与内部可滚菜单。网页Vibration接口不提供硬件振幅控制；实际手机效果与兼容性仍需试玩确认。
