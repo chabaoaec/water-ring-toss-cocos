@@ -100,3 +100,8 @@ Cocos Engine3.8.7 WebGL2 and cannon-es0.20.0 are real runtime dependencies. Wate
 Following feedback that v2 felt like v1, the exact Feishu-delivered v2 ZIP was downloaded back and its 620807 bytes/SHA256 matched the original tested ZIP. All 25 runtime files matched the v2 build. A fresh extraction passed actual WebGL browser checks for finite capacity, release/repress, increasing flow speed, tracers, touch cancel, and menu pause without page errors. This does not identify what the user's browser was serving.
 
 v2.1 adds only a visible version label and a Python launcher anchored to its own directory, default port8082, no-store responses, explicit occupied-port failure. Gameplay JavaScript is byte-identical to v2 commit3817be0. The v2.1 ZIP was independently extracted and browser-tested, including the visible label. Launcher checks also ran from a different working directory and verified occupied-port failure. Windows/macOS launcher behavior is not separately hardware-tested.
+
+
+## v5.3 performance and inversion
+
+Root integrated native Cannon AABB screening and retained screen-frame calibration. Combined95/95Node tests pass, including9840paired collision steps and fullflip sensor→Cannon/cavity regression. Previous86tests/failed evidence retained. Fullsensor inversion/native and fallback/eventorder/pause/explicitcalibrate tests pass. Browserwith synthetic events verifies upwardgravity210, bottomaircavity, liftedrings and preservedshake; notAndroidEdgehardware. Perf53–74%lower physicsstepcost in development tests, all128markers/120Hz/24sphere rings unchanged, mobileSwiftShaderaverageFPSgainmodest with no sim/wall improvement; noactualphone/stable60FPSclaim. Final public revision/HTTP/browser verification recorded separately after release.

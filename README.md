@@ -1,4 +1,4 @@
-# Pocket Tide · 水中套圈 Demo v5.2
+# Pocket Tide · 水中套圈 Demo v5.3
 
 竖版水中套圈玩具。真实 Cocos Engine 3.8.7 WebGL2 绘制、cannon-es 三维刚体。
 
@@ -7,18 +7,20 @@
 - 泵与水箱共用守恒水量，水位随排水/回补变化，上方保留较小空气区。
 - 边角圆环可通过底部回流重新进入喷流；底部圆环能随倾斜滑动。
 - 圈之间弹性碰撞，真实穿柱并受底座/环堆支撑落稳后计分。
+- 支持完整翻转、倒置游玩，浏览器转屏不会自动重设校准；只有菜单中的“校准”会改变基准。
+- 使用原生 AABB 剔除不可能的碰撞对，保留全部圆环形状、亮片和120Hz物理；移动性能仍需真机反馈。
 - 手机倾斜与摇晃默认开启；需要权限时在菜单授权，可校准或关闭。桌面支持A/D和左右键。
 - 菜单中重开；切走页面自动暂停。没有广告或支付。
 
 ## 在线试玩
 
-https://chabaoaec.github.io/water-ring-toss-cocos/?build=v5.2
+https://chabaoaec.github.io/water-ring-toss-cocos/?build=v5.3
 
-公开静态试玩，右上角显示 **DEMO v5.2**；手机需要权限时在菜单授权传感器。
+公开静态试玩，右上角显示 **DEMO v5.3**；手机需要权限时在菜单授权传感器。
 
 ## 本地试玩
 
-完整Web试玩包解压后运行 `python3 start-demo.py`（Windows可用 `py start-demo.py`），打开提示的 `http://127.0.0.1:8088/?build=v5.2`。右上角应显示 **DEMO v5.2**。启动器读取自身目录并禁止缓存；端口占用会明确报错。需要支持WebGL2的浏览器，不要双击HTML。
+完整Web试玩包解压后运行 `python3 start-demo.py`（Windows可用 `py start-demo.py`），打开提示的 `http://127.0.0.1:8088/?build=v5.3`。右上角应显示 **DEMO v5.3**。启动器读取自身目录并禁止缓存；端口占用会明确报错。需要支持WebGL2的浏览器，不要双击HTML。
 
 从源码运行：
 

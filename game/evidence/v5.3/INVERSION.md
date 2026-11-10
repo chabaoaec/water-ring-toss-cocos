@@ -1,0 +1,5 @@
+# Full inversion and preserved calibration
+
+Screen rotation previously discarded the calibration basis and made the next pose neutral. Synthetic physical180-degree roll with automatic90/180screen changes reproduced the apparent direction limit. The fix transforms calibration axes and cached screen samples together; device raw/estimated gravity and game-frame direction retain their own frames. Only explicit user calibration resets neutral. Valid W3C ranges, response smoothing, defaultON, permission calls and linear acceleration limits remain.
+
+Combined95/95game tests pass, including native/fallbacks/event ordering/fullroll/pitch/landscape/paused/stale/calibration and actual Cannon gravity/cavity/ring response. Actual Chromium/Cocos synthetic input showed upward gravity magnitude210, bottom air cavity, rings moving upward, shake sign/magnitude preserved, missing shake stream returning tozero, pause/reset behavior and explicit calibration. This is not physical AndroidEdge sensor evidence. Water remains a hydrostatic/analytic approximation, not a dynamic fluid solver.
