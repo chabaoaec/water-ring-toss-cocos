@@ -1,0 +1,26 @@
+{
+  "scope": "actual Chromium/SwiftShader v5.1 delta, no model process overlap/hardware claim",
+  "initial_surface": 520,
+  "full_surface": 536.266666666663,
+  "early_flow": {
+    "x": 2.3214299021544846,
+    "y": 463.0574636650643,
+    "z": 0
+  },
+  "half_second_flow": {
+    "x": 1.0619767722803068,
+    "y": 211.8333490005185,
+    "z": 0
+  },
+  "five_second_flow": {
+    "x": 0.0010458295589487528,
+    "y": 0.20861245155122282,
+    "z": 0
+  },
+  "visible_moved_over2px_after_empty": 126,
+  "empty_tank_volume_unchanged": true,
+  "refill_surface": 519.9999999999902,
+  "reset_speed": 0.0,
+  "pause_frozen": true,
+  "errors": []
+}

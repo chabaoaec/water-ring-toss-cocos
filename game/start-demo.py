@@ -7,7 +7,7 @@ from pathlib import Path
 import webbrowser
 
 ROOT = Path(__file__).resolve().parent
-VERSION = "v5"
+VERSION = "v5.1"
 class Handler(SimpleHTTPRequestHandler):
     def end_headers(self):
         self.send_header("Cache-Control", "no-store, max-age=0")
@@ -15,8 +15,8 @@ class Handler(SimpleHTTPRequestHandler):
         super().end_headers()
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Pocket Tide Demo v5")
-    parser.add_argument("--port", type=int, default=8086)
+    parser = argparse.ArgumentParser(description="Pocket Tide Demo v5.1")
+    parser.add_argument("--port", type=int, default=8087)
     parser.add_argument("--no-open", action="store_true")
     args = parser.parse_args()
     if not (ROOT / "index.html").is_file():
@@ -24,7 +24,7 @@ if __name__ == "__main__":
     try:
         server = ThreadingHTTPServer(("127.0.0.1", args.port), partial(Handler, directory=str(ROOT)))
     except OSError as exc:
-        parser.exit(1, f"Cannot start {VERSION}: port {args.port} unavailable ({exc}). Stop the previous server or choose --port 8087.\n")
+        parser.exit(1, f"Cannot start {VERSION}: port {args.port} unavailable ({exc}). Stop the previous server or choose --port 8088.\n")
     url = f"http://127.0.0.1:{args.port}/?build={VERSION}"
     print(f"Pocket Tide DEMO {VERSION}\nServing: {ROOT}\nOpen: {url}\nStop: Ctrl+C", flush=True)
     if not args.no_open:

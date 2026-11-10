@@ -1,2 +1,2 @@
-Pocket Tide Demo v5
-Reflective flakes, chamber-aware recirculation and water level, default-enabled mobile tilt gravity.
+Pocket Tide Demo v5.1
+Shared dissipating water inertia, smaller air gap, reflective flakes and default-enabled tilt gravity.
