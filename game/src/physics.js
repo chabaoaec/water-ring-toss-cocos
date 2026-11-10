@@ -15,6 +15,12 @@ export const clamp = (x,a,b) => Math.max(a,Math.min(b,x));
 export function makeRandom(seed=42) {return () => {seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}
 export function pegRadiusAtY(peg,y) {return 4.6+(3.7-4.6)*clamp((y-peg.base)/(peg.tip-peg.base),0,1);}
 const smoothstep = x => x*x*(3-2*x);
+// Circumscribed unit polygon: its affine image encloses the entire post ellipse.
+// A convex distance function is maximal at a polygon vertex, not between them.
+const POST_SECTION_VERTICES=Array.from({length:32},(_,i)=>{
+  const angle=i*Math.PI/16,scale=1/Math.cos(Math.PI/32);
+  return [Math.cos(angle)*scale,Math.sin(angle)*scale];
+});
 export class WaterWorld {
   constructor(seed=42) {this.tracers=new FluidTracers();this.reset(seed);}
   reset(seed=42) {
@@ -136,18 +142,56 @@ export class WaterWorld {
     const inertia=sampleWaterInertia(x,y,z,this.waterInertia,FLOW_BOUNDS,hydrostatic,phase);
     flow.x+=inertia.x;flow.y+=inertia.y;flow.z+=inertia.z;return flow;
   }
-  // Conservative circle enclosing the tapered post's elliptical cut by ring plane.
+  // Contain a conservative post-section ellipse in the actual ring-plane hole.
+  // A large enclosing circle loses offset direction and rejects valid tilt poses.
   threadedPeg(r) {
-    const n=r.body.quaternion.vmult(new CANNON.Vec3(0,1,0));
-    if(Math.abs(n.y)<.22)return null;
+    const n=r.body.quaternion.vmult(new CANNON.Vec3(0,1,0)),ny=Math.abs(n.y);
+    if(ny<.22)return null;
+    const horizontal=Math.hypot(n.x,n.z),tilt=horizontal/ny,limit=INNER_RADIUS-.35;
     for(let p=0;p<PEGS.length;p++) {
       const peg=PEGS[p],dx=peg.x-r.x,dz=peg.z-r.z;
-      const y=r.y-(n.x*dx+n.z*dz)/n.y;
-      const radial=Math.hypot(dx,y-r.y,dz);
-      const postSection=pegRadiusAtY(peg,y)/Math.abs(n.y);
-      if(y>peg.base-2&&y<peg.tip-3&&radial+postSection+.35<INNER_RADIUS)return p;
+      const projection=n.x*dx+n.z*dz,y=r.y-projection/n.y;
+      if(y<=peg.base-2||y>=peg.tip-3)continue;
+      const radial=Math.hypot(dx,y-r.y,dz),slope=Math.abs((3.7-4.6)/(peg.tip-peg.base));
+      // r_section <= r_axis + |slope|*r_section*tan(tilt). The true
+      // truncated post also has the global radius bound4.6, including its caps.
+      const radius=Math.min(4.6,pegRadiusAtY(peg,y)/(1-slope*tilt)),major=radius/ny;
+      if(radial+major<limit)return p;
+      if(radial+radius>=limit||horizontal<1e-10)continue;
+      // Major axis is the vertical direction projected into the ring plane;
+      // minor axis is horizontal and perpendicular to the post/normal plane.
+      const u=-projection/(horizontal*n.y),v=(n.x*dz-n.z*dx)/horizontal;
+      let contained=true;
+      for(const [cos,sin]of POST_SECTION_VERTICES) {
+        const a=u+major*cos,b=v+radius*sin;
+        if(a*a+b*b>=limit*limit){contained=false;break;}
+      }
+      // The hole-plane test alone misses tube thickness at steep tilt. Only
+      // newly accepted poses also need all24actual spheres to clear a round
+      // tapered frustum enclosing the16-sided Cannon post. The circle fast
+      // path uses the stronger taper bound too; the extra3D clearance guarantee
+      // applies only to this new directional branch. No body positions change.
+      if(contained&&this.postClearsRing(r,peg))return p;
     }
     return null;
+  }
+  postClearsRing(r,peg) {
+    const slope=(3.7-4.6)/(peg.tip-peg.base),intercept=4.6-slope*peg.base;
+    const point=new CANNON.Vec3();
+    for(const local of r.body.shapeOffsets) {
+      r.body.quaternion.vmult(local,point);
+      const y0=r.y+point.y,rho=Math.hypot(r.x+point.x-peg.x,r.z+point.z-peg.z);
+      // Closest point in the closed frustum's radial-height section. The
+      // objective is max(rho-r(y),0)^2+(y-y0)^2, convex and piecewise quadratic.
+      const projected=clamp((y0+slope*(rho-intercept))/(1+slope*slope),peg.base,peg.tip);
+      let minimum=Infinity;
+      for(const y of [peg.base,peg.tip,clamp(y0,peg.base,peg.tip),projected]) {
+        const outside=Math.max(0,rho-intercept-slope*y);
+        minimum=Math.min(minimum,outside*outside+(y-y0)*(y-y0));
+      }
+      if(minimum<TUBE_RADIUS*TUBE_RADIUS)return false;
+    }
+    return true;
   }
   setGravityDirection(direction) {
     const {x,y,z}=direction??{},length=Math.hypot(x,y,z);
@@ -236,13 +280,18 @@ export class WaterWorld {
     this.updateJets(dt);
     for(const r of this.rings)this.applyWaterForces(r);
     this.world.step(dt);
-    for(const r of this.rings) {const p=r.body.position;r.x=p.x;r.y=p.y;r.z=p.z;r.peg=this.threadedPeg(r);}
+    for(const r of this.rings) {
+      const p=r.body.position,previousPeg=r.peg;r.x=p.x;r.y=p.y;r.z=p.z;r.peg=this.threadedPeg(r);
+      // A captured ring remains captured through numerical contact-chain gaps;
+      // only genuinely leaving that post clears its capture and qualification.
+      if(r.peg!==previousPeg){r.stable=0;r.scored=false;}
+    }
     const supports=this.resolveSupport();
     for(const r of this.rings) {
       r.supported=supports.has(r.id);r.supportedBy=supports.get(r.id)??null;
       const stable=r.supported&&r.body.velocity.length()<10&&r.body.angularVelocity.length()<1.1;
       r.stable=stable?r.stable+dt:0;
-      const was=r.scored;r.scored=r.stable>=.7;
+      const was=r.scored;r.scored=r.peg!==null&&(was||r.stable>=.7);
       if(r.scored&&!was)this.events.push({type:'capture',id:r.id});
     }
     this.tracers.step(dt,this);
