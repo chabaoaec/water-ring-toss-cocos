@@ -105,3 +105,8 @@ v2.1 adds only a visible version label and a Python launcher anchored to its own
 ## v5.3 performance and inversion
 
 Root integrated native Cannon AABB screening and retained screen-frame calibration. Combined95/95Node tests pass, including9840paired collision steps and fullflip sensor→Cannon/cavity regression. Previous86tests/failed evidence retained. Fullsensor inversion/native and fallback/eventorder/pause/explicitcalibrate tests pass. Browserwith synthetic events verifies upwardgravity210, bottomaircavity, liftedrings and preservedshake; notAndroidEdgehardware. Perf53–74%lower physicsstepcost in development tests, all128markers/120Hz/24sphere rings unchanged, mobileSwiftShaderaverageFPSgainmodest with no sim/wall improvement; noactualphone/stable60FPSclaim. Final public revision/HTTP/browser verification recorded separately after release.
+
+
+## v5.4
+
+Slightly denser rings, actual-flow vibration request patterns, fixed viewport and internally scrollable completion UI. Captured-score retention prevents solver contact jitter from removing points while a ring remains threaded; conservative tilted-hole detection includes a thick-tube guard. Initial support qualification stays unchanged. Root113/113 tests and actualCocos synthetic-input/artificial-placement win checks pass; not a manual-game or phone-hardware claim. See `game/evidence/v5.4/ROOT-DECISION.md` for exact scope and limits.
