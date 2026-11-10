@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { DEFAULT_GRAVITY, motionGravity, orientationGravity, toScreenGravity, calibrationBasis, calibratedGravity, normalizeGravity, smoothGravity, createGravityInput } from '../src/gravity-input.js';
+import { DEFAULT_GRAVITY, motionGravity, orientationGravity, toScreenGravity, calibrationBasis, calibratedGravity, normalizeGravity, smoothGravity, createGravityInput, gravityStateLabel } from '../src/gravity-input.js';
 const close = (actual, expected, epsilon = 1e-7) => {
   for (const key of ['x', 'y', 'z']) assert.ok(Math.abs(actual[key] - expected[key]) < epsilon, `${key}: ${actual[key]} vs ${expected[key]}`);
 };
@@ -135,4 +135,66 @@ test('screen rotation recaptures neutral without immediate gravity update', () =
 test('null samples and disposal never emit gravity updates', () => {
   const f = fixture(); f.motion({ x: null, y: 9.81, z: 0 }); assert.equal(f.outputs.length, 0); assert.equal(f.input.calibrate(), false);
   f.input.dispose(); f.motion({ x: 0, y: 9.81, z: 0 }); assert.equal(f.outputs.length, 0); assert.equal(f.timers.size, 0);
+});
+
+test('first valid sample in menu, calibration, resume and fresh data have honest distinct status', () => {
+  const f = fixture();
+  f.input.setPaused(true);
+  assert.equal(f.input.getState().active, false);
+  f.motion({ x: 0, y: 9.81, z: 0 });
+  let state = f.input.getState();
+  assert.equal(state.hasReading, true);
+  assert.equal(state.active, false);
+  assert.equal(state.state, 'paused');
+  assert.equal(gravityStateLabel(state), '开 · 暂停中');
+  assert.match(state.message, /继续游玩/);
+  assert.equal(f.outputs.length, 0);
+  assert.equal(f.input.calibrate(), true);
+  state = f.input.getState();
+  assert.equal(gravityStateLabel(state), '开 · 暂停中');
+  assert.match(state.message, /仍暂停/);
+  f.input.setPaused(false);
+  state = f.input.getState();
+  assert.equal(state.paused, false);
+  assert.equal(state.active, false);
+  assert.equal(state.state, 'waiting');
+  assert.equal(gravityStateLabel(state), '开 · 等待读数');
+  assert.match(f.states.at(-1).message, /已继续/);
+  for (let i = 0; i < 100; i++) f.motion({ x: -6, y: 8, z: 0 });
+  state = f.input.getState();
+  assert.equal(state.active, true);
+  assert.equal(gravityStateLabel(state), '开');
+  assert.ok(f.outputs.at(-1).x > .5);
+  f.input.setPaused(true);
+  assert.equal(f.input.getState().active, false);
+  assert.equal(gravityStateLabel(f.input.getState()), '开 · 暂停中');
+  f.input.setPaused(false); f.timeout();
+  assert.equal(gravityStateLabel(f.input.getState()), '开 · 无数据');
+});
+test('status separates awaiting permission, denied, unavailable and disabled preferences', async () => {
+  const f = fixture({ permission: true });
+  assert.equal(gravityStateLabel(f.input.getState()), '开 · 待授权');
+  f.win.DeviceMotionEvent.requestPermission = () => Promise.resolve('denied');
+  f.win.DeviceOrientationEvent.requestPermission = () => Promise.resolve('denied');
+  await f.input.requestAccess();
+  assert.equal(gravityStateLabel(f.input.getState()), '开 · 未获授权');
+  f.input.disable(); f.input.setPaused(true); f.input.setPaused(false);
+  assert.equal(gravityStateLabel(f.input.getState()), '关');
+  assert.equal(f.input.getState().active, false);
+  const unsupported = fixture({ motion: false, orientation: false });
+  assert.equal(gravityStateLabel(unsupported.input.getState()), '开 · 不可用');
+});
+test('nonstandard permission returns do not attach listeners or claim success', async () => {
+  for (const result of [undefined, null, true, 'GRANTED', { state: 'granted' }]) {
+    const f = fixture({ permission: true });
+    f.win.DeviceMotionEvent.requestPermission = () => Promise.resolve(result);
+    f.win.DeviceOrientationEvent.requestPermission = () => Promise.resolve(result);
+    await f.input.requestAccess();
+    f.motion({ x: 0, y: 9.81, z: 0 });
+    assert.equal(f.input.getState().active, false);
+    assert.equal(f.input.getState().canRequest, true);
+    assert.equal(f.listeners.get('devicemotion')?.size ?? 0, 0);
+    assert.equal(f.outputs.length, 0);
+    f.input.dispose();
+  }
 });

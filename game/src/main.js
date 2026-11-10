@@ -1,7 +1,7 @@
 import { boot, cc } from './engine-bootstrap.js';
 import { WaterWorld, JET_CAPACITY } from './physics.js';
 import { bindControls } from './input.js';
-import { createGravityInput } from './gravity-input.js';
+import { createGravityInput, gravityStateLabel } from './gravity-input.js';
 import { ToyRenderer } from './render.js';
 const $ = s => document.querySelector(s);
 const status = $('#status');
@@ -52,7 +52,7 @@ function tone(type) {
 const gravityInput = createGravityInput({
   onDirection: direction => world.setGravityDirection(direction),
   onState: state => {
-    const label = state.active ? '开' : state.enabled ? '开 · 未生效' : '关';
+    const label = gravityStateLabel(state);
     $('#gravity-toggle').textContent = `倾斜重力 ${label}`;
     $('#gravity-toggle').setAttribute('aria-pressed', String(state.enabled));
     $('#gravity-status').textContent = state.message;

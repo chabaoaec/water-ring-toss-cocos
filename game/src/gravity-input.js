@@ -58,6 +58,18 @@ export function smoothGravity(from, to, dt) {
 }
 const blend = (a, b, weight) => ({ x: a.x + (b.x - a.x) * weight, y: a.y + (b.y - a.y) * weight, z: a.z + (b.z - a.z) * weight });
 
+// Preferred ON, a paused valid reading, and actual live application are distinct.
+export function gravityStateLabel(state) {
+  if (!state.enabled) return '关';
+  if (state.paused && state.hasReading) return '开 · 暂停中';
+  if (state.active) return '开';
+  if (state.state === 'permission' || state.state === 'requesting') return '开 · 待授权';
+  if (state.state === 'denied') return '开 · 未获授权';
+  if (state.state === 'waiting') return '开 · 等待读数';
+  if (state.state === 'unavailable') return '开 · 无数据';
+  return '开 · 不可用';
+}
+
 // No permission request occurs at construction, automatic start, or enable().
 // requestAccess() must be called directly inside the user's click handler.
 export function createGravityInput({ onDirection, onState = () => {}, win = globalThis.window, now = () => performance.now(), schedule = setTimeout, cancel = clearTimeout } = {}) {
@@ -69,7 +81,7 @@ export function createGravityInput({ onDirection, onState = () => {}, win = glob
   const sensors = [['motion', 'DeviceMotionEvent', 'devicemotion'], ['orientation', 'DeviceOrientationEvent', 'deviceorientation']].filter(([, name]) => typeof win?.[name] !== 'undefined');
   for (const [name, ctor] of sensors) permission.set(name, typeof win[ctor].requestPermission === 'function' ? 'prompt' : 'granted');
   const needsPermission = () => sensors.some(([name]) => ['prompt', 'denied'].includes(permission.get(name)));
-  const snapshot = () => ({ enabled: preferred, active, state, message, source, paused, canRequest: preferred && needsPermission() && !pending && win?.isSecureContext !== false, canCalibrate: preferred && !!sample });
+  const snapshot = () => ({ enabled: preferred, active, hasReading: !!sample, state, message, source, paused, canRequest: preferred && needsPermission() && !pending && win?.isSecureContext !== false, canCalibrate: preferred && !!sample });
   function emit(next, text) { state = next; message = text; onState(snapshot()); }
   function clearWatchdog() { if (timer !== null) cancel(timer); timer = null; }
   function watchdog() {
@@ -96,7 +108,7 @@ export function createGravityInput({ onDirection, onState = () => {}, win = glob
     if (!sample) return;
     source = kind; lastTime = time;
     if (paused) {
-      if (!hadSample) emit('paused', '游戏暂停，已收到传感器读数；可校准当前舒适姿势。');
+      if (!hadSample) emit('paused', '已收到传感器读数，当前游戏暂停；可校准姿势，再点“继续游玩”后倾斜。');
       return;
     }
     basis ??= calibrationBasis(sample);
@@ -122,7 +134,8 @@ export function createGravityInput({ onDirection, onState = () => {}, win = glob
       for (const [name, , event] of sensors) if (permission.get(name) === 'granted') win.addEventListener(event, name === 'motion' ? motion : orientation);
       listening = sensors.some(([name]) => permission.get(name) === 'granted');
     }
-    if (!active) emit(needsPermission() ? 'permission' : 'waiting', needsPermission() ? '倾斜重力默认开启，待授权：点“授权传感器”。' : '正在等待有效传感器数据，保持当前姿势自动校准。');
+    if (paused && sample) emit('paused', '已收到传感器读数，当前游戏暂停；点“继续游玩”后倾斜。');
+    else if (!active) emit(needsPermission() ? 'permission' : 'waiting', needsPermission() ? '倾斜重力默认开启，待授权：点“授权传感器”。' : '正在等待有效传感器数据，保持当前姿势自动校准。');
     watchdog();
   }
   function enable() {
@@ -158,18 +171,26 @@ export function createGravityInput({ onDirection, onState = () => {}, win = glob
   function calibrate() {
     if (!preferred || !sample) return false;
     basis = calibrationBasis(sample); direction = copy(DEFAULT_GRAVITY); onDirection(copy(direction));
-    emit(paused ? 'paused' : active ? 'active' : 'waiting', '已将当前姿势设为正向下；继续时缓慢倾斜手机。'); return true;
+    emit(paused ? 'paused' : active ? 'active' : 'waiting', paused ? '当前姿势已校准；游戏仍暂停，请点“继续游玩”后缓慢倾斜。' : '当前姿势已校准；请缓慢倾斜手机。'); return true;
   }
   function setPaused(value) {
     if (paused === value) return;
     paused = value; lastTime = null; raw = null; clearWatchdog();
-    if (paused && active) emit('paused', '游戏暂停，重力方向已冻结；可调整姿势后点击校准。');
-    else if (!paused) { if (active) emit('active', '继续后平滑更新重力；可在菜单校准舒适姿势。'); watchdog(); }
+    active = false;
+    if (paused) {
+      if (sample) emit('paused', '游戏暂停，重力方向已冻结；可校准姿势，再点“继续游玩”后倾斜。');
+      else emit(state, message);
+    } else if (!preferred) emit('disabled', '倾斜重力已关闭，恢复普通向下重力。');
+    else if (sample) {
+      emit('waiting', '已继续，等待新的传感器读数；收到后将平滑跟随倾斜。');
+      watchdog();
+    } else attach();
   }
   function screenChanged() {
     // Screen axes changed: recapture neutral on next valid sample, then blend.
+    const hadReading = !!sample;
     basis = raw = sample = null; lastTime = null;
-    if (preferred && active) emit('waiting', '屏幕方向已改变；下一次有效读数会重新校准，方向平滑过渡。');
+    if (preferred && (active || hadReading)) emit('waiting', '屏幕方向已改变；下一次有效读数会重新校准，方向平滑过渡。');
   }
   win?.screen?.orientation?.addEventListener('change', screenChanged);
   win?.addEventListener('orientationchange', screenChanged);
