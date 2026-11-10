@@ -1,5 +1,5 @@
 import { cc } from './engine-bootstrap.js';
-import { PEGS, RING_RADIUS } from './physics.js';
+import { PEGS, RING_RADIUS, INTAKES } from './physics.js';
 const color = (hex, alpha = 255) => {
   const c = new cc.Color(hex);
   c.a = alpha;
@@ -82,14 +82,38 @@ export class ToyRenderer {
       this.ellipse(p.x, p.base - 5, 29, 9, color('#d5debc'));
       this.ellipse(p.x, p.base - 2, 22, 5, color('#e6ebce'));
     }
-    // Soft, expanding dye puffs follow the physical jet velocity field. They keep
-    // their momentum briefly after release, disperse, and drift down as they fade.
+    // Separate intake grilles draw tank water back into each released pump.
+    for (const [side, inlet] of INTAKES.entries()) {
+      const strength = w.jetStates[side].intakeStrength;
+      this.rounded(inlet.x - 13, inlet.y - 8, 26, 16, 6, color('#7fa79e', 130));
+      this.rounded(inlet.x - 11, inlet.y - 6, 22, 12, 4, color('#d7e7ce', 210));
+      for (let slot = -1; slot <= 1; slot++) this.line(inlet.x + slot * 5, inlet.y - 3, inlet.x + slot * 5, inlet.y + 3, color('#6e9991', 180), 2);
+      if (strength > 0) {
+        // Short converging strokes, not newly emitted tracer particles.
+        const drift = (w.time * 1.9) % 1;
+        for (const direction of [-1, 1]) {
+          const x = inlet.x + direction * (20 - drift * 6);
+          this.line(x, inlet.y + 1, x - direction * 4, inlet.y - 1, color('#7aaea6', strength * 95), 1.4);
+          this.line(x - direction * 4, inlet.y - 1, x, inlet.y - 3, color('#7aaea6', strength * 95), 1.4);
+        }
+      }
+    }
+    // Existing all-domain dye forms soft asymmetric wisps, never concentric
+    // bubbles or nozzle-born puffs. Stretch/orientation follow local velocity.
     for (const p of w.tracers.particles) {
-      const age = p.age / p.life, fade = Math.min(1, p.age / .12) * (1 - age) ** 1.2;
-      const radius = p.size + p.age * 4.2, y = p.y + p.z * .32;
-      this.ellipse(p.x, y, radius * 1.75, radius * 2.0, color('#629e9f', 28 * fade));
-      this.ellipse(p.x - 1, y + 1, radius * 1.2, radius * 1.6, color('#f1fff3', 67 * fade));
-      this.ellipse(p.x + 1, y, radius * .72, radius * 1.1, color('#b9eeea', 45 * fade));
+      const fade = Math.min(1, p.age / .8, (p.life - p.age) / 1.5);
+      const speed = Math.hypot(p.vx, p.vy), phase = p.phase + t * .11;
+      const angle = Math.atan2(p.vy + Math.sin(phase) * 4, p.vx + Math.cos(phase) * 4);
+      const dx = Math.cos(angle), dy = Math.sin(angle), nx = -dy, ny = dx;
+      const length = p.size * (2.7 + Math.min(speed / 100, 1.6));
+      const bend = p.size * (.5 + Math.sin(phase) * .3), y = p.y + p.z * .32;
+      for (const [width, alpha, offset, tint] of [[1.8,8,2,'#83b7ad'],[1.05,34,0,'#f2fff0'],[.45,25,-1,'#f6fff3']]) {
+        g.strokeColor = color(tint, alpha * fade); g.lineWidth = p.size * width;
+        const x = p.x + nx * offset, py = y + ny * offset;
+        g.moveTo(x - dx * length, py - dy * length);
+        g.bezierCurveTo(x - dx * length * .35 + nx * bend, py - dy * length * .35 + ny * bend, x + dx * length * .35 - nx * bend, py + dy * length * .35 - ny * bend, x + dx * length, py + dy * length);
+        g.stroke();
+      }
     }
     const parts = [];
     for (const p of PEGS) parts.push({

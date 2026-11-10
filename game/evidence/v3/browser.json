@@ -1,0 +1,44 @@
+{
+  "url": "http://127.0.0.1:8784/?build=v3",
+  "page_errors": [],
+  "cases": [
+    {
+      "mobile": true,
+      "initial_particles": 128,
+      "initial_x_range": [
+        34.611689349294885,
+        382.98303757702985
+      ],
+      "initial_y_range": [
+        45.07430317303738,
+        525.966450454286
+      ],
+      "short_flow": 200.39514208688735,
+      "long_flow": 381.05882352941177,
+      "remaining_immediately_after_release": 0,
+      "remaining_after_partial_refill": 0.3238095238095239,
+      "pause_freezes": true,
+      "intake_toward_dot": 2512.4041952213925,
+      "water_balance_error": -2.4868995751603507e-14
+    },
+    {
+      "mobile": false,
+      "initial_particles": 128,
+      "initial_x_range": [
+        34.60767347257805,
+        382.990925696603
+      ],
+      "initial_y_range": [
+        45.07149284266315,
+        525.972508084296
+      ],
+      "short_flow": 200.39514208688735,
+      "long_flow": 381.05882352941177,
+      "remaining_immediately_after_release": 0,
+      "remaining_after_partial_refill": 0.34285714285714297,
+      "pause_freezes": true,
+      "intake_toward_dot": 2512.4041952213925,
+      "water_balance_error": -3.730349362740526e-14
+    }
+  ]
+}

@@ -1,53 +1,43 @@
-// Non-colliding dye/smoke tracers advected by the SAME approximate velocity field
-// that pushes the rings. This visualizes a reduced-order model, not a fluid solver.
+// Permanent, non-colliding smoke-like dye distributed throughout the tank.
+// The same sampleFlow that pushes rings advects these existing wisps. A gentle
+// visual return drift and staggered, faded renewal keep the whole tank suspended;
+// neither changes the rigid bodies, pump budget, or the fluid velocity sampler.
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const noise=n=>{const value=Math.sin(n*127.1+311.7)*43758.5453;return value-Math.floor(value);};
 export class FluidTracers {
-  constructor() {
-    this.setReducedMotion(false);
-    this.reset();
-  }
+  constructor() {this.reducedMotion=false;this.limit=128;this.reset();}
   setReducedMotion(reduced) {
-    this.reducedMotion = reduced;
-    this.limit = reduced ? 36 : 128;
-    this.emissionRate = reduced ? 12 : 42;
-    if (this.particles?.length > this.limit) this.particles.splice(0, this.particles.length - this.limit);
+    const limit=reduced?36:128;
+    if(this.limit===limit&&this.particles?.length===limit)return;
+    this.reducedMotion=reduced;this.limit=limit;this.reset();
   }
-  reset() {
-    this.particles = [];
-    this.emission = [0, 0];
-    this.sequence = 0;
+  createParticle(id,initial=false) {
+    const columns=this.reducedMotion?6:8,rows=this.limit/columns;
+    const home={x:24+((id%columns)+.22+.56*noise(id+1))*372/columns,y:38+(Math.floor(id/columns)+.22+.56*noise(id+71))*496/rows,z:(noise(id+131)-.5)*84};
+    const life=18+noise(id+181)*12;
+    return {id,home,x:home.x,y:home.y,z:home.z,vx:0,vy:0,vz:0,age:initial?life*(.08+.72*noise(id+241)):0,life,size:3.6+noise(id+293)*3,phase:noise(id+349)*Math.PI*2};
   }
-  step(dt, world) {
-    for (let side = 0; side < 2; side++) {
-      const state = world.jetStates[side];
-      if (!state.active) { this.emission[side] = 0; continue; }
-      this.emission[side] += dt * this.emissionRate * (.5 + state.pressure * .5);
-      while (this.emission[side] >= 1) {
-        this.emission[side]--;
-        const id = this.sequence++;
-        const x = (side === 0 ? 91 : 329) + Math.sin(id * 2.4) * 5;
-        const z = Math.cos(id * 3.1) * 7;
-        const flow = world.sampleFlow(x, 39, z);
-        if (this.particles.length >= this.limit) this.particles.shift();
-        this.particles.push({id, side, x, y:39, z, vx:flow.x*.8, vy:flow.y*.8, vz:flow.z*.8, age:0, life:3.8, size:2.5+(id%4)*.65});
-      }
+  reset() {this.particles=Array.from({length:this.limit},(_,id)=>this.createParticle(id,true));}
+  step(dt,world) {
+    for(let index=0;index<this.particles.length;index++) {
+      let p=this.particles[index];p.age+=dt;
+      if(p.age>=p.life) {p=this.createParticle(p.id);this.particles[index]=p;}
+      const flow=world.sampleFlow(p.x,p.y,p.z),speed=Math.hypot(flow.x,flow.y,flow.z);
+      // Local physical flow dominates whenever a pump is discharging or filling.
+      // Away from it, slow resuspension avoids a floor pile or an empty upper tank.
+      const quiet=1/(1+speed/16),phase=p.phase+world.time*.18;
+      const returnX=clamp((p.home.x-p.x)*.13,-15,15);
+      const returnY=clamp((p.home.y-p.y)*.13,-15,15);
+      const returnZ=clamp((p.home.z-p.z)*.13,-7,7);
+      const targetX=flow.x+quiet*(returnX+Math.sin(phase+p.y*.014)*1.7);
+      const targetY=flow.y+quiet*(returnY+Math.cos(phase+p.x*.017)*1.25);
+      const targetZ=flow.z+quiet*(returnZ+Math.sin(phase*.8)*.7);
+      const mix=1-Math.exp(-dt*1.9);
+      p.vx+=(targetX-p.vx)*mix;p.vy+=(targetY-p.vy)*mix;p.vz+=(targetZ-p.vz)*mix;
+      p.x+=p.vx*dt;p.y+=p.vy*dt;p.z+=p.vz*dt;
+      if(p.x<20||p.x>400) {p.x=clamp(p.x,20,400);p.vx*=-.18;}
+      if(p.y<32||p.y>540) {p.y=clamp(p.y,32,540);p.vy*=-.18;}
+      if(p.z< -52||p.z>52) {p.z=clamp(p.z,-52,52);p.vz*=-.18;}
     }
-    for (const p of this.particles) {
-      p.age += dt;
-      const flow = world.sampleFlow(p.x, p.y, p.z);
-      const mix = 1 - Math.exp(-dt * 2.8);
-      p.vx += (flow.x - p.vx) * mix;
-      p.vy += (flow.y - p.vy) * mix;
-      p.vz += (flow.z - p.vz) * mix;
-      // Small coherent dispersion; spent plumes lose momentum and slowly fall.
-      p.vx += Math.sin(p.id*1.7+world.time*2.3) * 13 * dt;
-      p.vz += Math.cos(p.id*2.1+world.time*1.9) * 9 * dt;
-      p.vy -= 13 * dt;
-      p.x += p.vx * dt; p.y += p.vy * dt; p.z += p.vz * dt;
-      if (p.x < 20 || p.x > 400) {p.x=Math.max(20,Math.min(400,p.x));p.vx*=-.2;}
-      if (p.y > 540) {p.y=540;p.vy=-Math.abs(p.vy)*.15;}
-      if (p.y < 32) {p.y=32;p.vy=0;}
-      p.z = Math.max(-52, Math.min(52,p.z));
-    }
-    this.particles = this.particles.filter(p => p.age < p.life);
   }
 }

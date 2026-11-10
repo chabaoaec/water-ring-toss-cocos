@@ -1,3 +1,17 @@
+# Current validation · v3 · 2026-11-10
+
+The current source adds initially present tank-wide suspended wisps and release-to-refill from separate intake ports. 30 meaningful Node/Cannon regressions pass (0failed/skipped):90s idle coverage, shared-field advection, noninstant refill, partial repress, held exhaustion, pause, two independent chambers with conserved tank/chamber accounting, intake direction, and the previous collision/real-support scoring regressions. The original red/first-failed runs remain in evidence/v3; final complete report is all-tests-first.txt.
+
+Root independently ran a fresh extraction of the actual v3 ZIP at mobile390×844 and desktop1280×900: initially128 particles across the tank; short/long sample flow200.40→381.06; release water stayed0 then rose gradually; intake directional dot positive; pause froze time/water; total-water error below4e-14. Separate real CDP two-touch full-release/cancel and partial-refill repress checks pass. A dispatched blur application event enters pause; this is not a hardware-focus test. Reduced-motion context starts36 tracers. Actual idle/press/refill screenshots were inspected. No page errors.
+
+Evidence: game/evidence/v3. Browser scripts require existing Playwright+Chromium and an already-running build selected by GAME_URL; no browser is installed by the project. Physics/visuals remain approximations; no claim of true CFD, hardware phone performance, real partial CDP touchEnd or full manual8/8 win.
+
+DeepSeek v3 static cross-check read the frozen production source. Its360s analysis timed out without final (not a verdict); a same-session conclusion-only continuation then completed in82.115s with a genuine final: no confirmed blocking defect in the scoped delta. It ran no tests or visual QA. Root accepted this against the independent tests and actual ZIP/browser/images above. Required skill bodies were reused from verified, unchanged prior reads in the same session.
+
+---
+
+## Historical v2 validation
+
 # Demo validation · v2 · 2026-11-10
 
 This version adds finite per-press water capacity, pressure-dependent speed/force, translucent flow tracers and elastic ring collisions. Short taps are weaker; holding ramps pressure until the independent left/right budget is exhausted. All inputs for that side must be released before a new press refills it. The main view stays portrait and restart stays in the secondary menu.

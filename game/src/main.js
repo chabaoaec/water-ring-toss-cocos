@@ -15,7 +15,7 @@ function updateJetHud() {
     button.classList.toggle('exhausted', state.exhausted);
     button.style.setProperty('--pressure', state.pressure);
     button.setAttribute('aria-pressed', String(world.held[side]));
-    $(`#${name}-feedback`).textContent = state.exhausted ? '已耗尽 · 松开补水' : state.active ? (state.pressure < .7 ? '轻轻喷流' : '加压喷流') : '按住加压';
+    $(`#${name}-feedback`).textContent = state.exhausted ? '已耗尽 · 松开吸水' : state.active ? (state.pressure < .7 ? '轻轻排水' : '加压排水') : state.refilling ? `吸水中 ${Math.round(state.remaining / JET_CAPACITY * 100)}%` : state.remaining < JET_CAPACITY ? '补水暂停' : '按住排水';
     const fraction = state.remaining / JET_CAPACITY;
     $(`#${name}-fuel`).setAttribute('aria-valuenow', String(Math.round(fraction * 100)));
     $(`#${name}-fuel i`).style.transform = `scaleX(${fraction})`;
@@ -50,7 +50,7 @@ function tone(type) {
 }
 const input = bindControls(world, [$('#left-jet'), $('#right-jet')], () => {
   if (audio?.state === 'suspended') audio.resume();
-});
+}, () => setPaused(true));
 $('#sound').addEventListener('click', () => {
   sound = !sound;
   $('#sound').setAttribute('aria-pressed', String(sound));
@@ -59,6 +59,7 @@ $('#sound').addEventListener('click', () => {
 });
 function setPaused(value) {
   paused = value;
+  world.setPaused(value);
   input.release();
   $('#menu-panel').hidden = !value;
   if (world.won) $('#win').hidden = value;
@@ -79,7 +80,7 @@ function reset() {
   previousScore = -1;
   announcedWin = false;
   $('#win').hidden = true;
-  $('#hint').textContent = '轻点微喷，长按加压；水尽松开，再次按压。';
+  $('#hint').textContent = '轻点微喷，长按加压；松开吸水，再按排水。';
   status.textContent = '新一局已准备。';
 }
 $('#reset').addEventListener('click', reset);

@@ -1,0 +1,16 @@
+✔ tracers exist over the entire water volume before any button is pressed (0.665047ms)
+✔ idle and stopped jets keep the full suspended population and long-term coverage (45.942339ms)
+✔ existing all-domain wisps are advected by the shared velocity sampler (3.17611ms)
+✔ releasing a pump preserves its remaining water, then refill takes time (239.324315ms)
+✔ pressing during refill spends only the current partial chamber and never refills while held (456.980991ms)
+✔ pause freezes refill and cumulative volumes without an edge refill (100.634625ms)
+✔ two chambers circulate independently and conserve tank plus chamber water (227.093088ms)
+✔ refill contributes a local converging field at the separate intake (88.915986ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1199.146092

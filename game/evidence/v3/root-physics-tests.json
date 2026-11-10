@@ -1,0 +1,16 @@
+{
+  "exit_code": 0,
+  "source_and_test_hashes_unchanged_during_run": true,
+  "manifest": {
+    "src/physics.js": "f840c16837d6384f76a67ea5e2fb873816a58ee8300e6914ea86153419119476",
+    "src/input.js": "e9d59117209743fd35044a12fb29ed1c48612b8b01840c391a16fd52e94cd6fc",
+    "src/render.js": "1014f81331d760cb2764abf6996eb4ddc3073770b085a14e593e48a94c6e79a1",
+    "src/main.js": "d0ab5339719a57ac81ea02a2b191fa4b97c474bda329a5469d17081e1b0751fb",
+    "src/engine-bootstrap.js": "cc12ec443fc97425363cb75cfaf8286dcdf80bf01db1c25ed5eaac7f87e81ab6",
+    "src/fluid-tracers.js": "3616caaf4c29de9d8ebf499c129eaddc1e77b20e500721eb7731aa816af33fbc",
+    "tests/physics.test.js": "71053e8e022042af3de0346cbe5721b53767c28015102387287f19a72dfde88c",
+    "tests/jet-support.test.js": "3101d1615e61bfd83522d40c584a61e4ef40249da59acce4f30fa2780acae67e",
+    "tests/fluid-circulation.test.js": "0f897be4b5de3cb11d614f5dbf602cfea7491106b0320743e789416ab4a95ada"
+  },
+  "finished_at": "2026-11-10T08:15:06.750115+00:00"
+}

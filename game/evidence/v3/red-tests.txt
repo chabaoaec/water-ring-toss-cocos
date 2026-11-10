@@ -1,0 +1,170 @@
+✖ tracers exist over the entire water volume before any button is pressed (0.634924ms)
+✖ idle and stopped jets keep the full suspended population and long-term coverage (0.169461ms)
+✖ existing all-domain wisps are advected by the shared velocity sampler (0.072667ms)
+✖ releasing a pump preserves its remaining water, then refill takes time (73.466863ms)
+✖ pressing during refill spends only the current partial chamber and never refills while held (335.153765ms)
+✖ pause freezes refill and cumulative volumes without an edge refill (88.789443ms)
+✖ two chambers circulate independently and conserve tank plus chamber water (1.088178ms)
+✖ refill contributes a local converging field at the separate intake (0.624548ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 0
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 535.138013
+
+✖ failing tests:
+
+test at tests/fluid-circulation.test.js:8:1
+✖ tracers exist over the entire water volume before any button is pressed (0.634924ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 128
+  
+      at TestContext.<anonymous> (file:///work/water-ring-cocos-20261110/repository/game/tests/fluid-circulation.test.js:8:119)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 128,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/fluid-circulation.test.js:9:1
+✖ idle and stopped jets keep the full suspended population and long-term coverage (0.169461ms)
+  TypeError: Cannot read properties of undefined (reading '0')
+      at FluidTracers.step (file:///work/water-ring-cocos-20261110/repository/game/src/fluid-tracers.js:21:36)
+      at TestContext.<anonymous> (file:///work/water-ring-cocos-20261110/repository/game/tests/fluid-circulation.test.js:9:204)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at tests/fluid-circulation.test.js:10:1
+✖ existing all-domain wisps are advected by the shared velocity sampler (0.072667ms)
+  TypeError: Cannot read properties of undefined (reading '0')
+      at FluidTracers.step (file:///work/water-ring-cocos-20261110/repository/game/src/fluid-tracers.js:21:36)
+      at TestContext.<anonymous> (file:///work/water-ring-cocos-20261110/repository/game/tests/fluid-circulation.test.js:10:281)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/fluid-circulation.test.js:11:1
+✖ releasing a pump preserves its remaining water, then refill takes time (73.466863ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 0.8
+  - 0.505545454545455
+  
+      at TestContext.<anonymous> (file:///work/water-ring-cocos-20261110/repository/game/tests/fluid-circulation.test.js:11:203)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0.8,
+    expected: 0.505545454545455,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/fluid-circulation.test.js:12:1
+✖ pressing during refill spends only the current partial chamber and never refills while held (335.153765ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(partial>0&&partial<.4)
+  
+      at TestContext.<anonymous> (file:///work/water-ring-cocos-20261110/repository/game/tests/fluid-circulation.test.js:12:324)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/fluid-circulation.test.js:13:1
+✖ pause freezes refill and cumulative volumes without an edge refill (88.789443ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (file:///work/water-ring-cocos-20261110/repository/game/tests/fluid-circulation.test.js:13:167)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/fluid-circulation.test.js:14:1
+✖ two chambers circulate independently and conserve tank plus chamber water (1.088178ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(w.water)
+  
+      at TestContext.<anonymous> (file:///work/water-ring-cocos-20261110/repository/game/tests/fluid-circulation.test.js:14:119)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/fluid-circulation.test.js:15:1
+✖ refill contributes a local converging field at the separate intake (0.624548ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(physics.INTAKES)
+  
+      at TestContext.<anonymous> (file:///work/water-ring-cocos-20261110/repository/game/tests/fluid-circulation.test.js:15:112)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

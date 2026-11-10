@@ -1,0 +1,42 @@
+
+> pocket-tide-cocos@1.0.0 test
+> node --test tests/*.test.js
+
+✔ tracers exist over the entire water volume before any button is pressed (0.792423ms)
+✔ idle and stopped jets keep the full suspended population and long-term coverage (53.094686ms)
+✔ existing all-domain wisps are advected by the shared velocity sampler (3.597152ms)
+✔ releasing a pump preserves its remaining water, then refill takes time (255.73561ms)
+✔ pressing during refill spends only the current partial chamber and never refills while held (478.120054ms)
+✔ pause freezes refill and cumulative volumes without an edge refill (104.747654ms)
+✔ two chambers circulate independently and conserve tank plus chamber water (237.994436ms)
+✔ refill contributes a local converging field at the separate intake (92.680814ms)
+✔ one held press exhausts; refill requires full release and elapsed refill time (393.186215ms)
+✔ longer press increases actual same-point flow speed before capacity runs out (69.327849ms)
+✔ left and right pressure/water budgets are independent (148.167976ms)
+✔ a jet-held threaded ring suspended well above the base cannot score (694.01741ms)
+✔ near-rim peg overlap is rejected by conservative hole containment (0.852423ms)
+✔ all-domain particles follow flow and stay suspended after release (889.555113ms)
+✔ real floating ring contacts do not create a support root (26.826158ms)
+✔ physical platform and stacked ring contacts root support continuously (232.360644ms)
+✔ ring-ring impact reverses closing relative velocity and water damps its rebound (70.258981ms)
+✔ shell rebound is gentler than elastic ring-ring impact (16.504789ms)
+✔ global suspended tracer count stays bounded during finite pulses; reduced motion is visual only (965.836346ms)
+✔ Cannon compound torus has a physical hole, cylinder pegs and six tank walls (9.072609ms)
+✔ submerged weight sinks; water drag dissipates horizontal momentum (181.999353ms)
+✔ left jet lifts nearby rings and release allows them to descend (475.961872ms)
+✔ hole can physically slide down a post and score only after stable seating (1589.525525ms)
+✔ mere proximity, floor contact and an edge-on ring cannot count (265.539557ms)
+✔ rigid rim collides with post rather than passing sideways through it (34.028253ms)
+✔ reset clears jets, counts, timer, scored flags and rebuilds world (27.244619ms)
+✔ long pump sequence preserves finite rigid-body states inside tank (2063.032919ms)
+✔ untouched toy never starts or awards free rings (385.29299ms)
+✔ eight physically falling rings seat, win, and freeze elapsed time (4193.646425ms)
+✔ finite real multi-pulses can earn physically rooted points from the untouched start (11308.885106ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 20576.943571

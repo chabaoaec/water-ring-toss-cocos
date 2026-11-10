@@ -1,0 +1,16 @@
+{
+  "page_errors": [],
+  "cases": [
+    {
+      "real_CDP_two_touch_full_release_refill": true,
+      "partial_water": 0.25714285714285706,
+      "real_CDP_cancel_stops_jet": true,
+      "synthetic_blur_enters_menu_and_freezes_water": true,
+      "escape_resumes": true,
+      "limitation": "No physical phone or real partial CDP touchEnd; blur is dispatched application event."
+    },
+    {
+      "prefers_reduced_motion_initial_population": 36
+    }
+  ]
+}

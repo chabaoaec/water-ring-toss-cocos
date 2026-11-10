@@ -1,4 +1,4 @@
-export function bindControls(world, buttons, onActivity = () => {}) {
+export function bindControls(world, buttons, onActivity = () => {}, onSuspend = () => {}) {
   const pointers = [new Set(), new Set()],
     keys = [new Set(), new Set()];
   const clickTimers = [null, null];
@@ -65,9 +65,9 @@ export function bindControls(world, buttons, onActivity = () => {}) {
       sync(i);
     }
   }
-  window.addEventListener('blur', release);
+  window.addEventListener('blur', () => {release();onSuspend();});
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) release();
+    if (document.hidden) {release();onSuspend();}
   });
   return {
     release
