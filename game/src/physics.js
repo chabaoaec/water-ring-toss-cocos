@@ -1,7 +1,8 @@
 import * as CANNON from '../vendor/cannon-es.js';
 import {FluidTracers} from './fluid-tracers.js';
+import {sampleRecirculatingFlow,FLOW_INTAKES} from './recirculating-flow.js';
 export const PEGS = [{x:143,z:0,tip:322,base:36},{x:277,z:0,tip:322,base:36}];
-export const INTAKES = [{x:42,y:74,z:0},{x:378,y:74,z:0}];
+export const INTAKES = FLOW_INTAKES;
 export const REFILL_SECONDS = .7;
 export const PALETTE = ['#f38b78','#b69af2','#f4c95c','#74cbbb','#ed8faf','#91a7ed','#f5b76e','#add68e'];
 export const RING_RADIUS = 19, TUBE_RADIUS = 3.6, INNER_RADIUS = RING_RADIUS - TUBE_RADIUS;
@@ -14,10 +15,11 @@ export class WaterWorld {
   constructor(seed=42) {this.tracers=new FluidTracers();this.reset(seed);}
   reset(seed=42) {
     this.random=makeRandom(seed);this.time=0;this.started=false;this.elapsed=0;this.pumps=0;this.won=false;this.paused=false;
-    this.water={initialTank:8,tank:8,total:8+2*JET_CAPACITY,initialChambers:[JET_CAPACITY,JET_CAPACITY],discharged:[0,0],intaken:[0,0]};
+    this.water={initialTank:8,tank:8,total:8+2*JET_CAPACITY,initialChambers:[JET_CAPACITY,JET_CAPACITY],discharged:[0,0],intaken:[0,0],area:8/418,surfaceY:450,previousSurfaceY:450,previousDischarged:[0,0]};
     this.held=[false,false];this.jets=[false,false];this.events=[];this.tracers.reset();
-    this.jetStates=[0,1].map(()=>({held:false,active:false,refilling:false,intakeStrength:0,remaining:JET_CAPACITY,elapsed:0,pressure:0,exhausted:false}));
+    this.jetStates=[0,1].map(()=>({held:false,active:false,refilling:false,intakeStrength:0,remaining:JET_CAPACITY,elapsed:0,pressure:0,volumeRate:0,exhausted:false}));
     this.world=new CANNON.World({gravity:new CANNON.Vec3(0,-210,0)});
+    this.gravityDirection={x:0,y:-1,z:0};
     this.world.broadphase=new CANNON.SAPBroadphase(this.world);this.world.solver.iterations=14;this.world.solver.tolerance=.0001;this.world.allowSleep=false;
     this.ringMaterial=new CANNON.Material('elastic wet ring');
     this.staticMaterial=new CANNON.Material('wet shell and posts');
@@ -44,7 +46,7 @@ export class WaterWorld {
     const state=this.jetStates[side];
     if(this.held[side]===held||(held&&this.paused))return;
     this.held[side]=held;state.held=held;
-    state.elapsed=0;state.pressure=0;state.intakeStrength=0;
+    state.elapsed=0;state.pressure=0;state.intakeStrength=0;state.volumeRate=0;
     if(!held) {
       state.active=false;state.exhausted=false;this.jets[side]=false;
       state.refilling=!this.paused&&!this.won&&state.remaining<JET_CAPACITY;
@@ -62,14 +64,16 @@ export class WaterWorld {
     for(let side=0;side<2;side++) {
       const state=this.jetStates[side];
       if(value) {this.held[side]=false;state.held=false;state.exhausted=false;}
-      state.active=false;state.pressure=0;state.intakeStrength=0;this.jets[side]=false;
+      state.active=false;state.pressure=0;state.intakeStrength=0;state.volumeRate=0;this.jets[side]=false;
       state.refilling=!value&&!state.held&&!this.won&&state.remaining<JET_CAPACITY;
     }
   }
   updateJets(dt) {
+    this.water.previousSurfaceY=this.water.surfaceY;
+    this.water.previousDischarged=[...this.water.discharged];
     for(let side=0;side<2;side++) {
       const state=this.jetStates[side];
-      state.active=false;state.refilling=false;state.pressure=0;state.intakeStrength=0;
+      state.active=false;state.refilling=false;state.pressure=0;state.intakeStrength=0;state.volumeRate=0;
       if(this.won)continue;
       if(state.held) {
         state.elapsed+=dt;
@@ -77,52 +81,32 @@ export class WaterWorld {
         const discharged=Math.min(state.remaining,requested*dt);
         state.remaining=Math.max(0,state.remaining-discharged);
         this.water.discharged[side]+=discharged;this.water.tank+=discharged;
-        state.active=discharged>1e-12;state.pressure=discharged/dt;
+        state.active=discharged>1e-12;state.pressure=discharged/dt;state.volumeRate=discharged/dt;
         state.exhausted=state.remaining<=0;
       } else if(state.remaining<JET_CAPACITY) {
         const rate=JET_CAPACITY/REFILL_SECONDS;
         const intaken=Math.min(JET_CAPACITY-state.remaining,rate*dt,this.water.tank);
         state.remaining+=intaken;this.water.tank-=intaken;this.water.intaken[side]+=intaken;
-        state.refilling=intaken>1e-12;state.intakeStrength=intaken/(rate*dt);
+        state.refilling=intaken>1e-12;state.intakeStrength=intaken/(rate*dt);state.volumeRate=-intaken/dt;
         state.exhausted=false;
       }
       this.jets[side]=state.active;
     }
+    this.water.surfaceY=32+this.water.tank/this.water.area;
   }
   finalizePumpFlows() {
     for(let side=0;side<2;side++) {
       const state=this.jetStates[side];
-      if(state.remaining<=0) {state.remaining=0;state.active=false;state.pressure=0;this.jets[side]=false;}
-      if(state.remaining>=JET_CAPACITY) {state.remaining=JET_CAPACITY;state.refilling=false;state.intakeStrength=0;}
+      if(state.remaining<=0) {state.remaining=0;state.active=false;state.pressure=0;state.volumeRate=0;this.jets[side]=false;}
+      if(state.remaining>=JET_CAPACITY) {state.remaining=JET_CAPACITY;state.refilling=false;state.intakeStrength=0;state.volumeRate=0;}
     }
   }
   get score() {return this.rings.filter(r=>r.scored).length;}
-  // Velocity of the same approximate water field used by force and dye tracers.
-  sampleFlow(x,y,z) {
-    const flow={x:0,y:0,z:0};
-    for(let side=0;side<2;side++) {
-      const state=this.jetStates[side];
-      if(state.refilling&&state.intakeStrength>0) {
-        const inlet=INTAKES[side],dx=inlet.x-x,dy=inlet.y-y,dz=inlet.z-z;
-        const distance=Math.hypot(dx,dy,dz*1.25);
-        const strength=75*state.intakeStrength*Math.exp(-((distance/105)**2))/(distance+18);
-        flow.x+=dx*strength;flow.y+=dy*strength;flow.z+=dz*strength;
-      }
-      if(!state.active)continue;
-      const nozzle=side===0?91:329;
-      const center=nozzle+(side===0?1:-1)*Math.min(52,Math.max(0,y-160)*.33);
-      const width=36+Math.max(0,y)*.24;
-      const plume=Math.exp(-(((x-center)/width)**2)-((z/70)**2));
-      const attenuation=Math.max(.3,1-y/850)*state.pressure;
-      const influence=(.18+.82*plume)*attenuation;
-      // The weak background uplift is not a tank-wide lateral tow; nearby plumes
-      // steer rings, while a far-side pulse need not drag a seated opposite stack.
-      const lateral=plume*attenuation;
-      flow.x+=((center-x)*4.2+Math.sin(this.time*6+x*.03+z*.08)*6)*lateral;
-      flow.y+=410*influence;
-      flow.z+=(-z*1.8+Math.sin(this.time*2+x*.05)*2)*influence;
-    }
-    return flow;
+  // One bounded incompressible kinematic field for ring drag and passive markers.
+  getWaterSurfaceY() {return this.water.surfaceY;}
+  sampleFlow(x,y,z,phase=1) {
+    const surface=this.water.previousSurfaceY+(this.water.surfaceY-this.water.previousSurfaceY)*phase;
+    return sampleRecirculatingFlow(x,y,z,this.jetStates,INTAKES,surface,this.water.area);
   }
   // Conservative circle enclosing the tapered post's elliptical cut by ring plane.
   threadedPeg(r) {
@@ -137,14 +121,25 @@ export class WaterWorld {
     }
     return null;
   }
+  setGravityDirection(direction) {
+    const {x,y,z}=direction??{},length=Math.hypot(x,y,z);
+    if(!Number.isFinite(length)||length<1e-8)return false;
+    this.gravityDirection={x:x/length,y:y/length,z:z/length};
+    this.world.gravity.set(210*x/length,210*y/length,210*z/length);
+    return true;
+  }
   applyWaterForces(r) {
-    const b=r.body;
-    b.applyForce(new CANNON.Vec3(-b.velocity.x*1.9,136-b.velocity.y*2.05,-b.velocity.z*2.4));
-    const normal=b.quaternion.vmult(new CANNON.Vec3(0,1,0)),face=normal.y<0?-1:1;
-    b.torque.x-=normal.z*face*115;b.torque.z+=normal.x*face*115;
-    b.torque.x-=b.angularVelocity.x*85;b.torque.y-=b.angularVelocity.y*30;b.torque.z-=b.angularVelocity.z*85;
-    const flow=this.sampleFlow(r.x,r.y,r.z);
-    b.applyForce(new CANNON.Vec3(flow.x*1.9,flow.y*2.05,flow.z*2.4),new CANNON.Vec3(Math.sin(this.time*2.7+r.id)*.65,0,Math.cos(this.time*2+r.id)*.45));
+    const b=r.body,g=this.gravityDirection;
+    const normal=b.quaternion.vmult(new CANNON.Vec3(0,1,0));
+    const up=new CANNON.Vec3(-g.x,-g.y,-g.z),face=normal.dot(up)<0?-1:1;
+    const extent=RING_RADIUS*Math.sqrt(Math.max(0,1-normal.y*normal.y))+TUBE_RADIUS;
+    const wet=clamp((this.water.surfaceY-b.position.y+extent)/(2*extent),0,1);
+    const restoring=normal.cross(up).scale(face*115*wet);
+    b.torque.vadd(restoring,b.torque);
+    b.torque.x-=b.angularVelocity.x*85*wet;b.torque.y-=b.angularVelocity.y*30*wet;b.torque.z-=b.angularVelocity.z*85*wet;
+    const flow=this.sampleFlow(r.x,r.y,r.z,.5);
+    b.applyForce(new CANNON.Vec3((-g.x*136-b.velocity.x*1.9)*wet,(-g.y*136-b.velocity.y*2.05)*wet,(-g.z*136-b.velocity.z*2.4)*wet));
+    b.applyForce(new CANNON.Vec3(flow.x*1.9*wet,flow.y*2.05*wet,flow.z*2.4*wet),new CANNON.Vec3(Math.sin(this.time*2.7+r.id)*.65,0,Math.cos(this.time*2+r.id)*.45));
   }
   // Only actual upward, loaded contacts rooted in that post's platform qualify.
   // Side contacts on posts/walls are never roots; unrooted ring cycles cannot pass.
@@ -193,7 +188,7 @@ export class WaterWorld {
     this.tracers.step(dt,this);
     this.finalizePumpFlows();
     if(!this.won&&this.score===this.rings.length) {
-      this.won=true;for(let side=0;side<2;side++){this.setJet(side,false);Object.assign(this.jetStates[side],{active:false,refilling:false,pressure:0,intakeStrength:0});this.jets[side]=false;}this.events.push({type:'win'});
+      this.won=true;for(let side=0;side<2;side++){this.setJet(side,false);Object.assign(this.jetStates[side],{active:false,refilling:false,pressure:0,intakeStrength:0,volumeRate:0});this.jets[side]=false;}this.events.push({type:'win'});
     }
   }
 }
