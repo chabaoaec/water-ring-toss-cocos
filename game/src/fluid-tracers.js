@@ -1,4 +1,5 @@
 import {portCoordinate,nozzleCoordinate,FLOW_INTAKES,INITIAL_TANK_VOLUME,INITIAL_WATER_SURFACE,PUMP_CAPACITY} from './recirculating-flow.js';
+import {reflectWaterParcel} from './water-parcel-boundary.js';
 // Fixed passive marker pool, including water temporarily inside the pump.
 // Midpoint RK2 follows the shared tank field; no home force or lifetime renewal.
 const noise=n=>{const value=Math.sin(n*127.1+311.7)*43758.5453;return value-Math.floor(value);};
@@ -17,6 +18,7 @@ export class FluidTracers {
   // An explicit reset/quality toggle may rebuild the visual pool; ordinary
   // simulation never does. Quality changes seed the CURRENT volume/chambers.
   reset(world) {
+    this.boundaryFailures=0;
     const surfaceY=world?.water?.surfaceY??INITIAL_WATER_SURFACE,total=world?.water?.total??(INITIAL_TANK_VOLUME+2*PUMP_CAPACITY);
     const remaining=world?.jetStates?.map(s=>s.remaining)??[PUMP_CAPACITY,PUMP_CAPACITY],discharged=world?.water?.discharged??[0,0];
     this.particles=Array.from({length:this.limit},(_,id)=>this.createParticle(id,this.limit,surfaceY));
@@ -27,7 +29,7 @@ export class FluidTracers {
       bank.forEach((p,i)=>Object.assign(p,{inChamber:side,pipeFraction:(i+.5)/bank.length,exitVolume:discharged[side]+remaining[side]*(i+.5)/bank.length}));
     }
     const tank=this.particles.filter(p=>p.inChamber===null);
-    tank.forEach((p,i)=>{const seed=this.createParticle(i,tank.length,surfaceY);p.x=seed.x;p.y=seed.y;p.z=seed.z;});
+    tank.forEach((p,i)=>{const seed=this.createParticle(i,tank.length,surfaceY);p.x=seed.x;p.y=seed.y;p.z=seed.z;if(!reflectWaterParcel(p,world?.getWaterSurface?.()))this.boundaryFailures++;});
   }
   step(dt,world) {
     this.lastWorld=world;
@@ -55,6 +57,7 @@ export class FluidTracers {
           p.exitVolume=world.water.discharged[side]+world.jetStates[side].remaining;
         }
       }
+      if(p.inChamber===null&&!reflectWaterParcel(p,world.getWaterSurface?.()))this.boundaryFailures++;
     }
   }
 }
