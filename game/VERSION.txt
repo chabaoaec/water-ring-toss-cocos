@@ -1,0 +1,2 @@
+Pocket Tide Demo v2.1
+Packaging clarity update; gameplay matches v2 commit 3817be0.

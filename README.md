@@ -21,3 +21,7 @@ npm start
 完整说明和验证边界见[game/README.md](game/README.md)，第三方许可证见[THIRD_PARTY_NOTICES.md](game/THIRD_PARTY_NOTICES.md)。本版本是独立启动的真实Cocos引擎Web Demo；未使用Creator编辑器构建，不是可直接打开的Creator场景工程。其他浏览器/iOS真机/低端性能尚待验证。
 
 ![手机端实际运行截图](game/evidence/v2/mobile.png)
+
+### v2.1 版本核对
+
+界面右上角显示 `DEMO v2.1`（玩法与v2相同）。完整试玩包解压后运行 `python3 start-demo.py`（Windows可用 `py start-demo.py`），使用独立8082端口并禁止缓存；服务固定从脚本所在目录读取文件，不受终端当前目录影响。若端口被占用会明确报错，不跳到旧服务。
