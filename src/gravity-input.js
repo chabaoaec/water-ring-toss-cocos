@@ -1,6 +1,9 @@
 // Coordinates: device +x right, +y toward its top, +z out of its screen.
 // Game +x right, +y up, +z toward the viewer before pose calibration.
 export const DEFAULT_GRAVITY = Object.freeze({ x: 0, y: -1, z: 0 });
+export const MAX_DEVICE_ACCELERATION = 3 * 9.81;
+const ZERO_ACCELERATION = Object.freeze({ x: 0, y: 0, z: 0 });
+const finiteVector = v => !!v && ['x', 'y', 'z'].every(k => Number.isFinite(v[k]));
 const copy = v => ({ x: v.x, y: v.y, z: v.z });
 const dot = (a, b) => a.x * b.x + a.y * b.y + a.z * b.z;
 const cross = (a, b) => ({ x: a.y * b.z - a.z * b.y, y: a.z * b.x - a.x * b.z, z: a.x * b.y - a.y * b.x });
@@ -14,11 +17,13 @@ export function normalizeGravity(v) {
 export function motionGravity(event) {
   const v = event?.accelerationIncludingGravity;
   if (!v || !['x', 'y', 'z'].every(k => Number.isFinite(v[k]))) return null;
-  const length = Math.hypot(v.x, v.y, v.z);
-  if (length < .5 || length > 30) return null;
-  // Accelerometers report specific force: at rest face-up z is +g,
-  // whereas physical downward gravity is -z. Linear acceleration is not separable.
-  return { x: -v.x, y: -v.y, z: -v.z };
+  // Specific force = physical linear acceleration - physical gravity. Native
+  // gravity-removed acceleration lets shaking be removed from the tilt channel.
+  const a = finiteVector(event.acceleration) ? event.acceleration : ZERO_ACCELERATION;
+  const gravity = { x: a.x - v.x, y: a.y - v.y, z: a.z - v.z };
+  const length = Math.hypot(gravity.x, gravity.y, gravity.z);
+  if (length < .5 || length > 30 || !Number.isFinite(length)) return null;
+  return gravity;
 }
 export function orientationGravity(event) {
   if (!Number.isFinite(event?.beta) || !Number.isFinite(event?.gamma)) return null;
@@ -28,11 +33,26 @@ export function orientationGravity(event) {
   // Alpha is rotation around vertical and cancels out of gravity.
   return { x: Math.cos(beta) * Math.sin(gamma), y: -Math.sin(beta), z: -Math.cos(beta) * Math.cos(gamma) };
 }
-export function toScreenGravity(v, angle = 0) {
-  if (!normalizeGravity(v)) return null;
+export function toScreenVector(v, angle = 0) {
+  if (!finiteVector(v)) return null;
   const a = (Number.isFinite(angle) ? angle : 0) * Math.PI / 180, c = Math.cos(a), s = Math.sin(a);
   // screen.orientation.angle 90: device-left becomes displayed screen-down.
   return { x: v.x * c - v.y * s, y: v.x * s + v.y * c, z: v.z };
+}
+export function toScreenGravity(v, angle = 0) {
+  return normalizeGravity(v) ? toScreenVector(v, angle) : null;
+}
+export function clampDeviceAcceleration(v) {
+  if (!finiteVector(v)) return null;
+  const length = Math.hypot(v.x, v.y, v.z);
+  if (length <= MAX_DEVICE_ACCELERATION) return copy(v);
+  const direction = normalizeGravity(v);
+  return { x: direction.x * MAX_DEVICE_ACCELERATION, y: direction.y * MAX_DEVICE_ACCELERATION, z: direction.z * MAX_DEVICE_ACCELERATION };
+}
+export function calibratedAcceleration(v, basis) {
+  if (!basis || !finiteVector(v)) return null;
+  // Basis is orthonormal: project without normalizing away physical magnitude.
+  return { x: dot(v, basis.right), y: dot(v, basis.up), z: dot(v, basis.depth) };
 }
 export function calibrationBasis(gravity) {
   const down = normalizeGravity(gravity);
@@ -58,26 +78,84 @@ export function smoothGravity(from, to, dt) {
 }
 const blend = (a, b, weight) => ({ x: a.x + (b.x - a.x) * weight, y: a.y + (b.y - a.y) * weight, z: a.z + (b.z - a.z) * weight });
 
+// Preferred ON, a paused valid reading, and actual live application are distinct.
+export function gravityStateLabel(state) {
+  if (!state.enabled) return '关';
+  if (state.paused && state.hasReading) return '开 · 暂停中';
+  if (state.active) return '开';
+  if (state.state === 'permission' || state.state === 'requesting') return '开 · 待授权';
+  if (state.state === 'denied') return '开 · 未获授权';
+  if (state.state === 'waiting') return '开 · 等待读数';
+  if (state.state === 'unavailable') return '开 · 无数据';
+  return '开 · 不可用';
+}
+
 // No permission request occurs at construction, automatic start, or enable().
 // requestAccess() must be called directly inside the user's click handler.
-export function createGravityInput({ onDirection, onState = () => {}, win = globalThis.window, now = () => performance.now(), schedule = setTimeout, cancel = clearTimeout } = {}) {
+export function createGravityInput({ onDirection, onAcceleration = () => {}, onState = () => {}, win = globalThis.window, now = () => performance.now(), schedule = setTimeout, cancel = clearTimeout } = {}) {
   let preferred = true, active = false, paused = false, listening = false, disposed = false;
   let basis = null, raw = null, sample = null, direction = copy(DEFAULT_GRAVITY), source = null;
   let lastTime = null, lastMotionTime = -Infinity, timer = null, generation = 0, pending = null;
+  let acceleration = copy(ZERO_ACCELERATION), accelerationActive = false, accelerationSource = null;
+  let accelerationTime = null, accelerationTimer = null, gravityEstimate = null;
   let state = 'waiting', message = '倾斜重力默认开启，正在等待传感器。';
   const permission = new Map();
   const sensors = [['motion', 'DeviceMotionEvent', 'devicemotion'], ['orientation', 'DeviceOrientationEvent', 'deviceorientation']].filter(([, name]) => typeof win?.[name] !== 'undefined');
   for (const [name, ctor] of sensors) permission.set(name, typeof win[ctor].requestPermission === 'function' ? 'prompt' : 'granted');
   const needsPermission = () => sensors.some(([name]) => ['prompt', 'denied'].includes(permission.get(name)));
-  const snapshot = () => ({ enabled: preferred, active, state, message, source, paused, canRequest: preferred && needsPermission() && !pending && win?.isSecureContext !== false, canCalibrate: preferred && !!sample });
+  const snapshot = () => ({ acceleration: copy(acceleration), accelerationActive, accelerationSource, enabled: preferred, active, hasReading: !!sample, state, message, source, paused, canRequest: preferred && needsPermission() && !pending && win?.isSecureContext !== false, canCalibrate: preferred && !!sample });
   function emit(next, text) { state = next; message = text; onState(snapshot()); }
+  function activeMessage() {
+    if (!accelerationActive) return '倾斜已启用；未收到晃动加速度，晃动暂不可用。';
+    return accelerationSource === 'estimated' ? '倾斜与晃动已启用 · 晃动使用估算加速度。' : '倾斜与晃动已启用。';
+  }
+  function emitActivity() {
+    if (active && !paused && (state !== 'active' || message !== activeMessage())) emit('active', activeMessage());
+  }
+  function clearAcceleration() {
+    if (accelerationTimer !== null) cancel(accelerationTimer);
+    accelerationTimer = null; accelerationTime = null; gravityEstimate = null;
+    acceleration = copy(ZERO_ACCELERATION); accelerationActive = false; accelerationSource = null;
+    onAcceleration(copy(acceleration));
+    emitActivity();
+  }
+  function handleAcceleration(event) {
+    if (!preferred || paused || disposed || permission.get('motion') !== 'granted') return;
+    const time = now(), dt = accelerationTime === null ? 1 / 60 : Math.max(.001, Math.min(.05, (time - accelerationTime) / 1000));
+    const native = finiteVector(event.acceleration) ? event.acceleration : null;
+    const including = finiteVector(event.accelerationIncludingGravity) ? event.accelerationIncludingGravity : null;
+    let linear = native, nextSource = 'native';
+    if (including) {
+      // Fallback is a high-pass residual, retaining rapid motion rather than
+      // normalizing it into tilt. It cannot distinguish slow translation from tilt.
+      if (native) gravityEstimate = { x: including.x - native.x, y: including.y - native.y, z: including.z - native.z };
+      else {
+        const measured = clampDeviceAcceleration(including);
+        gravityEstimate = gravityEstimate ? blend(gravityEstimate, measured, 1 - Math.exp(-dt / .35)) : measured;
+        linear = { x: measured.x - gravityEstimate.x, y: measured.y - gravityEstimate.y, z: measured.z - gravityEstimate.z };
+        nextSource = 'estimated';
+      }
+    }
+    const bounded = clampDeviceAcceleration(linear);
+    if (!bounded || !basis) return;
+    const screen = toScreenVector(bounded, win.screen?.orientation?.angle ?? win.orientation ?? 0);
+    const game = calibratedAcceleration(screen, basis);
+    acceleration = blend(acceleration, game, 1 - Math.exp(-dt / .03));
+    accelerationTime = time; accelerationActive = true; accelerationSource = nextSource;
+    onAcceleration(copy(acceleration));
+    if (accelerationTimer !== null) cancel(accelerationTimer);
+    // A missing stream must not leave a persistent force; fluid inertia is separate.
+    accelerationTimer = schedule(clearAcceleration, 150);
+    emitActivity();
+  }
   function clearWatchdog() { if (timer !== null) cancel(timer); timer = null; }
   function watchdog() {
     clearWatchdog();
     if (paused || !preferred || !listening) return;
     timer = schedule(() => {
       timer = null; active = false; sample = raw = null;
-      emit(needsPermission() ? 'permission' : 'unavailable', needsPermission() ? '倾斜重力待授权：点“授权传感器”；也可继续用按钮。' : '未收到有效传感器数据；保持当前重力，可继续用按钮。请用支持传感器的手机浏览器。');
+      if (accelerationTime === null || now() - accelerationTime >= 150) clearAcceleration();
+      emit(needsPermission() ? 'permission' : 'unavailable', needsPermission() ? '倾斜重力待授权：点“授权传感器”；也可继续用按钮。' : '未收到有效倾斜读数；保持当前重力，按钮仍可使用。请检查手机浏览器传感器设置。');
     }, 3500);
   }
   function handle(event, kind) {
@@ -88,7 +166,8 @@ export function createGravityInput({ onDirection, onState = () => {}, win = glob
     if (!value) return;
     if (kind === 'motion') lastMotionTime = time;
     const dt = lastTime === null ? 1 / 60 : Math.max(.001, Math.min(.05, (time - lastTime) / 1000));
-    // Motion's low-pass estimate reduces shaking; it cannot remove sustained acceleration.
+    // Native linear acceleration was removed above; with no native channel,
+    // this low-pass gravity estimate still has the usual translation/tilt ambiguity.
     raw = !raw || source !== kind ? value : blend(raw, value, 1 - Math.exp(-dt / .18));
     const screen = toScreenGravity(raw, win.screen?.orientation?.angle ?? win.orientation ?? 0);
     const hadSample = !!sample;
@@ -96,7 +175,7 @@ export function createGravityInput({ onDirection, onState = () => {}, win = glob
     if (!sample) return;
     source = kind; lastTime = time;
     if (paused) {
-      if (!hadSample) emit('paused', '游戏暂停，已收到传感器读数；可校准当前舒适姿势。');
+      if (!hadSample) emit('paused', '已收到传感器读数，当前游戏暂停；可校准姿势，再点“继续游玩”后倾斜。');
       return;
     }
     basis ??= calibrationBasis(sample);
@@ -105,14 +184,13 @@ export function createGravityInput({ onDirection, onState = () => {}, win = glob
     if (!filtered) return;
     direction = filtered; active = true;
     onDirection(copy(direction)); watchdog();
-    const nextMessage = paused ? '暂停期间重力方向已冻结。' : '倾斜重力已启用 · 缓慢倾斜，快速摇动可能干扰方向。';
     // Avoid rewriting an aria-live region on every sensor tick.
-    if (state !== 'active' || message !== nextMessage) emit('active', nextMessage);
+    emitActivity();
   }
-  const motion = e => handle(e, 'motion'), orientation = e => handle(e, 'orientation');
+  const motion = e => { handle(e, 'motion'); handleAcceleration(e); }, orientation = e => handle(e, 'orientation');
   function detach() {
     win?.removeEventListener('devicemotion', motion); win?.removeEventListener('deviceorientation', orientation);
-    listening = false; clearWatchdog();
+    listening = false; clearWatchdog(); clearAcceleration();
   }
   function attach() {
     if (disposed || !preferred) return;
@@ -122,7 +200,8 @@ export function createGravityInput({ onDirection, onState = () => {}, win = glob
       for (const [name, , event] of sensors) if (permission.get(name) === 'granted') win.addEventListener(event, name === 'motion' ? motion : orientation);
       listening = sensors.some(([name]) => permission.get(name) === 'granted');
     }
-    if (!active) emit(needsPermission() ? 'permission' : 'waiting', needsPermission() ? '倾斜重力默认开启，待授权：点“授权传感器”。' : '正在等待有效传感器数据，保持当前姿势自动校准。');
+    if (paused && sample) emit('paused', '已收到传感器读数，当前游戏暂停；点“继续游玩”后倾斜。');
+    else if (!active) emit(needsPermission() ? 'permission' : 'waiting', needsPermission() ? '倾斜重力默认开启，待授权：点“授权传感器”。' : '正在等待有效传感器数据，保持当前姿势自动校准。');
     watchdog();
   }
   function enable() {
@@ -157,25 +236,35 @@ export function createGravityInput({ onDirection, onState = () => {}, win = glob
   }
   function calibrate() {
     if (!preferred || !sample) return false;
+    clearAcceleration();
     basis = calibrationBasis(sample); direction = copy(DEFAULT_GRAVITY); onDirection(copy(direction));
-    emit(paused ? 'paused' : active ? 'active' : 'waiting', '已将当前姿势设为正向下；继续时缓慢倾斜手机。'); return true;
+    emit(paused ? 'paused' : active ? 'active' : 'waiting', paused ? '当前姿势已校准；游戏仍暂停，请点“继续游玩”后缓慢倾斜。' : '当前姿势已校准；请缓慢倾斜手机。'); return true;
   }
   function setPaused(value) {
     if (paused === value) return;
     paused = value; lastTime = null; raw = null; clearWatchdog();
-    if (paused && active) emit('paused', '游戏暂停，重力方向已冻结；可调整姿势后点击校准。');
-    else if (!paused) { if (active) emit('active', '继续后平滑更新重力；可在菜单校准舒适姿势。'); watchdog(); }
+    active = false; clearAcceleration();
+    if (paused) {
+      if (sample) emit('paused', '游戏暂停，重力方向已冻结；可校准姿势，再点“继续游玩”后倾斜。');
+      else emit(state, message);
+    } else if (!preferred) emit('disabled', '倾斜重力已关闭，恢复普通向下重力。');
+    else if (sample) {
+      emit('waiting', '已继续，等待新的传感器读数；收到后将平滑跟随倾斜。');
+      watchdog();
+    } else attach();
   }
   function screenChanged() {
     // Screen axes changed: recapture neutral on next valid sample, then blend.
+    const hadReading = !!sample;
+    clearAcceleration();
     basis = raw = sample = null; lastTime = null;
-    if (preferred && active) emit('waiting', '屏幕方向已改变；下一次有效读数会重新校准，方向平滑过渡。');
+    if (preferred && (active || hadReading)) emit('waiting', '屏幕方向已改变；下一次有效读数会重新校准，方向平滑过渡。');
   }
   win?.screen?.orientation?.addEventListener('change', screenChanged);
   win?.addEventListener('orientationchange', screenChanged);
   const api = {
     enable, disable, requestAccess, calibrate, setPaused, getState: snapshot,
-    reapply() { onDirection(copy(preferred ? direction : DEFAULT_GRAVITY)); },
+    reapply() { clearAcceleration(); onDirection(copy(preferred ? direction : DEFAULT_GRAVITY)); },
     dispose() { detach(); disposed = true; generation++; win?.screen?.orientation?.removeEventListener('change', screenChanged); win?.removeEventListener('orientationchange', screenChanged); }
   };
   attach();

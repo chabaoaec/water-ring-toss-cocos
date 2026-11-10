@@ -1,8 +1,8 @@
-import { boot, cc } from './engine-bootstrap.js';
-import { WaterWorld, JET_CAPACITY } from './physics.js';
-import { bindControls } from './input.js';
-import { createGravityInput } from './gravity-input.js';
-import { ToyRenderer } from './render.js';
+import { boot, cc } from './engine-bootstrap.js?v=568a4006b13fb9e33812';
+import { WaterWorld, JET_CAPACITY } from './physics.js?v=568a4006b13fb9e33812';
+import { bindControls } from './input.js?v=568a4006b13fb9e33812';
+import { createGravityInput, gravityStateLabel } from './gravity-input.js?v=568a4006b13fb9e33812';
+import { ToyRenderer } from './render.js?v=568a4006b13fb9e33812';
 const $ = s => document.querySelector(s);
 const status = $('#status');
 const world = new WaterWorld();
@@ -51,9 +51,11 @@ function tone(type) {
 }
 const gravityInput = createGravityInput({
   onDirection: direction => world.setGravityDirection(direction),
+  // Physical container acceleration in m/s²; physics owns inertial sign/scaling.
+  onAcceleration: acceleration => world.setDeviceAcceleration?.(acceleration),
   onState: state => {
-    const label = state.active ? '开' : state.enabled ? '开 · 未生效' : '关';
-    $('#gravity-toggle').textContent = `倾斜重力 ${label}`;
+    const label = gravityStateLabel(state);
+    $('#gravity-toggle').textContent = `体感 ${label}`;
     $('#gravity-toggle').setAttribute('aria-pressed', String(state.enabled));
     $('#gravity-status').textContent = state.message;
     $('#gravity-authorize').hidden = !state.canRequest;

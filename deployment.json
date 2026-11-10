@@ -1,5 +1,9 @@
 {
-  "version": "v5.1",
-  "source_commit": "673f2bd9d4bb43b4a1f2630944c4183bba820690",
-  "built_at": "2026-11-10T10:37:07.933113+00:00"
+  "version": "v5.2",
+  "source_commit": "b49a0e0a3080dc2fde78cab66c7a49f275018b78",
+  "runtime_core_commit": "d5e560327af1d7af817a15d4acb29abd716b0473",
+  "assetRevision": "568a4006b13fb9e33812",
+  "manifest_sha256": "2b29de58beb93e62a59c365f57b80cf167a76ee09aa5341537e173998b6a7c85",
+  "authorization": "P9Dp-1x6lXzsNzRG",
+  "prepared_at": "2026-11-10T11:21:53.625744+00:00"
 }

@@ -1,6 +1,8 @@
-import * as CANNON from '../vendor/cannon-es.js';
-import {FluidTracers} from './fluid-tracers.js';
-import {sampleRecirculatingFlow,FLOW_INTAKES,INITIAL_TANK_VOLUME,INITIAL_WATER_SURFACE,PUMP_CAPACITY,WATER_AREA,advanceCirculation} from './recirculating-flow.js';
+import * as CANNON from '../vendor/cannon-es.js?v=568a4006b13fb9e33812';
+import {FluidTracers} from './fluid-tracers.js?v=568a4006b13fb9e33812';
+import {createWaterSurfaceCache} from './water-surface.js?v=568a4006b13fb9e33812';
+import {createWaterInertia,advanceWaterInertia,sampleWaterInertia,boundedAcceleration,GAME_ACCELERATION_PER_MPS2} from './inertial-water.js?v=568a4006b13fb9e33812';
+import {sampleRecirculatingFlow,FLOW_INTAKES,INITIAL_TANK_VOLUME,INITIAL_WATER_SURFACE,PUMP_CAPACITY,WATER_AREA,advanceCirculation,FLOW_BOUNDS} from './recirculating-flow.js?v=568a4006b13fb9e33812';
 export const PEGS = [{x:143,z:0,tip:322,base:36},{x:277,z:0,tip:322,base:36}];
 export const INTAKES = FLOW_INTAKES;
 export const REFILL_SECONDS = .7;
@@ -20,7 +22,14 @@ export class WaterWorld {
     this.jetStates=[0,1].map(()=>({held:false,active:false,refilling:false,intakeStrength:0,remaining:JET_CAPACITY,elapsed:0,pressure:0,volumeRate:0,circulation:0,intakeCirculation:0,exhausted:false}));
     this.world=new CANNON.World({gravity:new CANNON.Vec3(0,-210,0)});
     this.gravityDirection={x:0,y:-1,z:0};
+    this.deviceAcceleration={x:0,y:0,z:0};this.waterInertia=createWaterInertia();
+    this.surfaceCache=createWaterSurfaceCache();this.waterSurface=null;
     this.world.broadphase=new CANNON.SAPBroadphase(this.world);this.world.solver.iterations=14;this.world.solver.tolerance=.0001;this.world.allowSleep=false;
+    // Cannon's friction bounds are used as solver impulses. Bound the aggregate
+    // wet static-body contact patch once, rather than giving each torus sphere
+    // an independent gravity-sized impulse budget at every120Hz step.
+    const solve=this.world.solver.solve.bind(this.world.solver);
+    this.world.solver.solve=(dt,world)=>{this.limitWetStaticFriction(dt);return solve(dt,world);};
     this.ringMaterial=new CANNON.Material('elastic wet ring');
     this.staticMaterial=new CANNON.Material('wet shell and posts');
     this.world.defaultContactMaterial.friction=.12;this.world.defaultContactMaterial.restitution=.1;
@@ -28,14 +37,17 @@ export class WaterWorld {
     this.world.addContactMaterial(new CANNON.ContactMaterial(this.ringMaterial,this.staticMaterial,{friction:.12,restitution:.1,contactEquationStiffness:1e7,contactEquationRelaxation:4}));
     this.supportBases=new Map();
     const box=(x,y,z,hx,hy,hz)=>{const b=new CANNON.Body({mass:0,material:this.staticMaterial,position:new CANNON.Vec3(x,y,z)});b.addShape(new CANNON.Box(new CANNON.Vec3(hx,hy,hz)));this.world.addBody(b);return b;};
-    box(210,20,0,210,8,63);box(6,290,0,6,270,63);box(414,290,0,6,270,63);box(210,558,0,210,6,63);box(210,290,-61,210,280,4);box(210,290,61,210,280,4);
+    // All six collider inner faces agree with the fluid box; no dry strips in
+    // which a flat or edge-on torus can come to rest outside its water sampler.
+    box(210,24,0,210,8,63);box(10,290,0,10,270,63);box(410,290,0,10,270,63);box(210,546,0,210,6,63);box(210,290,-56,210,280,4);box(210,290,56,210,280,4);
     for(const [index,peg] of PEGS.entries()) {
       const post=new CANNON.Body({mass:0,material:this.staticMaterial,position:new CANNON.Vec3(peg.x,(peg.tip+peg.base)/2,0)});
       post.addShape(new CANNON.Cylinder(3.7,4.6,peg.tip-peg.base,16));this.world.addBody(post);
       const platform=box(peg.x,peg.base-7,0,29,5,27);this.supportBases.set(platform.id,index);
     }
     this.rings=PALETTE.map((color,i)=>{
-      const body=new CANNON.Body({mass:1,material:this.ringMaterial,position:new CANNON.Vec3(46+i*46,49+(i%2)*8,i===2||i===5?34:(i%3-1)*17),linearDamping:0,angularDamping:.85});
+      // Depth28 keeps the two offset rings clear of both posts and ±52 walls.
+      const body=new CANNON.Body({mass:1,material:this.ringMaterial,position:new CANNON.Vec3(46+i*46,49+(i%2)*8,i===2||i===5?28:(i%3-1)*17),linearDamping:0,angularDamping:.85});
       for(let k=0;k<24;k++){const a=k*Math.PI/12;body.addShape(new CANNON.Sphere(TUBE_RADIUS),new CANNON.Vec3(Math.cos(a)*RING_RADIUS,0,Math.sin(a)*RING_RADIUS));}
       body.quaternion.setFromEuler((this.random()-.5)*.6,0,(this.random()-.5)*.4);this.world.addBody(body);
       return {id:i,color,body,x:body.position.x,y:body.position.y,z:body.position.z,peg:null,supported:false,supportedBy:null,stable:0,scored:false};
@@ -61,6 +73,7 @@ export class WaterWorld {
   }
   setPaused(value) {
     this.paused=value;
+    if(value)this.setDeviceAcceleration({x:0,y:0,z:0});
     for(let side=0;side<2;side++) {
       const state=this.jetStates[side];
       if(value) {this.held[side]=false;state.held=false;state.exhausted=false;}
@@ -94,6 +107,8 @@ export class WaterWorld {
     }
     for(const state of this.jetStates)advanceCirculation(state,dt);
     this.water.surfaceY=32+this.water.tank/this.water.area;
+    advanceWaterInertia(this.waterInertia,this.deviceAcceleration,dt);
+    this.waterSurface=this.surfaceCache.get({gravity:this.gravityDirection,volume:this.water.tank,area:this.water.area});
   }
   finalizePumpFlows() {
     for(let side=0;side<2;side++) {
@@ -105,9 +120,16 @@ export class WaterWorld {
   get score() {return this.rings.filter(r=>r.scored).length;}
   // One bounded incompressible kinematic field for ring drag and passive markers.
   getWaterSurfaceY() {return this.water.surfaceY;}
+  getWaterSurface() {
+    if(!this.waterSurface)this.waterSurface=this.surfaceCache.get({gravity:this.gravityDirection,volume:this.water.tank,area:this.water.area});
+    return this.waterSurface;
+  }
   sampleFlow(x,y,z,phase=1) {
     const surface=this.water.previousSurfaceY+(this.water.surfaceY-this.water.previousSurfaceY)*phase;
-    return sampleRecirculatingFlow(x,y,z,this.jetStates,INTAKES,surface,this.water.area,phase);
+    const hydrostatic=this.getWaterSurface();
+    const flow=sampleRecirculatingFlow(x,y,z,this.jetStates,INTAKES,surface,this.water.area,phase,hydrostatic);
+    const inertia=sampleWaterInertia(x,y,z,this.waterInertia,FLOW_BOUNDS,hydrostatic,phase);
+    flow.x+=inertia.x;flow.y+=inertia.y;flow.z+=inertia.z;return flow;
   }
   // Conservative circle enclosing the tapered post's elliptical cut by ring plane.
   threadedPeg(r) {
@@ -127,19 +149,49 @@ export class WaterWorld {
     if(!Number.isFinite(length)||length<1e-8)return false;
     this.gravityDirection={x:x/length,y:y/length,z:z/length};
     this.world.gravity.set(210*x/length,210*y/length,210*z/length);
+    this.waterSurface=null;
     return true;
+  }
+  setDeviceAcceleration(acceleration) {
+    this.deviceAcceleration=boundedAcceleration(acceleration);
+  }
+  limitWetStaticFriction(dt) {
+    const patches=new Map(),key=(a,b)=>a.id<b.id?`${a.id}:${b.id}`:`${b.id}:${a.id}`;
+    for(const c of this.world.contacts) {
+      if((c.bi.invMass>0&&c.bj.invMass>0)||!c.enabled)continue;
+      const inverseMass=c.bi.invMass+c.bj.invMass;if(inverseMass<=0)continue;
+      const pair=key(c.bi,c.bj),patch=patches.get(pair)??{count:0,load:0,mass:1/inverseMass};
+      // Gravity has already been added to body.force before solver.solve.
+      const ax=c.bi.force.x*c.bi.invMass-c.bj.force.x*c.bj.invMass;
+      const ay=c.bi.force.y*c.bi.invMass-c.bj.force.y*c.bj.invMass;
+      const az=c.bi.force.z*c.bi.invMass-c.bj.force.z*c.bj.invMass;
+      patch.load+=Math.max(0,(ax*c.ni.x+ay*c.ni.y+az*c.ni.z)*patch.mass);patch.count++;
+      patches.set(pair,patch);
+    }
+    const gravity=(this.world.frictionGravity??this.world.gravity).length();
+    for(const f of this.world.frictionEquations) {
+      const patch=patches.get(key(f.bi,f.bj));if(!patch||gravity<=0)continue;
+      const mu=f.maxForce/(gravity*patch.mass);
+      const impulse=mu*(patch.load/patch.count)*dt/patch.count;
+      f.maxForce=impulse;f.minForce=-impulse;
+    }
   }
   applyWaterForces(r) {
     const b=r.body,g=this.gravityDirection;
     const normal=b.quaternion.vmult(new CANNON.Vec3(0,1,0));
     const up=new CANNON.Vec3(-g.x,-g.y,-g.z),face=normal.dot(up)<0?-1:1;
-    const extent=RING_RADIUS*Math.sqrt(Math.max(0,1-normal.y*normal.y))+TUBE_RADIUS;
-    const wet=clamp((this.water.surfaceY-b.position.y+extent)/(2*extent),0,1);
+    const surface=this.getWaterSurface(),alignment=normal.dot(surface.normal);
+    const extent=RING_RADIUS*Math.sqrt(Math.max(0,1-alignment*alignment))+TUBE_RADIUS;
+    const wet=clamp((surface.signedDepth(b.position)+extent)/(2*extent),0,1);
     const restoring=normal.cross(up).scale(face*115*wet);
     b.torque.vadd(restoring,b.torque);
     b.torque.x-=b.angularVelocity.x*85*wet;b.torque.y-=b.angularVelocity.y*30*wet;b.torque.z-=b.angularVelocity.z*85*wet;
     const flow=this.sampleFlow(r.x,r.y,r.z,.5);
     b.applyForce(new CANNON.Vec3((-g.x*136-b.velocity.x*1.9)*wet,(-g.y*136-b.velocity.y*2.05)*wet,(-g.z*136-b.velocity.z*2.4)*wet));
+    // In the accelerating container frame use -a; pressure buoyancy displaces
+    // the submerged fluid mass, leaving the density-contrast response.
+    const accelerationMass=b.mass-(136/210)*wet,device=this.deviceAcceleration;
+    b.applyForce(new CANNON.Vec3(-device.x*GAME_ACCELERATION_PER_MPS2*accelerationMass,-device.y*GAME_ACCELERATION_PER_MPS2*accelerationMass,-device.z*GAME_ACCELERATION_PER_MPS2*accelerationMass));
     // Centre-sampled bulk drag acts at the centre of mass. Collisions and
     // restoring water torque still rotate the ring; no arbitrary lever pumps spin.
     b.applyForce(new CANNON.Vec3(flow.x*1.9*wet,flow.y*2.05*wet,flow.z*2.4*wet));
