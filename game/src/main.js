@@ -51,6 +51,8 @@ function tone(type) {
 }
 const gravityInput = createGravityInput({
   onDirection: direction => world.setGravityDirection(direction),
+  // Physical container acceleration in m/s²; physics owns inertial sign/scaling.
+  onAcceleration: acceleration => world.setDeviceAcceleration?.(acceleration),
   onState: state => {
     const label = gravityStateLabel(state);
     $('#gravity-toggle').textContent = `倾斜重力 ${label}`;
