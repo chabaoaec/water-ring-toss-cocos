@@ -1,0 +1,68 @@
+{
+  "observed_at": "2026-11-10T07:24:25.492334+00:00",
+  "target": "http://127.0.0.1:8768",
+  "checks": [
+    {
+      "name": "desktop",
+      "engine": "3.8.7",
+      "physics": "cannon-es 0.20.0",
+      "component": "Graphics",
+      "bodyCount": 18,
+      "horizontalOverflow": false,
+      "buttonsVisible": true,
+      "canvas": {
+        "x": 447.296875,
+        "y": 109,
+        "width": 385.390625,
+        "height": 532.953125,
+        "top": 109,
+        "right": 832.6875,
+        "bottom": 641.953125,
+        "left": 447.296875
+      }
+    },
+    {
+      "name": "finite pressure / same-side A+Left aggregation / autorepeat / independent right / full release refill / Enter hold / blur / menu Escape return reset",
+      "pass": true,
+      "lift_before": 48.82218853065743,
+      "lift_after": 80.5857121208558
+    },
+    {
+      "name": "mobile",
+      "engine": "3.8.7",
+      "physics": "cannon-es 0.20.0",
+      "component": "Graphics",
+      "bodyCount": 18,
+      "horizontalOverflow": false,
+      "buttonsVisible": true,
+      "canvas": {
+        "x": 44,
+        "y": 107,
+        "width": 302,
+        "height": 417.796875,
+        "top": 107,
+        "right": 346,
+        "bottom": 524.796875,
+        "left": 44
+      }
+    },
+    {
+      "name": "real CDP two-touch held/exhaustion/full pointerup / next touch refill / cancellation",
+      "pass": true
+    },
+    {
+      "name": "synthetic controller same-side partial pointerup retains exhaustion until last pointerup",
+      "pass": true,
+      "limitation": "controller-injected PointerEvents; not a real partial CDP touchEnd or physical-device observation"
+    },
+    {
+      "name": "smoke tracer bound",
+      "particles": 88,
+      "limit": 128
+    }
+  ],
+  "console_errors": [],
+  "page_errors": [],
+  "webgl_warnings": [],
+  "browser_version": "155.0.8059.84"
+}

@@ -82,6 +82,15 @@ export class ToyRenderer {
       this.ellipse(p.x, p.base - 5, 29, 9, color('#d5debc'));
       this.ellipse(p.x, p.base - 2, 22, 5, color('#e6ebce'));
     }
+    // Soft, expanding dye puffs follow the physical jet velocity field. They keep
+    // their momentum briefly after release, disperse, and drift down as they fade.
+    for (const p of w.tracers.particles) {
+      const age = p.age / p.life, fade = Math.min(1, p.age / .12) * (1 - age) ** 1.2;
+      const radius = p.size + p.age * 4.2, y = p.y + p.z * .32;
+      this.ellipse(p.x, y, radius * 1.75, radius * 2.0, color('#629e9f', 28 * fade));
+      this.ellipse(p.x - 1, y + 1, radius * 1.2, radius * 1.6, color('#f1fff3', 67 * fade));
+      this.ellipse(p.x + 1, y, radius * .72, radius * 1.1, color('#b9eeea', 45 * fade));
+    }
     const parts = [];
     for (const p of PEGS) parts.push({
       z: 0,
@@ -137,15 +146,6 @@ export class ToyRenderer {
       g.lineWidth = .9;
       g.circle(x, y, b.r);
       g.stroke();
-    }
-    for (let side = 0; side < 2; side++) if (w.jets[side] && !w.won) {
-      const x = side === 0 ? 91 : 329;
-      for (let k = 0; k < (this.reduced ? 7 : 19); k++) {
-        const life = (t * 1.9 + k * .127) % 1,
-          y = 38 + life * 400,
-          px = x + (side === 0 ? 1 : -1) * life * 65 + Math.sin(k * 7 + t * 6) * life * 25;
-        this.ellipse(px, y, 1.5 + life * 2, 2.8 + life * 3.5, color('#f8fff4', 180 * (1 - life)));
-      }
     }
     // Waterline, glass thickness and restrained highlights.
     this.line(16, 551, 404, 551, color('#f8fff4', 160), 2);

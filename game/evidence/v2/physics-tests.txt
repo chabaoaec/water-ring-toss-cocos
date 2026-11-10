@@ -1,0 +1,34 @@
+
+> pocket-tide-cocos@1.0.0 test
+> node --test tests/*.test.js
+
+✔ one held press exhausts; repeat/added input cannot refill until full release (265.754091ms)
+✔ longer press increases actual same-point flow speed before capacity runs out (65.064377ms)
+✔ left and right pressure/water budgets are independent (139.756286ms)
+✔ a jet-held threaded ring suspended well above the base cannot score (660.012466ms)
+✔ near-rim peg overlap is rejected by conservative hole containment (0.704297ms)
+✔ tracer particles use the flow, keep a bound, and remain after release (759.32519ms)
+✔ real floating ring contacts do not create a support root (26.11716ms)
+✔ physical platform and stacked ring contacts root support continuously (226.782583ms)
+✔ ring-ring impact reverses closing relative velocity and water damps its rebound (67.416478ms)
+✔ shell rebound is gentler than elastic ring-ring impact (15.397452ms)
+✔ continuous finite pulses exercise the tracer cap; reduced motion changes visuals only (849.116383ms)
+✔ Cannon compound torus has a physical hole, cylinder pegs and six tank walls (6.487091ms)
+✔ submerged weight sinks; water drag dissipates horizontal momentum (203.347943ms)
+✔ left jet lifts nearby rings and release allows them to descend (448.537668ms)
+✔ hole can physically slide down a post and score only after stable seating (1440.750739ms)
+✔ mere proximity, floor contact and an edge-on ring cannot count (261.614351ms)
+✔ rigid rim collides with post rather than passing sideways through it (34.31114ms)
+✔ reset clears jets, counts, timer, scored flags and rebuilds world (26.994833ms)
+✔ long pump sequence preserves finite rigid-body states inside tank (2031.895257ms)
+✔ untouched toy never starts or awards free rings (380.544103ms)
+✔ eight physically falling rings seat, win, and freeze elapsed time (4161.411601ms)
+✔ finite real multi-pulses can earn physically rooted points from the untouched start (9284.204335ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 18321.324663

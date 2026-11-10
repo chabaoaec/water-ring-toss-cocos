@@ -1,0 +1,23 @@
+{
+  "url": "http://127.0.0.1:8768",
+  "page_errors": [],
+  "cases": [
+    {
+      "flow_short": 185.65963756835902,
+      "flow_long": 381.05882352941177,
+      "particles": 21
+    },
+    {
+      "autorepeat_and_partial_key_release_cannot_refill": true,
+      "full_release_repress_refills": true
+    },
+    {
+      "same_side_real_CDP_two_fingers_full_release": true,
+      "partial_touch_release": "not tested by root CDP; covered as controller-only synthetic events in implementation evidence",
+      "touch_repress_and_cancel": true
+    },
+    {
+      "menu_release_pause_escape_resume": true
+    }
+  ]
+}

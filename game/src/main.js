@@ -1,10 +1,26 @@
 import { boot, cc } from './engine-bootstrap.js';
-import { WaterWorld } from './physics.js';
+import { WaterWorld, JET_CAPACITY } from './physics.js';
 import { bindControls } from './input.js';
 import { ToyRenderer } from './render.js';
 const $ = s => document.querySelector(s);
 const status = $('#status');
 const world = new WaterWorld();
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+world.tracers.setReducedMotion(reducedMotion);
+function updateJetHud() {
+  for (const [side, name] of ['left', 'right'].entries()) {
+    const state = world.jetStates[side], button = $(`#${name}-jet`);
+    button.classList.toggle('pressed', world.held[side]);
+    button.classList.toggle('flowing', state.active);
+    button.classList.toggle('exhausted', state.exhausted);
+    button.style.setProperty('--pressure', state.pressure);
+    button.setAttribute('aria-pressed', String(world.held[side]));
+    $(`#${name}-feedback`).textContent = state.exhausted ? '已耗尽 · 松开补水' : state.active ? (state.pressure < .7 ? '轻轻喷流' : '加压喷流') : '按住加压';
+    const fraction = state.remaining / JET_CAPACITY;
+    $(`#${name}-fuel`).setAttribute('aria-valuenow', String(Math.round(fraction * 100)));
+    $(`#${name}-fuel i`).style.transform = `scaleX(${fraction})`;
+  }
+}
 let audio = null,
   sound = false;
 let previousScore = -1,
@@ -49,7 +65,8 @@ function setPaused(value) {
   $('#menu').textContent = value ? '↶ 返回' : '☰ 菜单';
   $('#menu').setAttribute('aria-expanded', String(value));
   if (value) $('#resume').focus();else $('#menu').focus();
-  for (const button of [$('#left-jet'), $('#right-jet')]) button.disabled = value;
+  for (const button of [$('#left-jet'), $('#right-jet')]) button.disabled = value || world.won;
+  updateJetHud();
 }
 $('#menu').addEventListener('click', () => setPaused(!paused));
 $('#resume').addEventListener('click', () => setPaused(false));
@@ -57,10 +74,12 @@ function reset() {
   setPaused(false);
   input.release();
   world.reset(42 + Math.floor(Math.random() * 100000));
+  for (const button of [$('#left-jet'), $('#right-jet')]) button.disabled = false;
+  updateJetHud();
   previousScore = -1;
   announcedWin = false;
   $('#win').hidden = true;
-  $('#hint').textContent = '按住喷流，让彩环升起；松开，让它缓缓落柱。';
+  $('#hint').textContent = '轻点微喷，长按加压；水尽松开，再次按压。';
   status.textContent = '新一局已准备。';
 }
 $('#reset').addEventListener('click', reset);
@@ -75,7 +94,7 @@ try {
     scene,
     camera
   } = await boot();
-  const renderer = new ToyRenderer(graphics, matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const renderer = new ToyRenderer(graphics, reducedMotion);
   class WaterToy extends cc.Component {
     update(dt) {
       if (paused) return;
@@ -84,6 +103,7 @@ try {
         world.step(1 / 120);
         this.accumulator -= 1 / 120;
       }
+      updateJetHud();
       renderer.draw(world);
       for (const event of world.events.splice(0)) {
         tone(event.type);
@@ -100,6 +120,7 @@ try {
       if (world.won && !announcedWin) {
         announcedWin = true;
         input.release();
+        for (const button of [$('#left-jet'), $('#right-jet')]) button.disabled = true;
         $('#win-stats').textContent = `用时 ${formatTime(world.elapsed)} · ${world.pumps} 次喷流`;
         $('#win').hidden = false;
         $('#play-again').focus();
