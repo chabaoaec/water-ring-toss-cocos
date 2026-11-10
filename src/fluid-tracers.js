@@ -1,5 +1,5 @@
-import {portCoordinate,nozzleCoordinate,FLOW_INTAKES,INITIAL_TANK_VOLUME,INITIAL_WATER_SURFACE,PUMP_CAPACITY} from './recirculating-flow.js?v=4ca47e03e619b998ee99';
-import {reflectWaterParcel} from './water-parcel-boundary.js?v=4ca47e03e619b998ee99';
+import {portCoordinate,nozzleCoordinate,FLOW_INTAKES,INITIAL_TANK_VOLUME,INITIAL_WATER_SURFACE,PUMP_CAPACITY} from './recirculating-flow.js?v=dac88d6e5afbc69b7d8a';
+import {reflectWaterParcel} from './water-parcel-boundary.js?v=dac88d6e5afbc69b7d8a';
 // Fixed passive marker pool, including water temporarily inside the pump.
 // Midpoint RK2 follows the shared tank field; no home force or lifetime renewal.
 const noise=n=>{const value=Math.sin(n*127.1+311.7)*43758.5453;return value-Math.floor(value);};

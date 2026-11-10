@@ -1,2 +1,2 @@
-Pocket Tide Demo v5.4
+Pocket Tide Demo v5.5
 Full inversion across automatic screen rotation, preserved calibration and conservative AABB collision screening.

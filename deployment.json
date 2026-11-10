@@ -1,9 +1,9 @@
 {
-  "version": "v5.4",
-  "source_commit": "04568470fbb6ce3ad72b0edc01ebd3ee8d870754",
-  "runtime_core_commit": "5f7c95f7b987b6cf78e7472ad30f69c2d92da8b3",
-  "assetRevision": "4ca47e03e619b998ee99",
-  "manifest_sha256": "f3bf609096ae2404bde6e79edff44533c8a290f01b2d7e5067ea1842e8fc052d",
-  "authorization": "P9Dp-1x6lXzsNzRG",
-  "prepared_at": "2026-11-10T13:08:38.385594+00:00"
+  "version": "v5.5",
+  "source_commit": "428dacdb9ce5a1ba50fdf8f2fb808f8884d1742f",
+  "runtime_core_commit": "428dacdb9ce5a1ba50fdf8f2fb808f8884d1742f",
+  "assetRevision": "dac88d6e5afbc69b7d8a",
+  "manifest_sha256": "a88eeff85e0853009b42fd2285153b67e1670eacdbcb25c6dfcb42a843cd57b7",
+  "authorization": "P9Dp-1x6lXzsNzRG; continuing iOS fix HyZVd2-xEa9pS8r5",
+  "prepared_at": "2026-11-10T16:00:58.943486+00:00"
 }
