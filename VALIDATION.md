@@ -1,3 +1,21 @@
+# v5 validation · 2026-11-10
+
+Root integrated51/51 Node tests pass with no failures/skips, including60s bilateral marker identities/bounds/distribution, source divergence and exchange flux, water-volume ledger/free surface, finite pumps, real supported score, collisions and sensor lifecycle. Single-side/reduced60s separately retain identity and water; original v4.1 ceiling-aggregation red evidence is preserved.
+
+Actual Chromium/SwiftShader desktop/mobile UI: default-enabled pending permission, no automatic permission dialog, denied→retry→granted, synthetic tilt, pause/calibration/off/on/reset,36reduced, waterline450→533.6→450 and128total variable-visible markers. Button-only1.1/.7/.1/16s protocol gives real supported score1 from2pumps, without direct body manipulation. Root viewed actual bright-flake/air/waterline screenshots. No page/console errors.
+
+Final ZIP sha256 **82fd0fb96e1ebf87d59b6d27b5b9764c1843060748ad9fbdb9fb8f42c2fbee3c**,627017bytes; fresh extraction29runtime-file hashes match committed source. Launcher version/no-store headers and actual Cocos3.8.7 startup/default-ON state verified. First browser attempt hit test-machine thread starvation while company review overlapped; same unchangedZIP passed alone, original failure retained.
+
+One bounded isolated2CPU Chromium/SwiftShader6s idle/6s pump sample:39.72/11.97meanFPS, framep9533.4/249.9ms, physicsstepmedian1.2/1.3ms. Long frames remain; no hardwareBrave/mobile performance-fix or controlled v4 comparison claim.
+
+DeepSeek static cross-check: complete8files supplied; sharp-edges293actual read lines verified and prior unchanged review skills reused. First300s timed out without verdict; same-session167.441s conclusion completed with no new tools. Its only blocker refers to a nonexistent removed bubble draw block; root refuted it with exact supplied/current/ZIP source hashes and actual browser results. See game/evidence/v5/ROOT-DECISION.md; do not call the model verdict clean or its review exhaustive. No source changes were made for a false finding.
+
+Known limits: one-way kinematic flow notCFD, unresolved intake conduits, horizontal surface under tilt/no sloshing, approximate submersion. Synthetic sensors are not real phone testing. Full manual8/8, user visual acceptance and Brave hardware performance remain unverified.
+
+---
+
+## Historical v4.1 and earlier validation
+
 # Current validation · v4.1
 
 Zhou reported v4 particles perceptually invisible despite nonzero pixel evidence. v4.1 changes only the radial gradient, max alpha55→135 and diameter factor2.05→2.9, including matching136-entry alpha cache.128/36 counts and sprite-pool/motion/physics are retained. Root compared normal-size actual desktop/mobile images; a first overly dark candidate was rejected and kept privately, then the balanced candidate was packaged. Nonzero pixels are a rendering diagnostic, not human acceptance. Evidence and actual screenshots:game/evidence/v4.1. No new whole physics/DeepSeek rerun for these bounded appearance constants; the full render logic was previously reviewed, exact unchanged modules are bound below. v4 performance samples remain v4-only; larger visible area may change GPU cost, hardware Brave performance is unverified.

@@ -1,0 +1,15 @@
+{
+  "sharp_edges_full_lines": 293,
+  "actual_successful_tool_results": [
+    "call_00_2w2nuXKtHn0YuzfqruVb7733|376fcf1b-a39b-493f-880a-41831abe0055",
+    "call_01_vpv3Zk42LyAmXkvJpdUn5973|3db6e105-3af2-4dab-b04d-9fe7af80e43d",
+    "call_02_3GirxCAc0ouPfffbnvuT8761|0fd6a783-0b73-4a7a-a84b-ea6b4579a396",
+    "call_03_7r7eQmcqP4YZT3iG3W773928|3b15877f-10bc-43a7-822b-73ff5ac01633"
+  ],
+  "sharp_edges_sha256": "3b69a709c2f8f0cfcf57d40a3186e166f307865cc8ed924be4098e549a121e9c",
+  "tapml_differential_reused_verified_unchanged": "../v3/skills-reuse.json",
+  "frozen_production_files_match_current": true,
+  "source_supplied_directly": true,
+  "first_run": "300s timeout completedfalse/no final; not a verdict",
+  "run_dir": "/work/ds-harness-gateway/private/runs/20261110T100245Z-ccad4742c0254ecdb965ce632ff163a3"
+}
