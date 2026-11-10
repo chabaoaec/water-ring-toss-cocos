@@ -55,7 +55,7 @@ const gravityInput = createGravityInput({
   onAcceleration: acceleration => world.setDeviceAcceleration?.(acceleration),
   onState: state => {
     const label = gravityStateLabel(state);
-    $('#gravity-toggle').textContent = `倾斜重力 ${label}`;
+    $('#gravity-toggle').textContent = `体感 ${label}`;
     $('#gravity-toggle').setAttribute('aria-pressed', String(state.enabled));
     $('#gravity-status').textContent = state.message;
     $('#gravity-authorize').hidden = !state.canRequest;
