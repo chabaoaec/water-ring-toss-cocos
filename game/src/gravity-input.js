@@ -5,6 +5,16 @@ export const MAX_DEVICE_ACCELERATION = 3 * 9.81;
 const ZERO_ACCELERATION = Object.freeze({ x: 0, y: 0, z: 0 });
 const finiteVector = v => !!v && ['x', 'y', 'z'].every(k => Number.isFinite(v[k]));
 const copy = v => ({ x: v.x, y: v.y, z: v.z });
+// WebKit/iOS exposes Core Motion's user+gravity convention, opposite to
+// Android's accelerometer convention. Normalize BOTH motion channels before
+// gravity subtraction, screen rotation or calibration (never mirror game x).
+// iPadOS can identify itself as a desktop Mac; a Mac without touch is not iOS.
+export function motionAccelerationSign(win) {
+  const nav = win?.navigator;
+  return /iPad|iPhone|iPod/.test(nav?.userAgent ?? '')
+    || (nav?.platform === 'MacIntel' && nav?.maxTouchPoints > 1) ? -1 : 1;
+}
+const motionVector = (v, sign) => finiteVector(v) ? { x: v.x * sign, y: v.y * sign, z: v.z * sign } : null;
 const dot = (a, b) => a.x * b.x + a.y * b.y + a.z * b.z;
 const cross = (a, b) => ({ x: a.y * b.z - a.z * b.y, y: a.z * b.x - a.x * b.z, z: a.x * b.y - a.y * b.x });
 export function normalizeGravity(v) {
@@ -14,12 +24,12 @@ export function normalizeGravity(v) {
   const x = v.x / scale, y = v.y / scale, z = v.z / scale, length = Math.hypot(x, y, z);
   return { x: x / length, y: y / length, z: z / length };
 }
-export function motionGravity(event) {
-  const v = event?.accelerationIncludingGravity;
-  if (!v || !['x', 'y', 'z'].every(k => Number.isFinite(v[k]))) return null;
+export function motionGravity(event, sign = 1) {
+  const v = motionVector(event?.accelerationIncludingGravity, sign);
+  if (!v) return null;
   // Specific force = physical linear acceleration - physical gravity. Native
   // gravity-removed acceleration lets shaking be removed from the tilt channel.
-  const a = finiteVector(event.acceleration) ? event.acceleration : ZERO_ACCELERATION;
+  const a = motionVector(event.acceleration, sign) ?? ZERO_ACCELERATION;
   const gravity = { x: a.x - v.x, y: a.y - v.y, z: a.z - v.z };
   const length = Math.hypot(gravity.x, gravity.y, gravity.z);
   if (length < .5 || length > 30 || !Number.isFinite(length)) return null;
@@ -93,6 +103,7 @@ export function gravityStateLabel(state) {
 // No permission request occurs at construction, automatic start, or enable().
 // requestAccess() must be called directly inside the user's click handler.
 export function createGravityInput({ onDirection, onAcceleration = () => {}, onState = () => {}, win = globalThis.window, now = () => performance.now(), schedule = setTimeout, cancel = clearTimeout } = {}) {
+  const motionSign = motionAccelerationSign(win);
   let preferred = true, active = false, paused = false, listening = false, disposed = false;
   let basis = null, raw = null, sample = null, direction = copy(DEFAULT_GRAVITY), source = null;
   let lastTime = null, lastMotionTime = -Infinity, timer = null, generation = 0, pending = null;
@@ -138,8 +149,8 @@ export function createGravityInput({ onDirection, onAcceleration = () => {}, onS
     if (!preferred || paused || disposed || permission.get('motion') !== 'granted') return;
     synchronizeScreenFrame();
     const time = now(), dt = accelerationTime === null ? 1 / 60 : Math.max(.001, Math.min(.05, (time - accelerationTime) / 1000));
-    const native = finiteVector(event.acceleration) ? event.acceleration : null;
-    const including = finiteVector(event.accelerationIncludingGravity) ? event.accelerationIncludingGravity : null;
+    const native = motionVector(event.acceleration, motionSign);
+    const including = motionVector(event.accelerationIncludingGravity, motionSign);
     let linear = native, nextSource = 'native';
     if (including) {
       // Fallback is a high-pass residual, retaining rapid motion rather than
@@ -180,7 +191,7 @@ export function createGravityInput({ onDirection, onAcceleration = () => {}, onS
     synchronizeScreenFrame();
     const time = now();
     if (kind === 'orientation' && time - lastMotionTime < 1000) return;
-    const value = kind === 'motion' ? motionGravity(event) : orientationGravity(event);
+    const value = kind === 'motion' ? motionGravity(event, motionSign) : orientationGravity(event);
     if (!value) return;
     if (kind === 'motion') lastMotionTime = time;
     const dt = lastTime === null ? 1 / 60 : Math.max(.001, Math.min(.05, (time - lastTime) / 1000));
