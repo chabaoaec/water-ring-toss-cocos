@@ -1,0 +1,222 @@
+{
+  "scope": "15 simulated seconds of real Cannon World, changing tilt + finite pump cycles + 3-axis shake; synthetic device inputs",
+  "records": [
+    {
+      "second": 1,
+      "visible": 126,
+      "nearSurface": 4,
+      "outside": 0,
+      "water": 48.41434523809514,
+      "normal": {
+        "x": -0.3055469400675719,
+        "y": 0.9490953871002412,
+        "z": -0.07654419377318387
+      },
+      "boundaryFailures": 0,
+      "score": 0
+    },
+    {
+      "second": 2,
+      "visible": 124,
+      "nearSurface": 2,
+      "outside": 0,
+      "water": 48.16503161783094,
+      "normal": {
+        "x": -0.37775562392327244,
+        "y": 0.9184428999947374,
+        "z": -0.11731721119936359
+      },
+      "boundaryFailures": 0,
+      "score": 0
+    },
+    {
+      "second": 3,
+      "visible": 124,
+      "nearSurface": 2,
+      "outside": 0,
+      "water": 48.43243742024686,
+      "normal": {
+        "x": -0.1718619873263891,
+        "y": 0.9796816131875222,
+        "z": -0.10337985342666121
+      },
+      "boundaryFailures": 0,
+      "score": 0
+    },
+    {
+      "second": 4,
+      "visible": 125,
+      "nearSurface": 6,
+      "outside": 0,
+      "water": 47.99999999999923,
+      "normal": {
+        "x": 0.1732869628309205,
+        "y": 0.9840249385264467,
+        "z": -0.04082338632277141
+      },
+      "boundaryFailures": 0,
+      "score": 0
+    },
+    {
+      "second": 5,
+      "visible": 127,
+      "nearSurface": 3,
+      "outside": 0,
+      "water": 48.64291666666588,
+      "normal": {
+        "x": 0.38020309305688027,
+        "y": 0.9239759000165637,
+        "z": 0.04140222480208536
+      },
+      "boundaryFailures": 0,
+      "score": 0
+    },
+    {
+      "second": 6,
+      "visible": 126,
+      "nearSurface": 0,
+      "outside": 0,
+      "water": 48.43220238095126,
+      "normal": {
+        "x": 0.30436266221684327,
+        "y": 0.9468966941595529,
+        "z": 0.10368230532731153
+      },
+      "boundaryFailures": 0,
+      "score": 0
+    },
+    {
+      "second": 7,
+      "visible": 126,
+      "nearSurface": 4,
+      "outside": 0,
+      "water": 48.16503161782992,
+      "normal": {
+        "x": -0.003700133438039077,
+        "y": 0.9931003346788642,
+        "z": 0.11720936086025198
+      },
+      "boundaryFailures": 0,
+      "score": 0
+    },
+    {
+      "second": 8,
+      "visible": 127,
+      "nearSurface": 4,
+      "outside": 0,
+      "water": 48.414580277388694,
+      "normal": {
+        "x": -0.3095189308451154,
+        "y": 0.9478454528933267,
+        "z": 0.07607252380420598
+      },
+      "boundaryFailures": 0,
+      "score": 0
+    },
+    {
+      "second": 9,
+      "visible": 124,
+      "nearSurface": 4,
+      "outside": 0,
+      "water": 47.99999999999821,
+      "normal": {
+        "x": -0.3789628393201978,
+        "y": 0.925410951949187,
+        "z": -0.0013177355096330476
+      },
+      "boundaryFailures": 0,
+      "score": 0
+    },
+    {
+      "second": 10,
+      "visible": 125,
+      "nearSurface": 2,
+      "outside": 0,
+      "water": 48.64291666666486,
+      "normal": {
+        "x": -0.16628384203084753,
+        "y": 0.9829825585887905,
+        "z": -0.07807031055206
+      },
+      "boundaryFailures": 0,
+      "score": 0
+    },
+    {
+      "second": 11,
+      "visible": 124,
+      "nearSurface": 7,
+      "outside": 0,
+      "water": 48.41434523809309,
+      "normal": {
+        "x": 0.17812007302515995,
+        "y": 0.9769504444412052,
+        "z": -0.11764807134689168
+      },
+      "boundaryFailures": 0,
+      "score": 0
+    },
+    {
+      "second": 12,
+      "visible": 124,
+      "nearSurface": 9,
+      "outside": 0,
+      "water": 48.165031617828895,
+      "normal": {
+        "x": 0.37982846215496713,
+        "y": 0.9193748547285177,
+        "z": -0.1023729252776806
+      },
+      "boundaryFailures": 0,
+      "score": 0
+    },
+    {
+      "second": 13,
+      "visible": 118,
+      "nearSurface": 0,
+      "outside": 0,
+      "water": 48.41458027738767,
+      "normal": {
+        "x": 0.30171179226149974,
+        "y": 0.9526042391104186,
+        "z": -0.03892503101108303
+      },
+      "boundaryFailures": 0,
+      "score": 0
+    },
+    {
+      "second": 14,
+      "visible": 116,
+      "nearSurface": 1,
+      "outside": 0,
+      "water": 47.999999999997186,
+      "normal": {
+        "x": -0.010440580373606866,
+        "y": 0.9990082163441322,
+        "z": 0.04328484675238867
+      },
+      "boundaryFailures": 0,
+      "score": 0
+    },
+    {
+      "second": 15,
+      "visible": 124,
+      "nearSurface": 2,
+      "outside": 0,
+      "water": 48.64291666666384,
+      "normal": {
+        "x": -0.3125749230321479,
+        "y": 0.9441107368774435,
+        "z": 0.10465101052630937
+      },
+      "boundaryFailures": 0,
+      "score": 0
+    }
+  ],
+  "maxOutside": 0,
+  "maxMassError": 2.8350655156827997e-12,
+  "maxNearSurface": 10,
+  "boundaryFailures": 0,
+  "poolCount": 128,
+  "idsStable": true,
+  "allBodiesFinite": true
+}

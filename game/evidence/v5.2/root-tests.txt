@@ -1,0 +1,109 @@
+
+> pocket-tide-cocos@1.0.0 test
+> node --test tests/*.test.js
+
+{"cornerRecovery":[{"name":"left-floor","maximumY":523.9588668804306,"closest":0.04882761141564629,"pumps":5,"maxWaterError":1.2931877790833823e-12},{"name":"right-floor","maximumY":523.9619947385883,"closest":0.015141828142134273,"pumps":5,"maxWaterError":1.2931877790833823e-12},{"name":"left-depth","maximumY":537.6791826646725,"closest":0.21164603716700015,"pumps":5,"maxWaterError":1.2931877790833823e-12},{"name":"right-depth","maximumY":537.6780805936207,"closest":0.21163394483568254,"pumps":5,"maxWaterError":1.2931877790833823e-12},{"name":"left-edgeon","maximumY":262.7279476517611,"closest":0.037201072922371736,"pumps":5,"maxWaterError":1.2931877790833823e-12},{"name":"right-edgeon","maximumY":409.6850327700176,"closest":0.014753719874022408,"pumps":5,"maxWaterError":1.2931877790833823e-12},{"name":"front-edgeon","maximumY":529.2801909257622,"closest":0.23394063440639457,"pumps":5,"maxWaterError":1.2931877790833823e-12},{"name":"back-edgeon","maximumY":529.7665432450178,"closest":0.1702373115496698,"pumps":5,"maxWaterError":1.2931877790833823e-12}]}
+{"groundTilt":[{"angle":10,"distance":3.2636545170446425,"velocity":2.1151818230729584},{"angle":20,"distance":13.369051542477536,"velocity":8.736723041388219},{"angle":30,"distance":17.877055351761754,"velocity":3.7820500834198514}]}
+{"obliqueClosedDivergence":2.5315316509733066e-7,"obliqueNormalFlux":3.2981603559356643e-13}
+{"physicalShake":[{"pose":"air","pulseDistance":-3.5677879714577045,"afterCoastDistance":-13.305913361579712,"coastMarkers":104,"coastField":-15.895472561927384},{"pose":"floor","pulseDistance":-0.938538720315222,"afterCoastDistance":-2.3495682107164555,"coastMarkers":104,"coastField":-15.895472561927384}]}
+✔ normal reset rings start completely inside the actual six fluid-aligned solid walls (19.094162ms)
+✔ eight legal floor/side/depth corner poses reach the lift stream using ordinary finite strokes (2978.619875ms)
+✔ normal10/20/30degree gravity tilts move a grounded wet ring without pump or special nudges (185.106665ms)
+✔ closed pump/intake curls stay divergence free and tangent to oblique hydrostatic surfaces (5.83837ms)
+✔ device acceleration preserves magnitude/sign, moves ring and shared water, freezes on pause and clears on reset (47.374382ms)
+✔ short physical shakes move airborne and grounded rings relative to no-motion and advect shared markers during coast (85.419829ms)
+✔ tracers exist over the entire water volume before any button is pressed (1.778344ms)
+✔ idle and stopped jets keep the full suspended population and long-term coverage (20.630005ms)
+✔ existing all-domain wisps are advected by the shared velocity sampler (5.506701ms)
+✔ releasing a pump preserves its remaining water, then refill takes time (541.520617ms)
+✔ pressing during refill spends only the current partial chamber and never refills while held (760.131327ms)
+✔ pause freezes refill and cumulative volumes without an edge refill (170.771533ms)
+✔ two chambers circulate independently and conserve tank plus chamber water (727.954666ms)
+✔ refill adds a local converging component even while previous bulk water coasts upward (130.601697ms)
+✔ specific-force sign fixtures: face-up, upright, right, left, front and back (2.141847ms)
+✔ orientation fallback follows gravity projection Rz(alpha)Rx(beta)Ry(gamma) (0.319335ms)
+✔ screen-angle fixtures give displayed down in all orientations (0.354752ms)
+✔ comfort calibration maps arbitrary neutral down and retains orthonormal axes (0.624088ms)
+✔ invalid, null and unsupported readings are ignored; normalization is overflow safe (0.408502ms)
+✔ angular smoothing is bounded, unit length and traverses antipodal directions (2.346015ms)
+✔ default preference on auto-attaches without permission requests; valid reading activates (2.081055ms)
+✔ permission is only requested on explicit call, both calls occur synchronously (1.099673ms)
+✔ repeated enabling does not duplicate listeners (0.280626ms)
+✔ denial and insecure/unsupported browsers honestly remain inactive (0.596837ms)
+✔ granting only orientation works after motion denial (0.197918ms)
+✔ disable during unresolved permission does not attach late listeners (0.283419ms)
+✔ motion preferred over orientation, with fallback after stale motion (0.14475ms)
+✔ no-data and stopped-data timeout do not claim active; later readings recover (0.103792ms)
+✔ paused readings allow current-pose calibration without changing physics (0.723879ms)
+✔ pause-resume changed pose smooths rather than snapping; reapply keeps last valid after reset (0.908214ms)
+✔ screen rotation recaptures neutral without immediate gravity update (0.073ms)
+✔ null samples and disposal never emit gravity updates (0.051167ms)
+✔ first valid sample in menu, calibration, resume and fresh data have honest distinct status (1.092298ms)
+✔ status separates awaiting permission, denied, unavailable and disabled preferences (0.137126ms)
+✔ nonstandard permission returns do not attach listeners or claim success (0.252419ms)
+✔ native linear acceleration is removed from physical gravity, including during fast shaking (0.044334ms)
+✔ acceleration transforms preserve zero, magnitude and calibrated screen axes (0.087625ms)
+✔ native acceleration channel keeps physical direction and amplitude separate from gravity (0.52442ms)
+✔ opposite shake reverses quickly and extreme finite values remain bounded at 3g (0.776921ms)
+✔ controller acceleration respects landscape rotation and flat-pose calibration (1.899387ms)
+✔ including-gravity fallback retains rapid positive and negative transients as estimated acceleration (0.195543ms)
+✔ shake watchdog clears at 150ms without disabling otherwise valid tilt data (0.102417ms)
+✔ pause, reset reapply, calibration, rotation, disable and disposal clear every stored shake (0.391961ms)
+✔ orientation-only and denied permission paths never manufacture shake data (0.140209ms)
+✔ tilt watchdog does not cancel a still-fresh native linear acceleration stream (1.205174ms)
+✔ linear shake retains magnitude, reverses direction and decays after input stops (2.286098ms)
+✔ inertial field has zero normal wall flux and divergence for all three shake axes (0.454252ms)
+✔ free-plane envelope is tangent and divergence-free; bad accelerations cannot poison state (1.12509ms)
+✔ one held press exhausts; refill requires full release and elapsed refill time (755.935925ms)
+✔ longer press increases actual same-point flow speed before capacity runs out (115.54681ms)
+✔ left and right pressure/water budgets are independent (263.566826ms)
+✔ a jet-held threaded ring suspended well above the base cannot score (997.572447ms)
+✔ near-rim peg overlap is rejected by conservative hole containment (0.801463ms)
+✔ all-domain particles follow flow and stay suspended after release (940.956757ms)
+✔ real floating ring contacts do not create a support root (38.548159ms)
+✔ physical platform and stacked ring contacts root support continuously (313.720933ms)
+✔ ring-ring impact reverses closing relative velocity and water damps its rebound (101.149303ms)
+✔ shell rebound is gentler than elastic ring-ring impact (32.807915ms)
+✔ global suspended tracer count stays bounded during finite pulses; reduced motion is visual only (1209.859658ms)
+{"seed":43,"protocol":"left1.1-release20","initial":[{"id":0,"x":46,"y":49,"z":-17,"quaternion":{"x":-0.07395932645557955,"y":-0.004757265655029079,"z":-0.06401354648160998,"w":0.9951932738521555}},{"id":1,"x":92,"y":57,"z":0,"quaternion":{"x":-0.07126003551669544,"y":-0.0034292445612418483,"z":-0.04794486316952366,"w":0.9962989198606782}},{"id":2,"x":138,"y":49,"z":28,"quaternion":{"x":-0.1367258896042059,"y":0.007482939640752881,"z":0.05413297238676384,"w":0.9891004286860081}},{"id":3,"x":184,"y":57,"z":-17,"quaternion":{"x":0.11276177232321336,"y":0.010525987895762725,"z":-0.09234510244764746,"w":0.9892655701758146}},{"id":4,"x":230,"y":49,"z":0,"quaternion":{"x":-0.03509276849027272,"y":-0.0031521679065746977,"z":-0.08940812446907428,"w":0.9953716636091765}},{"id":5,"x":276,"y":57,"z":28,"quaternion":{"x":-0.05777389124464971,"y":-0.003650507413032096,"z":-0.06295460009066141,"w":0.9963360726248466}},{"id":6,"x":322,"y":49,"z":-17,"quaternion":{"x":0.0355811454197937,"y":-0.002232249951045339,"z":0.06257397320570342,"w":0.9974033772892609}},{"id":7,"x":368,"y":57,"z":0,"quaternion":{"x":0.09727853619845199,"y":-0.0011060147380531986,"z":0.01131490409621331,"w":0.9951922608580612}}],"score":1,"scored":[{"id":1,"x":140.30823604342078,"y":41.668190309966114,"z":-0.4537866679788087,"peg":0,"support":{"kind":"base","bodyId":205,"peg":0}}]}
+✔ Cannon compound torus has a physical hole, cylinder pegs and six tank walls (10.482566ms)
+✔ submerged weight sinks; water drag dissipates horizontal momentum (349.97587ms)
+✔ left jet lifts nearby rings and release allows them to descend (828.237547ms)
+✔ hole can physically slide down a post and score only after stable seating (1937.624155ms)
+✔ mere proximity, floor contact and an edge-on ring cannot count (316.363116ms)
+✔ rigid rim collides with post rather than passing sideways through it (40.312129ms)
+✔ reset clears jets, counts, timer, scored flags and rebuilds world (33.285168ms)
+✔ long pump sequence preserves finite rigid-body states inside tank (2506.308818ms)
+✔ untouched toy never starts or awards free rings (447.73536ms)
+✔ eight physically falling rings seat, win, and freeze elapsed time (4910.189617ms)
+✔ one finite left stroke and its coasting water earn a physically rooted point from a normal reset (3356.407878ms)
+{"maxDivergence":1.801048199467914e-8,"maxGridSpeed":1156.9552134118144}
+{"records":[{"seconds":5,"surfaceY":533.9428571428427,"visible":127,"bins":[34,34,30,29],"top5":1},{"seconds":10,"surfaceY":526.9762077037269,"visible":124,"bins":[29,32,35,28],"top5":2},{"seconds":15,"surfaceY":522.3238095237584,"visible":124,"bins":[34,30,29,31],"top5":0},{"seconds":20,"surfaceY":536.2666666666012,"visible":128,"bins":[31,39,29,29],"top5":2},{"seconds":25,"surfaceY":523.3556428958166,"visible":126,"bins":[32,36,26,32],"top5":0},{"seconds":30,"surfaceY":526.9714285713271,"visible":126,"bins":[37,23,29,37],"top5":2},{"seconds":35,"surfaceY":533.0726388887715,"visible":126,"bins":[37,27,30,32],"top5":1},{"seconds":40,"surfaceY":520.8938353575727,"visible":128,"bins":[32,32,37,27],"top5":3},{"seconds":45,"surfaceY":531.6190476188958,"visible":128,"bins":[32,27,34,35],"top5":2},{"seconds":50,"surfaceY":529.0059722220531,"visible":127,"bins":[30,31,29,37],"top5":2},{"seconds":55,"surfaceY":519.9999999998115,"visible":125,"bins":[33,29,34,29],"top5":0},{"seconds":60,"surfaceY":536.2666666664646,"visible":128,"bins":[33,27,40,28],"top5":1}],"maxOutside":0,"maxWaterError":1.9873880319210002e-11,"up":128,"down":128,"entries":107,"exits":111,"wallMs":10295.788769}
+✔ combined curls and displacement are divergence free and match moving-surface/port flux (97.306654ms)
+✔ 60s real repeated pumps retain marker identity, upward/downward paths and water-volume distribution (10309.678147ms)
+✔ surface displacement, dry-body forces, gravity, pause and reset obey their contracts (424.838133ms)
+{"emptyField":322.9646945769442,"after5s":0.1473765091793122,"moving":126,"amplitude":0.6858264010418343}
+{"residualMaxDivergence":8.67783904630326e-9}
+✔ empty held pump stops exchange but shared bulk water and persistent tracers coast then decay (1423.982297ms)
+✔ release and completed refill keep dissipating circulation, pause freezes it and reset clears it (577.033091ms)
+✔ analytic momentum interpolation is timestep consistent and residual curls have no net flux (11.376613ms)
+✔ crossing a free plane reflects parcels inside without putting all at one depth (2.852976ms)
+✔ bounded reflections retain distinct finite positions inside tilted and inverted water boxes (20.121085ms)
+{"maximumIndependentGeometricFractionError":3.3306690738754696e-16,"cases":99}
+{"variedPlanes":300,"maximumIndependentGeometricFractionError":5.551115123125783e-16}
+✔ upright nominal water is exactly y520, proper depth, capacity and empty/full behavior (1.18059ms)
+✔ analytic equilibrium conserves clipped box volume under oblique and inverted gravity (18.192739ms)
+✔ deterministic varied planes conserve volume without near-axis cancellation (18.524033ms)
+✔ arbitrary rectangular bounds retain the upright volume-to-height convention (0.203959ms)
+✔ mirrored gravity mirrors plane and inverted gravity exchanges water and air (0.093376ms)
+✔ wet and air face clipping partitions the face and surface polygon stays planar and bounded (0.508336ms)
+✔ cached resolver skips unchanged solves and freezes caller-owned input snapshots (0.765672ms)
+✔ invalid gravity, area, volume and bounds fail explicitly (0.24846ms)
+ℹ tests 86
+ℹ suites 0
+ℹ pass 86
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14808.803761

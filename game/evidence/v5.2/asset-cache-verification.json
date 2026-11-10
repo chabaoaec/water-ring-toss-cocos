@@ -1,0 +1,10 @@
+{
+  "identical_rebuild_same_manifest": true,
+  "leaf_change_old_revision": "079f7bea0368a6c42300",
+  "leaf_change_new_revision": "51807eae810af2982108",
+  "all_relative_module_requests_versioned": 15,
+  "all_requests_resolve": true,
+  "all_manifest_hashes_match": 32,
+  "no_source_mutation": true,
+  "scope": "isolated copy build verification, not online browser or hardware"
+}
