@@ -1,0 +1,13 @@
+{
+  "observed_at": "2026-11-10T10:39:16.062672+00:00",
+  "url": "https://chabaoaec.github.io/water-ring-toss-cocos/",
+  "anonymous_http_success": true,
+  "deployment": {
+    "version": "v5.1",
+    "source_commit": "673f2bd9d4bb43b4a1f2630944c4183bba820690",
+    "built_at": "2026-11-10T10:37:07.933113+00:00"
+  },
+  "publicly_verified_runtime_files": 29,
+  "all_files_match_build_manifest": true,
+  "initial_wait_checks": []
+}

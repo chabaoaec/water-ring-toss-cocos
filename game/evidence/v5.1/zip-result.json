@@ -1,0 +1,8 @@
+{
+  "zip": "/work/water-ring-cocos-20261110/release/Pocket-Tide-Demo-v5.1-Web.zip",
+  "bytes": 627805,
+  "sha256": "13d4011c2f4c33194bc0db6b0223a8d2e7e36f9ddb07756be525e326ebdda5de",
+  "verified_extracted_runtime_files": 29,
+  "runtime_same_as_public_pages_manifest": true,
+  "actual_browser_target": "public HTTPS Pages; separate local ZIP boot not repeated"
+}

@@ -1,0 +1,36 @@
+{
+  "actual_skill_reads": {
+    "tapml-code-review": {
+      "calls": [
+        {
+          "id": "call_00_qu82e3GCUyi3m39rHoGA5741|96f21621-5494-4012-87c9-c747348d504b",
+          "status": "completed"
+        }
+      ],
+      "verified_line_count": 44,
+      "source_sha256": "7cd1ddf5c5671833d732bfcf0420c6aaa07fa939d650008e34213b2d13c12fb4"
+    },
+    "differential-review": {
+      "calls": [
+        {
+          "id": "call_01_j2MHGAj51r5v9m6JdfFA6191|14cf048c-d137-4c91-ae18-5dd3715f8deb",
+          "status": "completed"
+        },
+        {
+          "id": "call_02_RsWBW6Wogiaj0BkDEFNF1497|a8032f2c-4bb5-41d2-a219-661c0b8c90c1",
+          "status": "completed"
+        },
+        {
+          "id": "call_03_WiCtNYiAsxsdCAOD7HoE6942|e217fe4e-1575-4cc3-9767-77d3f4b1a252",
+          "status": "completed"
+        }
+      ],
+      "verified_line_count": 225,
+      "source_sha256": "f9af6a8193fc1a9f8ca3c54bb8d19095a5f20c9472ca6d014488bbde50b67da0"
+    }
+  },
+  "source": "complete3frozenfiles supplied directly with delta; no source tool-read claim",
+  "initial": "180s timeout/no final",
+  "conclusion": "same session90s timeout/no final; no verdict/not rerun",
+  "parent_decision": "54realtests, independentactualbrowser+math/sourcecheck, no confirmedparentblocker; no model clean-verdict claim"
+}

@@ -9,6 +9,12 @@
 - 手机倾斜重力默认开启；需要权限时在菜单授权，可校准或关闭。桌面支持A/D和左右键。
 - 菜单中重开；切走页面自动暂停。没有广告或支付。
 
+## 在线试玩
+
+https://chabaoaec.github.io/water-ring-toss-cocos/?build=v5.1
+
+公开静态试玩，右上角显示 **DEMO v5.1**；手机需要权限时在菜单授权传感器。
+
 ## 本地试玩
 
 完整Web试玩包解压后运行 `python3 start-demo.py`（Windows可用 `py start-demo.py`），打开提示的 `http://127.0.0.1:8087/?build=v5.1`。右上角应显示 **DEMO v5.1**。启动器读取自身目录并禁止缓存；端口占用会明确报错。需要支持WebGL2的浏览器，不要双击HTML。
